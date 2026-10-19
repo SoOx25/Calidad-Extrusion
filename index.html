@@ -291,6 +291,12 @@
       font-size: 0.85rem;
     }
 
+    /* ESTILO PARA EL TEXTO GRIS EN HORARIO DE TURNO */
+    .horario-tag {
+      color: #94a3b8;
+      font-weight: normal;
+    }
+
     @media (max-width: 640px) {
       body { padding: 8px; }
       .header-title { font-size: 1.1rem; }
@@ -388,11 +394,12 @@
           <input type="text" id="input-operador" placeholder="Nombre del operador">
         </div>
         <div>
-          <label>Turno:</label>
+          <label id="label-turno">Turno:</label>
           <select id="input-turno">
-            <option value="Día">Día</option>
-            <option value="Tarde">Tarde</option>
-            <option value="Noche">Noche</option>
+            <option value="Día">Día [07:00 a 14:30]</option>
+            <option value="Tarde">Tarde [14:30 a 22:00]</option>
+            <option value="Noche">Noche [22:00 a 07:00]</option>
+            <option value="Especial">Especial [Horario Especial]</option>
           </select>
         </div>
       </div>
@@ -595,6 +602,77 @@
     let sonidoHabilitado = true;
     let timerAlertaFullscreen = null;
 
+    // LÓGICA DE TURNOS SEGÚN HORA Y DÍA
+    function obtenerTurnoAutomatico() {
+      const ahora = new Date();
+      const diaSemana = ahora.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+      const minutosTotales = ahora.getHours() * 60 + ahora.getMinutes();
+
+      // Lunes (1) a Viernes (5)
+      if (diaSemana >= 1 && diaSemana <= 5) {
+        if (minutosTotales >= 420 && minutosTotales < 870) { // 07:00 a 14:30
+          return { nombre: 'Día', horario: '07:00 a 14:30' };
+        } else if (minutosTotales >= 870 && minutosTotales < 1320) { // 14:30 a 22:00
+          return { nombre: 'Tarde', horario: '14:30 a 22:00' };
+        } else { // 22:00 a 07:00
+          return { nombre: 'Noche', horario: '22:00 a 07:00' };
+        }
+      } 
+      // Sábado (6)
+      else if (diaSemana === 6) {
+        if (minutosTotales >= 420 && minutosTotales < 690) { // 07:00 a 11:30
+          return { nombre: 'Día', horario: '07:00 a 11:30' };
+        } else if (minutosTotales >= 690 && minutosTotales < 960) { // 11:30 a 16:00
+          return { nombre: 'Tarde', horario: '11:30 a 16:00' };
+        } else {
+          return { nombre: 'Noche', horario: '22:00 a 07:00' };
+        }
+      } 
+      // Domingo (0)
+      else {
+        return { nombre: 'Especial', horario: 'Horario Especial' };
+      }
+    }
+
+    function actualizarTurnoEnInterfaz() {
+      const turnoAuto = obtenerTurnoAutomatico();
+      const selectTurno = document.getElementById('input-turno');
+      const labelTurno = document.getElementById('label-turno');
+
+      if (labelTurno) {
+        labelTurno.innerHTML = `Turno: <b>${turnoAuto.nombre}</b> <span class="horario-tag">[${turnoAuto.horario}]</span>`;
+      }
+
+      if (selectTurno) {
+        // Actualizar opciones con sus corchetes en texto
+        const diaSemana = new Date().getDay();
+        if (diaSemana >= 1 && diaSemana <= 5) {
+          selectTurno.innerHTML = `
+            <option value="Día">Día [07:00 a 14:30]</option>
+            <option value="Tarde">Tarde [14:30 a 22:00]</option>
+            <option value="Noche">Noche [22:00 a 07:00]</option>
+            <option value="Especial">Especial [Horario Especial]</option>
+          `;
+        } else if (diaSemana === 6) {
+          selectTurno.innerHTML = `
+            <option value="Día">Día [07:00 a 11:30]</option>
+            <option value="Tarde">Tarde [11:30 a 16:00]</option>
+            <option value="Noche">Noche [22:00 a 07:00]</option>
+            <option value="Especial">Especial [Horario Especial]</option>
+          `;
+        } else {
+          selectTurno.innerHTML = `
+            <option value="Especial">Especial [Horario Especial]</option>
+            <option value="Día">Día [07:00 a 14:30]</option>
+            <option value="Tarde">Tarde [14:30 a 22:00]</option>
+            <option value="Noche">Noche [22:00 a 07:00]</option>
+          `;
+        }
+        
+        selectTurno.value = turnoAuto.nombre;
+      }
+    }
+
     function guardarHistorialLocal() {
       localStorage.setItem('mediciones_local', JSON.stringify(historial));
     }
@@ -715,12 +793,10 @@
       const ext = extrusoras.find(e => e.id === id);
       if (!ext) return;
 
-      // Extraer datos
       const numOnly = parseInt(ext.id.replace(/\D/g, ''), 10);
       document.getElementById('cfg-num-ext').value = isNaN(numOnly) ? '' : numOnly;
-      document.getElementById('cfg-num-ext').readOnly = true; // Bloquea el ID durante la edición
+      document.getElementById('cfg-num-ext').readOnly = true;
 
-      // Extraer Ancho x Largo x OT del string del producto
       const matchProd = ext.producto.match(/^(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)\s*\(OT:\s*(\d+)\)$/);
       if (matchProd) {
         document.getElementById('cfg-ancho-prod').value = matchProd[1];
@@ -1272,6 +1348,8 @@
 
     window.onload = () => {
       actualizarSelect();
+      actualizarTurnoEnInterfaz();
+      setInterval(actualizarTurnoEnInterfaz, 60000); // Reevalúa el turno automáticamente cada minuto
       setTimeout(iniciarSincronizacionFirebase, 800);
     };
   </script>
