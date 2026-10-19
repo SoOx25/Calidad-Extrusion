@@ -299,12 +299,14 @@
 </head>
 <body>
 
-  <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
+  <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN - DISEÑO PANTALLA EN ALTURA) -->
   <div id="alerta-fullscreen">
-    <h1 id="fs-extrusora-header" style="font-size: 1.8rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
-    <h1 id="fs-titulo" style="font-size: 2.2rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
-    <p id="fs-detalle" style="font-size: 1.2rem; margin: 0 0 25px 0; max-width: 100%; line-height: 1.4;">---</p>
-    <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: 1.1rem; padding: 12px 25px; width: auto; border-radius: 8px; cursor: pointer; font-weight: bold;">Silenciar y Cerrar Alerta</button>
+    <h1 id="fs-extrusora-header" style="font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase; text-shadow: 0 4px 15px rgba(0,0,0,0.7), 0 0 20px #ef4444; letter-spacing: 2px;">
+      CORREGIR EXTRUSORA EXT-00
+    </h1>
+    <h1 id="fs-titulo" style="font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 800; margin: 0 0 15px 0; color: #ffffff;">🚨 ¡ALERTA CRÍTICA!</h1>
+    <p id="fs-detalle" style="font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 600; margin: 0 0 30px 0; max-width: 90%; line-height: 1.5; background: rgba(0,0,0,0.3); padding: 15px 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">---</p>
+    <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: clamp(1.1rem, 1.8vw, 1.5rem); padding: 16px 35px; width: auto; border-radius: 10px; cursor: pointer; font-weight: 900; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">Silenciar y Cerrar Alerta</button>
   </div>
 
   <!-- VISTA 1: HOME -->
@@ -403,7 +405,7 @@
         </div>
         <div>
           <label>Peso Medido (gr):</label>
-          <input type="number" step="0.1" id="val-peso" placeholder="Ej: 12.5">
+          <input type="number" step="0.1" id="val-peso" placeholder="Ej: 44.4">
         </div>
       </div>
       
@@ -548,7 +550,7 @@
         <div class="grid-4" style="margin-top: 5px;">
           <div>
             <label>Peso Ideal:</label>
-            <input type="number" step="0.1" id="cfg-peso-ideal" value="12.0" oninput="actualizarRangos()">
+            <input type="number" step="0.1" id="cfg-peso-ideal" value="44.4" oninput="actualizarRangos()">
           </div>
           <div>
             <label>Tol. Peso ±:</label>
@@ -556,11 +558,11 @@
           </div>
           <div>
             <label>Peso Mín:</label>
-            <input type="number" step="0.1" id="cfg-min-peso" value="11.0" readonly style="background:#1e293b; color:#94a3b8;">
+            <input type="number" step="0.1" id="cfg-min-peso" value="43.4" readonly style="background:#1e293b; color:#94a3b8;">
           </div>
           <div>
             <label>Peso Máx:</label>
-            <input type="number" step="0.1" id="cfg-max-peso" value="13.0" readonly style="background:#1e293b; color:#94a3b8;">
+            <input type="number" step="0.1" id="cfg-max-peso" value="45.4" readonly style="background:#1e293b; color:#94a3b8;">
           </div>
         </div>
 
@@ -579,7 +581,7 @@
   <script>
     let vistaActual = 'home';
     let extrusoras = JSON.parse(localStorage.getItem('extrusoras')) || [
-      { id: 'EXT-09', producto: '54x50 (OT: 18489)', ancho: 54.0, tolAncho: 0.5, minAncho: 53.5, maxAncho: 54.5, pesoIdeal: 12.0, tolPeso: 1.0, minPeso: 11.0, maxPeso: 13.0 }
+      { id: 'EXT-09', producto: '54x50 (OT: 18489)', ancho: 54.0, tolAncho: 0.5, minAncho: 53.5, maxAncho: 54.5, pesoIdeal: 44.4, tolPeso: 1.0, minPeso: 43.4, maxPeso: 45.4 }
     ];
 
     let historial = JSON.parse(localStorage.getItem('mediciones_local')) || [];
@@ -731,7 +733,6 @@
       try {
         if (window.fbMethods && window.db) {
           const { doc, setDoc } = window.fbMethods;
-          // Guardar permanentemente en la colección 'fichas' de Firebase
           await setDoc(doc(window.db, "fichas", idFormatted), nuevaFicha);
         } else {
           const index = extrusoras.findIndex(e => e.id === idFormatted);
@@ -995,7 +996,7 @@
         if (fsAlerta) {
           document.getElementById('fs-extrusora-header').innerText = `CORREGIR EXTRUSORA ${reg.id}`;
           document.getElementById('fs-titulo').innerText = reg.alertaTipo;
-          document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | Producto: ${reg.producto}\nMedido -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr\nOperador: ${reg.operador}`;
+          document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | OT / Producto: ${reg.producto}\nMediciones -> Ancho: ${reg.valorMedido} cm | Peso: ${reg.pesoMedido} gr\nOperador: ${reg.operador}`;
           fsAlerta.style.display = 'flex';
 
           if (timerAlertaFullscreen) clearTimeout(timerAlertaFullscreen);
@@ -1195,7 +1196,7 @@
           usarHistorialLocal();
         });
 
-        // 2. Escuchador de Fichas Técnicas (Sincronización permanente)
+        // 2. Escuchador de Fichas Técnicas
         const qFichas = collection(window.db, "fichas");
         onSnapshot(qFichas, (snapshot) => {
           const nuevasFichas = [];
