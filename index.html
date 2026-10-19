@@ -69,29 +69,26 @@
     .view-section { display: none; }
     .view-section.active { display: block; }
 
-    /* BADGE INDICADOR DE ALERTAS ACTIVAS EN LA ESQUINA SUPERIOR DERECHA */
-    #badge-alertas-top {
+    /* BANNER DE ALERTAS ACTIVAS EN EL MEDIO DE LA PÁGINA */
+    #banner-alertas-medio {
       display: none;
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      z-index: 1000;
-      background: #ef4444;
+      background: linear-gradient(135deg, #dc2626, #991b1b);
       color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 15px;
       font-weight: 800;
-      font-size: 0.85rem;
-      box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+      font-size: 1rem;
       border: 2px solid #fef08a;
+      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5);
       animation: palpitarAlerta 1s infinite alternate;
     }
     @keyframes palpitarAlerta {
-      from { transform: scale(1); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
-      to { transform: scale(1.08); box-shadow: 0 0 20px rgba(239, 68, 68, 1); }
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
     }
 
-    /* BANNERS Y ALERTAS */
     #banner-offline {
       display: none;
       background: #334155;
@@ -103,18 +100,6 @@
       margin-bottom: 12px;
       font-size: 0.85rem;
       font-weight: 600;
-    }
-
-    #banner-alerta { 
-      display: none; 
-      background: #dc2626; 
-      color: white; 
-      padding: 15px; 
-      border-radius: 10px; 
-      text-align: center; 
-      margin-bottom: 15px; 
-      font-size: 1.1rem; 
-      font-weight: bold; 
     }
 
     #alerta-fullscreen {
@@ -258,7 +243,7 @@
     .btn-corregir { background: #16a34a; padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 4px; }
     .btn-corregir:hover { background: #15803d; }
 
-    /* MODAL FICHAS */
+    /* MODAL / VENTANA FLOTANTE GENERAL */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; padding: 10px; box-sizing: border-box; }
     .modal-content { background: #1e293b; width: 100%; max-width: 650px; padding: 20px; border-radius: 12px; border: 1px solid #475569; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 12px; }
@@ -293,11 +278,7 @@
       font-size: 0.85rem;
     }
 
-    /* ESTILO PARA EL TEXTO GRIS EN HORARIO DE TURNO */
-    .horario-tag {
-      color: #94a3b8;
-      font-weight: normal;
-    }
+    .horario-tag { color: #94a3b8; font-weight: normal; }
 
     /* ESTILOS COMPACTOS EXTRUSORAS OPERATIVAS */
     .operativas-container {
@@ -331,36 +312,12 @@
       cursor: pointer;
       border: 1px solid #334155;
     }
-    .checkbox-label input {
-      width: auto;
-      margin-top: 0;
-      cursor: pointer;
-    }
-    .grupo-operativas input[type="text"] {
-      padding: 6px 8px;
-      font-size: 0.8rem;
-      margin-top: 2px;
-    }
-    .grupo-operativas label {
-      font-size: 0.75rem;
-      margin-top: 4px;
-    }
-
-    @media (max-width: 640px) {
-      body { padding: 8px; }
-      .header-title { font-size: 1.1rem; }
-      .logo-glow { max-height: 40px; }
-      .home-grid { grid-template-columns: 1fr; }
-      .card { padding: 12px; }
-    }
+    .checkbox-label input { width: auto; margin-top: 0; cursor: pointer; }
+    .grupo-operativas input[type="text"] { padding: 6px 8px; font-size: 0.8rem; margin-top: 2px; }
+    .grupo-operativas label { font-size: 0.75rem; margin-top: 4px; }
   </style>
 </head>
 <body>
-
-  <!-- INDICADOR PALPITANTE DE ALERTAS ACTIVAS (ESQUINA SUPERIOR DERECHA) -->
-  <div id="badge-alertas-top">
-    🚨 ALERTAS ACTIVAS: <span id="m-alertas-count">0</span>
-  </div>
 
   <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
   <div id="alerta-fullscreen">
@@ -405,54 +362,17 @@
         <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="logo-glow">
         <span class="header-title">Octagon</span>
       </div>
-      <button class="btn-action" onclick="abrirModal()">⚙️ Fichas Técnicas / OT</button>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn-action" onclick="abrirModalDesvio()" style="background: #dc2626;">🚨 Registrar Alerta / Desvío</button>
+        <button class="btn-action" onclick="abrirModal()">⚙️ Fichas Técnicas</button>
+      </div>
     </div>
 
     <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú</button>
 
-    <div id="banner-alerta">
-      <span id="titulo-alerta">🚨 ¡ALERTA DE DESVÍO!</span> <br>
-      <span id="detalle-alerta" style="font-size: 0.95rem; font-weight: normal;">---</span>
-    </div>
-
-    <!-- SISTEMA DE REPORTE DE ALERTAS Y DESVÍOS (FORMULARIO) -->
-    <div class="card" style="border: 1px solid #ef4444; background: rgba(30, 41, 59, 0.95);">
-      <h2 style="color: #fca5a5; border-bottom: 2px solid #ef4444;">🚨 Registro de Alertas y Desvíos de Calidad</h2>
-      
-      <div class="grid-3">
-        <div>
-          <label>Extrusora:</label>
-          <select id="alerta-extrusora" onchange="sincronizarOTAlerta()"></select>
-        </div>
-        <div>
-          <label>OT Activa:</label>
-          <select id="alerta-ot"></select>
-        </div>
-        <div>
-          <label>N° Bobina:</label>
-          <input type="number" id="alerta-bobina" placeholder="Ej: 14">
-        </div>
-      </div>
-
-      <div style="margin-top: 10px;">
-        <label>Tipo de Desvío:</label>
-        <select id="alerta-tipo-desvio">
-          <option value="Espesor Promedio">Espesor Promedio</option>
-          <option value="Circulo Micronométrico Sucio Realizar Limpieza al Equipo">Circulo Micronométrico Sucio Realizar Limpieza al Equipo</option>
-          <option value="Espesor Demasiado Bajo">Espesor Demasiado Bajo</option>
-          <option value="Espesor Demasiado Alto">Espesor Demasiado Alto</option>
-          <option value="Geles en Muestra">Geles en Muestra</option>
-          <option value="Piel de Naranja">Piel de Naranja</option>
-          <option value="Otro">Otro</option>
-        </select>
-      </div>
-
-      <div style="margin-top: 10px;">
-        <label>Comentarios / Observación:</label>
-        <textarea id="alerta-comentario" rows="2" placeholder="Agrega aquí detalles o comentarios adicionales sobre el desvío..."></textarea>
-      </div>
-
-      <button onclick="registrarAlertaDesvio()" style="background: #dc2626; font-size: 0.95rem; margin-top: 12px;">⚠️ Notificar Alerta de Desvío</button>
+    <!-- BANNER DE ALERTAS ACTIVAS EN EL MEDIO -->
+    <div id="banner-alertas-medio">
+      🚨 ¡ATENCIÓN! HAY <span id="m-alertas-count">0</span> ALERTAS ACTIVAS PENDIENTES DE CORRECCIÓN
     </div>
 
     <div class="card">
@@ -617,6 +537,55 @@
           </thead>
           <tbody id="tabla-log-extrusion"></tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- VENTANA FLOTANTE (MODAL) PARA REGISTRAR ALERTA/DESVÍO -->
+  <div class="modal-overlay" id="modal-desvios">
+    <div class="modal-content" style="border: 1px solid #ef4444;">
+      <div class="modal-header">
+        <h2 style="border:none; margin:0; color: #fca5a5; font-size: 1.1rem;">🚨 Registrar Alerta y Desvío de Calidad</h2>
+        <button class="btn-cerrar" onclick="cerrarModalDesvio()">✕ Cerrar</button>
+      </div>
+
+      <div>
+        <label>Tipo de Desvío:</label>
+        <select id="alerta-tipo-desvio" onchange="actualizarCamposDesvio()">
+          <option value="Espesor Promedio">Espesor Promedio</option>
+          <option value="Circulo Micronométrico Sucio, Realizar Limpieza al Equipo">Circulo Micronométrico Sucio, Realizar Limpieza al Equipo</option>
+          <option value="Geles en Muestra">Geles en Muestra</option>
+          <option value="Piel de Naranja">Piel de Naranja</option>
+          <option value="Otro">Otro</option>
+        </select>
+
+        <div class="grid-2" style="margin-top: 5px;">
+          <div>
+            <label>Extrusora:</label>
+            <select id="alerta-extrusora" onchange="sincronizarOTAlerta()"></select>
+          </div>
+          <div>
+            <label>OT Activa:</label>
+            <select id="alerta-ot"></select>
+          </div>
+        </div>
+
+        <div id="grupo-bobina" style="margin-top: 5px;">
+          <label>N° Bobina:</label>
+          <input type="number" id="alerta-bobina" placeholder="Ej: 14">
+        </div>
+
+        <div id="grupo-porcentaje" style="margin-top: 5px; display: none;">
+          <label>Porcentaje (%):</label>
+          <input type="number" step="0.1" id="alerta-porcentaje" placeholder="Ej: 5.5">
+        </div>
+
+        <div id="grupo-comentario" style="margin-top: 5px;">
+          <label>Comentario / Detalle:</label>
+          <textarea id="alerta-comentario" rows="2" placeholder="Agrega aquí detalles u observaciones..."></textarea>
+        </div>
+
+        <button onclick="registrarAlertaDesvio()" style="background: #dc2626; margin-top: 15px;">⚠️ Enviar Notificación de Alerta</button>
       </div>
     </div>
   </div>
@@ -800,6 +769,39 @@
       document.getElementById('modal-fichas').style.display = 'none'; 
       document.getElementById('mensaje-exito').style.display = 'none';
       cancelarEdicionFicha();
+    }
+
+    function abrirModalDesvio() {
+      document.getElementById('modal-desvios').style.display = 'flex';
+      actualizarCamposDesvio();
+    }
+    function cerrarModalDesvio() {
+      document.getElementById('modal-desvios').style.display = 'none';
+    }
+
+    // CONTROL DINÁMICO DE CAMPOS SEGÚN EL TIPO DE DESVÍO
+    function actualizarCamposDesvio() {
+      const tipo = document.getElementById('alerta-tipo-desvio').value;
+      const grupoBobina = document.getElementById('grupo-bobina');
+      const grupoPorcentaje = document.getElementById('grupo-porcentaje');
+      const grupoComentario = document.getElementById('grupo-comentario');
+
+      // Valores por defecto: ocultar todo
+      grupoBobina.style.display = 'none';
+      grupoPorcentaje.style.display = 'none';
+      grupoComentario.style.display = 'none';
+
+      if (tipo === 'Espesor Promedio') {
+        grupoBobina.style.display = 'block';
+        grupoComentario.style.display = 'block';
+      } else if (tipo === 'Circulo Micronométrico Sucio, Realizar Limpieza al Equipo') {
+        // Sin bobina ni comentario
+      } else if (tipo === 'Geles en Muestra' || tipo === 'Piel de Naranja') {
+        grupoBobina.style.display = 'block';
+        grupoPorcentaje.style.display = 'block';
+      } else if (tipo === 'Otro') {
+        grupoComentario.style.display = 'block';
+      }
     }
 
     function actualizarRangos() {
@@ -1020,7 +1022,6 @@
           renderListaModal();
         }
       } catch (e) {
-        console.warn("Error al guardar ficha en Firebase, guardando en LocalStorage:", e);
         const index = extrusoras.findIndex(e => e.id === idFormatted);
         if (index >= 0) extrusoras[index] = nuevaFicha;
         else extrusoras.push(nuevaFicha);
@@ -1035,7 +1036,6 @@
 
     async function eliminarExtrusora(id) {
       if (!confirm(`¿Eliminar la ficha técnica para la ${id}?`)) return;
-      
       try {
         if (window.fbMethods && window.db) {
           const { doc, deleteDoc } = window.fbMethods;
@@ -1057,13 +1057,25 @@
     async function registrarAlertaDesvio() {
       const extId = document.getElementById('alerta-extrusora').value;
       const ot = document.getElementById('alerta-ot').value;
-      const bobina = document.getElementById('alerta-bobina').value.trim();
       const tipoDesvio = document.getElementById('alerta-tipo-desvio').value;
+      const bobina = document.getElementById('alerta-bobina').value.trim();
+      const porcentaje = document.getElementById('alerta-porcentaje').value.trim();
       const comentario = document.getElementById('alerta-comentario').value.trim();
       const operador = document.getElementById('input-operador').value.trim() || "Octagon";
       const turno = document.getElementById('input-turno').value;
 
-      if (!bobina) return alert('Por favor ingresa el N° de Bobina');
+      let detalleExtra = ` | OT: ${ot}`;
+      if (tipoDesvio === 'Espesor Promedio') {
+        if (!bobina) return alert('Por favor ingresa el N° de Bobina');
+        detalleExtra += ` | Bobina #${bobina}`;
+        if (comentario) detalleExtra += ` | Obs: ${comentario}`;
+      } else if (tipoDesvio === 'Geles en Muestra' || tipoDesvio === 'Piel de Naranja') {
+        if (!bobina) return alert('Por favor ingresa el N° de Bobina');
+        if (!porcentaje) return alert('Por favor ingresa el porcentaje (%)');
+        detalleExtra += ` | Bobina #${bobina} | Porcentaje: ${porcentaje}%`;
+      } else if (tipoDesvio === 'Otro') {
+        if (comentario) detalleExtra += ` | Obs: ${comentario}`;
+      }
 
       const registro = {
         timestamp: Date.now(),
@@ -1071,12 +1083,12 @@
         operador,
         turno,
         id: extId,
-        producto: `${ot} | Bobina #${bobina}`,
+        producto: detalleExtra,
         valorMedido: 0,
         pesoMedido: 0,
         fueraDeRango: true,
         corregido: false,
-        alertaTipo: `⚠️ ${tipoDesvio}${comentario ? ': ' + comentario : ''}`
+        alertaTipo: `⚠️ ${tipoDesvio}`
       };
 
       try {
@@ -1091,15 +1103,16 @@
         }
 
         document.getElementById('alerta-bobina').value = '';
+        document.getElementById('alerta-porcentaje').value = '';
         document.getElementById('alerta-comentario').value = '';
+        cerrarModalDesvio();
         alert('⚠️ Alerta enviada con éxito');
       } catch (e) {
         historial.unshift(registro);
         guardarHistorialLocal();
         renderHistorial();
         lanzarAlerta(registro);
-        document.getElementById('alerta-bobina').value = '';
-        document.getElementById('alerta-comentario').value = '';
+        cerrarModalDesvio();
         alert('⚠️ Alerta enviada con éxito');
       }
     }
@@ -1214,24 +1227,24 @@
       }
     }
 
-    function actualizarBadgeAlertasTop() {
+    function actualizarBannerAlertasMedio() {
       const alertasCount = historial.filter(r => r.fueraDeRango).length;
-      const badge = document.getElementById('badge-alertas-top');
+      const banner = document.getElementById('banner-alertas-medio');
       const countEl = document.getElementById('m-alertas-count');
 
       if (countEl) countEl.innerText = alertasCount;
 
-      if (badge) {
+      if (banner) {
         if (alertasCount > 0) {
-          badge.style.display = 'block';
+          banner.style.display = 'block';
         } else {
-          badge.style.display = 'none';
+          banner.style.display = 'none';
         }
       }
     }
 
     function renderHistorial() {
-      actualizarBadgeAlertasTop();
+      actualizarBannerAlertasMedio();
 
       const fExt = (document.getElementById('filtro-extrusora') || {}).value || "TODAS";
       const fEst = (document.getElementById('filtro-estado') || {}).value || "TODOS";
@@ -1318,21 +1331,13 @@
         if (fsAlerta) {
           document.getElementById('fs-extrusora-header').innerText = `CORREGIR EXTRUSORA ${reg.id}`;
           document.getElementById('fs-titulo').innerText = reg.alertaTipo;
-          document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | OT / Producto: ${reg.producto}\nOperador: ${reg.operador}`;
+          document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | Detalle: ${reg.producto}\nOperador: ${reg.operador}`;
           fsAlerta.style.display = 'flex';
 
           if (timerAlertaFullscreen) clearTimeout(timerAlertaFullscreen);
           timerAlertaFullscreen = setTimeout(() => {
             cerrarAlertaFullscreen();
           }, 30000);
-        }
-      } else if (vistaActual === 'octagon') {
-        const banner = document.getElementById('banner-alerta');
-        if (banner) {
-          document.getElementById('titulo-alerta').innerText = reg.alertaTipo;
-          document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id} -> ${reg.producto}`;
-          banner.style.display = 'block';
-          setTimeout(() => { banner.style.display = 'none'; }, 10000);
         }
       }
     }
@@ -1372,12 +1377,8 @@
       img.crossOrigin = 'Anonymous';
       img.src = 'https://iili.io/nw6Sq0v.png';
 
-      img.onload = () => {
-        dibujarPDF(doc, img);
-      };
-      img.onerror = () => {
-        dibujarPDF(doc, null);
-      };
+      img.onload = () => { dibujarPDF(doc, img); };
+      img.onerror = () => { dibujarPDF(doc, null); };
     }
 
     function dibujarPDF(doc, img) {
@@ -1530,7 +1531,6 @@
         if (!window.fbMethods || !window.db) throw new Error("Firebase no inicializado");
         const { collection, onSnapshot, query, orderBy, limit } = window.fbMethods;
         
-        // 1. Escuchador de Mediciones
         const qMediciones = query(collection(window.db, "mediciones"), orderBy("timestamp", "desc"), limit(50));
         onSnapshot(qMediciones, (snapshot) => {
           const nuevosDatos = [];
@@ -1545,17 +1545,12 @@
             lanzarAlerta(historial[0]);
           }
           primerCarga = false;
-        }, (error) => {
-          usarHistorialLocal();
-        });
+        }, (error) => { usarHistorialLocal(); });
 
-        // 2. Escuchador de Fichas Técnicas
         const qFichas = collection(window.db, "fichas");
         onSnapshot(qFichas, (snapshot) => {
           const nuevasFichas = [];
-          snapshot.forEach((doc) => {
-            nuevasFichas.push(doc.data());
-          });
+          snapshot.forEach((doc) => { nuevasFichas.push(doc.data()); });
           if (nuevasFichas.length > 0) {
             extrusoras = nuevasFichas;
             localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
@@ -1563,10 +1558,7 @@
             renderListaModal();
           }
         });
-
-      } catch (e) {
-        usarHistorialLocal();
-      }
+      } catch (e) { usarHistorialLocal(); }
     }
 
     function usarHistorialLocal() {
