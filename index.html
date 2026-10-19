@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Control de Calidad - Planta</title>
   
-  <!-- Librería externa para exportar a PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Firebase SDKs (v10 Compat) para Sincronización en Tiempo Real -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -27,6 +25,15 @@
     try {
       firebase.initializeApp(firebaseConfig);
       window.db = firebase.firestore();
+      window.rtdb = firebase.database();
+      
+      // Forzar conexión de red
+      window.db.enableNetwork().then(() => {
+        console.log("✅ Firestore red habilitada");
+      }).catch(err => {
+        console.error("❌ Error habilitando red Firestore:", err);
+      });
+      
       console.log("✅ Firebase inicializado correctamente");
     } catch (err) {
       console.error("❌ Error al inicializar Firebase:", err);
@@ -50,6 +57,57 @@
     
     .view-section { display: none; }
     .view-section.active { display: block; }
+
+    /* INDICADOR DE CONEXIÓN */
+    #connection-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    #connection-status.connected {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid #22c55e;
+    }
+    #connection-status.disconnected {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid #ef4444;
+    }
+    #connection-status.connecting {
+      background: rgba(234, 179, 8, 0.2);
+      color: #fde047;
+      border: 1px solid #eab308;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .connected .status-dot {
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      animation: pulse 2s infinite;
+    }
+    .disconnected .status-dot {
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
+    }
+    .connecting .status-dot {
+      background: #eab308;
+      box-shadow: 0 0 8px #eab308;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
 
     #banner-offline {
       display: none;
@@ -103,7 +161,7 @@
       border-bottom: 2px solid #334155; 
       padding-bottom: 12px; 
     }
-    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .header-title { font-size: 1.3rem; font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
 
     .logo-glow { 
@@ -243,12 +301,12 @@
       .logo-glow { max-height: 40px; }
       .home-grid { grid-template-columns: 1fr; }
       .card { padding: 12px; }
+      #connection-status { font-size: 0.7rem; padding: 3px 8px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
   <div id="alerta-fullscreen">
     <h1 style="font-size: 1.6rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
     <h1 id="fs-titulo" style="font-size: 2rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
@@ -256,7 +314,6 @@
     <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: 1.1rem; padding: 12px 25px; width: auto; border-radius: 8px; cursor: pointer; font-weight: bold;">Silenciar y Cerrar Alerta</button>
   </div>
 
-  <!-- VISTA 1: HOME -->
   <div id="view-home" class="view-section active">
     <div id="banner-offline">
       ℹ️ Sistema activo en Modo Respaldo / Sincronización Local (Sin conexión a Firebase).
@@ -278,12 +335,15 @@
     </div>
   </div>
 
-  <!-- VISTA 2: OCTAGON -->
   <div id="view-octagon" class="view-section">
     <div class="header">
       <div class="header-left">
         <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="logo-glow">
         <span class="header-title">Octagon</span>
+        <div id="connection-status" class="connecting">
+          <span class="status-dot"></span>
+          <span id="connection-text">Conectando...</span>
+        </div>
       </div>
       <button class="btn-action" onclick="abrirModal()">⚙️ Fichas Técnicas / OT</button>
     </div>
@@ -359,12 +419,15 @@
     </div>
   </div>
 
-  <!-- VISTA 3: EXTRUSIÓN -->
   <div id="view-extrusion" class="view-section">
     <div class="header">
       <div class="header-left">
         <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="logo-glow">
         <span class="header-title">Extrusión</span>
+        <div id="connection-status-2" class="connecting">
+          <span class="status-dot"></span>
+          <span id="connection-text-2">Conectando...</span>
+        </div>
       </div>
       <span style="color: #38bdf8; font-weight: bold; font-size: 0.9rem;">EN TIEMPO REAL</span>
     </div>
@@ -394,7 +457,6 @@
     </div>
   </div>
 
-  <!-- MODAL DE FICHAS TÉCNICAS -->
   <div class="modal-overlay" id="modal-fichas">
     <div class="modal-content">
       <div class="modal-header">
@@ -671,26 +733,21 @@
         lanzarAlerta(registro);
       }
 
-      // Sincronización con Firebase
       if (window.db && !window.useLocalFallback) {
         try {
+          console.log("📤 Enviando dato a Firebase...");
           const docRef = await window.db.collection("mediciones").add(registro);
+          console.log("✅ Dato enviado a Firebase con ID:", docRef.id);
           
           const localIndex = historial.findIndex(h => h.docId === registro.docId);
           if (localIndex !== -1) {
             historial[localIndex].docId = docRef.id;
             guardarHistorialLocal();
           }
-          console.log("✅ Medida sincronizada con Firebase:", docRef.id);
         } catch (e) {
-          console.error("❌ Error al sincronizar con Firebase:", e);
-          window.useLocalFallback = true;
-          document.getElementById('banner-offline').style.display = 'block';
-          alert("⚠️ No se pudo conectar a Firebase. Los datos se guardaron solo localmente.");
+          console.error("❌ Error al enviar a Firebase:", e);
+          alert("⚠️ Error al sincronizar con Firebase:\n\n" + e.message + "\n\nVerifica que Firestore esté habilitado en la consola de Firebase y que las reglas estén configuradas correctamente.");
         }
-      } else if (!window.db) {
-        console.warn("⚠️ Firebase no está inicializado. Operando en modo local.");
-        document.getElementById('banner-offline').style.display = 'block';
       }
 
       document.getElementById('val-medida').value = '';
@@ -702,6 +759,7 @@
 
       if (window.db && !window.useLocalFallback) {
         try {
+          console.log("🗑️ Limpiando historial en Firebase...");
           const snapshot = await window.db.collection("mediciones").get();
           const batch = window.db.batch();
           snapshot.docs.forEach((doc) => {
@@ -729,11 +787,12 @@
       
       if (window.db && !docId.startsWith('local_') && !window.useLocalFallback) {
         try {
+          console.log("✅ Corrigiendo error en Firebase:", docId);
           await window.db.collection("mediciones").doc(docId).update({
             corregido: true,
             fueraDeRango: false
           });
-          console.log("✅ Error corregido en Firebase:", docId);
+          console.log("✅ Error corregido en Firebase");
         } catch(e) {
           console.error("❌ Error actualizando en Firebase:", e);
         }
@@ -956,21 +1015,60 @@
       }
     }
 
+    function actualizarEstadoConexion(estado) {
+      const status1 = document.getElementById('connection-status');
+      const status2 = document.getElementById('connection-status-2');
+      const text1 = document.getElementById('connection-text');
+      const text2 = document.getElementById('connection-text-2');
+      
+      [status1, status2].forEach(status => {
+        if (status) {
+          status.className = estado;
+        }
+      });
+      
+      const textos = {
+        'connected': 'Conectado en Tiempo Real',
+        'disconnected': 'Desconectado',
+        'connecting': 'Conectando...'
+      };
+      
+      [text1, text2].forEach(text => {
+        if (text) {
+          text.textContent = textos[estado] || 'Desconocido';
+        }
+      });
+    }
+
     function iniciarSincronizacionFirebase() {
       if (!window.db || window.useLocalFallback) {
         console.warn("⚠️ Firebase no disponible. Usando modo local.");
-        document.getElementById('banner-offline').style.display = 'block';
-        renderHistorial();
+        actualizarEstadoConexion('disconnected');
         return;
       }
       
       console.log("🔄 Iniciando sincronización en tiempo real con Firebase...");
+      actualizarEstadoConexion('connecting');
       
+      // Verificar conectividad usando Realtime Database
+      if (window.rtdb) {
+        window.rtdb.ref('.info/connected').on('value', (snapshot) => {
+          if (snapshot.val() === true) {
+            console.log("🌐 Conexión a Firebase establecida");
+            actualizarEstadoConexion('connected');
+          } else {
+            console.warn("⚠️ Sin conexión a Firebase");
+            actualizarEstadoConexion('disconnected');
+          }
+        });
+      }
+      
+      // Listener de Firestore en tiempo real
       window.db.collection("mediciones")
         .orderBy("timestamp", "desc")
         .limit(50)
         .onSnapshot((snapshot) => {
-          console.log("📡 Recibiendo datos de Firebase...");
+          console.log("📡 Recibiendo datos de Firebase -", snapshot.docs.length, "documentos");
           
           const nuevosDatos = [];
           snapshot.forEach((doc) => {
@@ -989,9 +1087,14 @@
           primerCarga = false;
         }, (error) => {
           console.error("❌ Error de sincronización en tiempo real:", error);
-          window.useLocalFallback = true;
-          document.getElementById('banner-offline').style.display = 'block';
-          renderHistorial();
+          console.error("Detalles del error:", error.code, error.message);
+          actualizarEstadoConexion('disconnected');
+          
+          if (error.code === 'permission-denied') {
+            alert("⚠️ Error de permisos en Firebase.\n\nPor favor verifica que las reglas de Firestore estén configuradas correctamente.\n\nCódigo: " + error.code);
+          } else if (error.code === 'unavailable') {
+            alert("⚠️ Firestore no está disponible.\n\nPosibles causas:\n1. Firestore no está habilitado en la consola\n2. Las reglas están bloqueando el acceso\n\nCódigo: " + error.code);
+          }
         });
     }
 
@@ -1004,8 +1107,8 @@
       if (window.db) {
         iniciarSincronizacionFirebase();
       } else {
-        console.warn("⚠️ Firebase no inicializado. Esperando...");
-        document.getElementById('banner-offline').style.display = 'block';
+        console.warn("⚠️ Firebase no inicializado");
+        actualizarEstadoConexion('disconnected');
       }
     };
   </script>
