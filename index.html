@@ -131,6 +131,19 @@
       filter: drop-shadow(0 0 8px #22c55e); 
     }
 
+    /* MEJORA 1: Logo principal responsivo para móviles */
+    .home-main-logo { 
+      max-width: 85%; 
+      max-height: 100px; 
+      width: auto; 
+      height: auto; 
+      filter: drop-shadow(0 0 10px #22c55e); 
+      margin-bottom: 10px;
+    }
+    @media (max-width: 640px) {
+      .home-main-logo { max-height: 80px; }
+    }
+
     .btn-action { 
       background: #475569; 
       width: auto; 
@@ -263,9 +276,10 @@
 
   <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
   <div id="alerta-fullscreen">
-    <h1 style="font-size: 1.8rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
-    <h1 id="fs-titulo" style="font-size: 2.2rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
-    <p id="fs-detalle" style="font-size: 1.2rem; margin: 0 0 25px 0; max-width: 100%; line-height: 1.4;">---</p>
+    <h1 style="font-size: 1.6rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
+    <h1 id="fs-titulo" style="font-size: 2rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
+    <!-- MEJORA 3: Contenedor con formato HTML para mejor diferenciación de errores -->
+    <div id="fs-detalle" style="font-size: 1.1rem; margin: 0 0 25px 0; max-width: 100%; line-height: 1.5; white-space: normal;"></div>
     <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: 1.1rem; padding: 12px 25px; width: auto; border-radius: 8px; cursor: pointer; font-weight: bold;">Silenciar y Cerrar Alerta</button>
   </div>
 
@@ -275,7 +289,8 @@
       ℹ️ Sistema activo en Modo Respaldo / Sincronización Local.
     </div>
     <div class="home-container">
-      <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="logo-glow" style="max-height: 90px; margin-bottom: 10px;">
+      <!-- MEJORA 1: Clase actualizada para responsividad -->
+      <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="home-main-logo">
       <h1 style="color: #38bdf8; font-size: 1.5rem; margin: 0;">Control de Calidad en Tiempo Real</h1>
       <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Selecciona el puesto de trabajo para comenzar</p>
       
@@ -709,7 +724,7 @@ service cloud.firestore {
       const pesoFuera = pesoMedido < ext.minPeso || pesoMedido > ext.maxPeso;
       const fueraDeRango = anchoFuera || pesoFuera;
 
-      let mensajeAlertaTipo = "";
+      let mensajeAlertaTipo = "✅ Medición Dentro de Rango";
       if (anchoFuera && pesoFuera) {
         mensajeAlertaTipo = "⚠️ Ancho y Peso Fuera de Rango";
       } else if (anchoFuera) {
@@ -718,6 +733,7 @@ service cloud.firestore {
         mensajeAlertaTipo = `🚨 Peso Fuera de Rango (${pesoMedido} gr)`;
       }
 
+      // MEJORA 3 y 4: Guardamos todos los datos de referencia en el registro para la alerta y el historial
       const registro = {
         timestamp: Date.now(),
         hora: new Date().toLocaleTimeString('es-CL'),
@@ -729,15 +745,39 @@ service cloud.firestore {
         pesoMedido,
         fueraDeRango,
         corregido: false,
-        alertaTipo: mensajeAlertaTipo
+        alertaTipo: mensajeAlertaTipo,
+        targetAncho: ext.ancho,
+        minAncho: ext.minAncho,
+        maxAncho: ext.maxAncho,
+        targetPeso: ext.pesoIdeal,
+        minPeso: ext.minPeso,
+        maxPeso: ext.maxPeso,
+        anchoFuera: anchoFuera,
+        pesoFuera: pesoFuera
       };
 
-      let firebaseExito = false;
+      // CORRECCIÓN BUG CRÍTICO: Actualización optimista (se muestra al instante)
+      registro.docId = 'local_' + Date.now();
+      historial.unshift(registro);
+      guardarHistorialLocal();
+      renderHistorial();
+      
+      if (registro.fueraDeRango) {
+        lanzarAlerta(registro);
+      }
+
+      // Sincronización en segundo plano con Firebase
       if (window.db && window.fbMethods && !window.useLocalFallback) {
         try {
           const { collection, addDoc } = window.fbMethods;
-          await addDoc(collection(window.db, "mediciones"), registro);
-          firebaseExito = true;
+          const docRef = await addDoc(collection(window.db, "mediciones"), registro);
+          
+          // Actualizamos el ID temporal por el real de Firebase
+          const localIndex = historial.findIndex(h => h.docId === registro.docId);
+          if (localIndex !== -1) {
+            historial[localIndex].docId = docRef.id;
+            guardarHistorialLocal();
+          }
         } catch (e) {
           console.warn("Firestore inaccesible. Modo local activo:", e.message);
           window.useLocalFallback = true;
@@ -745,19 +785,14 @@ service cloud.firestore {
         }
       }
 
-      if (!firebaseExito) {
-        registro.docId = 'local_' + Date.now();
-        historial.unshift(registro);
-        guardarHistorialLocal();
-        renderHistorial();
-        if (registro.fueraDeRango) lanzarAlerta(registro);
-      }
-
       document.getElementById('val-medida').value = '';
       document.getElementById('val-peso').value = '';
     }
 
     async function limpiarHistorial() {
+      // CORRECCIÓN: Confirmación para evitar borrados accidentales
+      if (!confirm("¿Estás seguro de que deseas borrar TODO el historial? Esta acción no se puede deshacer.")) return;
+
       if (window.db && window.fbMethods && !window.useLocalFallback) {
         try {
           const { collection, getDocs, deleteDoc, doc } = window.fbMethods;
@@ -774,6 +809,16 @@ service cloud.firestore {
     }
 
     async function corregirError(docId) {
+      // CORRECCIÓN: Actualización optimista local inmediata
+      const regIndex = historial.findIndex(item => item.docId === docId);
+      if (regIndex !== -1) {
+        historial[regIndex].corregido = true;
+        historial[regIndex].fueraDeRango = false;
+        guardarHistorialLocal();
+        renderHistorial();
+      }
+      
+      // Sincronización en segundo plano con Firebase
       if (window.db && window.fbMethods && !docId.startsWith('local_') && !window.useLocalFallback) {
         try {
           const { doc, updateDoc } = window.fbMethods;
@@ -782,18 +827,9 @@ service cloud.firestore {
             corregido: true,
             fueraDeRango: false
           });
-          return;
         } catch(e) {
           console.warn("Error actualizando en Firebase:", e);
         }
-      }
-      
-      const reg = historial.find(item => item.docId === docId);
-      if (reg) {
-        reg.corregido = true;
-        reg.fueraDeRango = false;
-        guardarHistorialLocal();
-        renderHistorial();
       }
     }
 
@@ -859,15 +895,35 @@ service cloud.firestore {
       const banner = document.getElementById('banner-alerta');
       if (banner) {
         document.getElementById('titulo-alerta').innerText = reg.alertaTipo;
-        document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id} -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr`;
+        document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id}`;
         banner.style.display = 'block';
         setTimeout(() => { banner.style.display = 'none'; }, 10000);
       }
 
+      // MEJORA 2: La alerta de pantalla completa SOLO aparece si estamos en el módulo de extrusión
+      const isExtrusionView = document.getElementById('view-extrusion').classList.contains('active');
       const fsAlerta = document.getElementById('alerta-fullscreen');
-      if (fsAlerta) {
+      
+      if (fsAlerta && isExtrusionView) {
         document.getElementById('fs-titulo').innerText = reg.alertaTipo;
-        document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | Producto: ${reg.producto}\nMedido -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr\nOperador: ${reg.operador}`;
+        
+        // MEJORA 3: Detalle visual claro comparando medido vs objetivo
+        const anchoIcon = reg.anchoFuera ? '❌' : '✅';
+        const anchoColor = reg.anchoFuera ? '#fca5a5' : '#4ade80';
+        
+        const pesoIcon = reg.pesoFuera ? '❌' : '✅';
+        const pesoColor = reg.pesoFuera ? '#fca5a5' : '#4ade80';
+
+        let detalleHTML = `<strong>Extrusora:</strong> ${reg.id} | <strong>Producto:</strong> ${reg.producto}<br>`;
+        detalleHTML += `<strong>Operador:</strong> ${reg.operador} (${reg.turno})<br><br>`;
+        
+        detalleHTML += `<span style="color:${anchoColor}; font-size: 1.2rem;"><strong>Ancho:</strong> ${reg.valorMedido} cm ${anchoIcon}</span><br>`;
+        detalleHTML += `<span style="font-size:0.95rem; color:#cbd5e1;">(Objetivo: ${reg.targetAncho} cm | Rango: ${reg.minAncho} - ${reg.maxAncho} cm)</span><br><br>`;
+
+        detalleHTML += `<span style="color:${pesoColor}; font-size: 1.2rem;"><strong>Peso:</strong> ${reg.pesoMedido} gr ${pesoIcon}</span><br>`;
+        detalleHTML += `<span style="font-size:0.95rem; color:#cbd5e1;">(Objetivo: ${reg.targetPeso} gr | Rango: ${reg.minPeso} - ${reg.maxPeso} gr)</span>`;
+
+        document.getElementById('fs-detalle').innerHTML = detalleHTML;
         fsAlerta.style.display = 'flex';
       }
     }
@@ -982,6 +1038,9 @@ service cloud.firestore {
         snapshot.forEach((doc) => {
           nuevosDatos.push({ docId: doc.id, ...doc.data() });
         });
+
+        // Ordenar localmente por seguridad
+        nuevosDatos.sort((a, b) => b.timestamp - a.timestamp);
 
         historial = nuevosDatos;
         guardarHistorialLocal();
