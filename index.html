@@ -5,12 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Control de Calidad - Planta</title>
   
+  <!-- Librería externa para exportar a PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-  <script>
+  <!-- SDKs de Firebase (v10) para Sincronización en Tiempo Real -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      onSnapshot, 
+      doc, 
+      updateDoc, 
+      deleteDoc, 
+      getDocs, 
+      query, 
+      orderBy, 
+      limit 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyAT-1T7ldwa89OYwITwkiuYqaoP58Cl9Tw",
       authDomain: "calidadextrusion-d9f60.firebaseapp.com",
@@ -23,20 +37,16 @@
     };
 
     try {
-      firebase.initializeApp(firebaseConfig);
-      window.db = firebase.firestore();
-      window.rtdb = firebase.database();
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      window.db = db;
+      window.fbMethods = { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, getDocs, query, orderBy, limit };
       
-      // Forzar conexión de red
-      window.db.enableNetwork().then(() => {
-        console.log("✅ Firestore red habilitada");
-      }).catch(err => {
-        console.error("❌ Error habilitando red Firestore:", err);
-      });
-      
-      console.log("✅ Firebase inicializado correctamente");
+      if (typeof window.iniciarSincronizacionFirebase === 'function') {
+        window.iniciarSincronizacionFirebase();
+      }
     } catch (err) {
-      console.error("❌ Error al inicializar Firebase:", err);
+      console.warn("Error al inicializar Firebase, operando en modo local:", err);
       window.useLocalFallback = true;
     }
   </script>
@@ -58,57 +68,7 @@
     .view-section { display: none; }
     .view-section.active { display: block; }
 
-    /* INDICADOR DE CONEXIÓN */
-    #connection-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-left: 10px;
-    }
-    #connection-status.connected {
-      background: rgba(34, 197, 94, 0.2);
-      color: #4ade80;
-      border: 1px solid #22c55e;
-    }
-    #connection-status.disconnected {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border: 1px solid #ef4444;
-    }
-    #connection-status.connecting {
-      background: rgba(234, 179, 8, 0.2);
-      color: #fde047;
-      border: 1px solid #eab308;
-    }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-    .connected .status-dot {
-      background: #22c55e;
-      box-shadow: 0 0 8px #22c55e;
-      animation: pulse 2s infinite;
-    }
-    .disconnected .status-dot {
-      background: #ef4444;
-      box-shadow: 0 0 8px #ef4444;
-    }
-    .connecting .status-dot {
-      background: #eab308;
-      box-shadow: 0 0 8px #eab308;
-      animation: pulse 1s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
+    /* BANNERS Y ALERTAS */
     #banner-offline {
       display: none;
       background: #334155;
@@ -151,6 +111,7 @@
     }
     @keyframes pulsoAlerta { from { background: #dc2626; } to { background: #991b1b; } }
 
+    /* HEADER & NAVEGACIÓN */
     .header { 
       display: flex; 
       flex-wrap: wrap;
@@ -161,25 +122,13 @@
       border-bottom: 2px solid #334155; 
       padding-bottom: 12px; 
     }
-    .header-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
     .header-title { font-size: 1.3rem; font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
 
     .logo-glow { 
       max-height: 50px; 
       width: auto; 
       filter: drop-shadow(0 0 8px #22c55e); 
-    }
-
-    .home-main-logo { 
-      max-width: 85%; 
-      max-height: 100px; 
-      width: auto; 
-      height: auto; 
-      filter: drop-shadow(0 0 10px #22c55e); 
-      margin-bottom: 10px;
-    }
-    @media (max-width: 640px) {
-      .home-main-logo { max-height: 80px; }
     }
 
     .btn-action { 
@@ -231,6 +180,7 @@
     }
     button:hover { background: #0369a1; }
     
+    /* VISTA HOME */
     .home-container { 
       display: flex; 
       flex-direction: column; 
@@ -248,23 +198,24 @@
       margin-top: 25px; 
     }
     .home-card { 
-      background: transparent; 
-      border: none;
+      background: #1e293b; 
+      border: 1px solid #334155;
       border-radius: 16px;
-      padding: 15px; 
+      padding: 25px 15px; 
       cursor: pointer; 
-      transition: transform 0.2s, opacity 0.2s; 
+      transition: transform 0.2s, background-color 0.2s; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
     }
     .home-card:active, .home-card:hover { 
-      transform: scale(1.05); 
-      opacity: 0.8;
+      transform: scale(1.03); 
+      background: #334155;
     }
     .home-logo { max-height: 120px; width: auto; filter: drop-shadow(0 0 10px #22c55e); }
 
+    /* TABLAS Y MÓVIL RESPONSIVE */
     .table-responsive {
       width: 100%;
       overflow-x: auto;
@@ -283,6 +234,7 @@
     .btn-corregir { background: #16a34a; padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 4px; }
     .btn-corregir:hover { background: #15803d; }
 
+    /* MODAL FICHAS & REGLAS */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; padding: 10px; box-sizing: border-box; }
     .modal-content { background: #1e293b; width: 100%; max-width: 650px; padding: 20px; border-radius: 12px; border: 1px solid #475569; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 12px; }
@@ -291,6 +243,9 @@
     .item-extrusora { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #334155; font-size: 0.85rem; }
     .btn-borrar { background: #ef4444; width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; }
 
+    pre { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 8px; color: #38bdf8; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
+
+    /* REJILLAS MÓVILES FLUIDAS */
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
@@ -301,49 +256,53 @@
       .logo-glow { max-height: 40px; }
       .home-grid { grid-template-columns: 1fr; }
       .card { padding: 12px; }
-      #connection-status { font-size: 0.7rem; padding: 3px 8px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
   <div id="alerta-fullscreen">
-    <h1 style="font-size: 1.6rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
-    <h1 id="fs-titulo" style="font-size: 2rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
-    <div id="fs-detalle" style="font-size: 1.1rem; margin: 0 0 25px 0; max-width: 100%; line-height: 1.5; white-space: normal;"></div>
+    <h1 style="font-size: 1.8rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
+    <h1 id="fs-titulo" style="font-size: 2.2rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
+    <p id="fs-detalle" style="font-size: 1.2rem; margin: 0 0 25px 0; max-width: 100%; line-height: 1.4;">---</p>
     <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: 1.1rem; padding: 12px 25px; width: auto; border-radius: 8px; cursor: pointer; font-weight: bold;">Silenciar y Cerrar Alerta</button>
   </div>
 
+  <!-- VISTA 1: HOME -->
   <div id="view-home" class="view-section active">
     <div id="banner-offline">
-      ℹ️ Sistema activo en Modo Respaldo / Sincronización Local (Sin conexión a Firebase).
+      ℹ️ Sistema activo en Modo Respaldo / Sincronización Local.
     </div>
     <div class="home-container">
-      <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="home-main-logo">
+      <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="logo-glow" style="max-height: 90px; margin-bottom: 10px;">
       <h1 style="color: #38bdf8; font-size: 1.5rem; margin: 0;">Control de Calidad en Tiempo Real</h1>
       <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Selecciona el puesto de trabajo para comenzar</p>
       
       <div class="home-grid">
         <div class="home-card" onclick="cambiarVista('octagon')">
           <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="home-logo">
+          <span style="margin-top: 10px; font-weight: bold; color: #38bdf8;">Módulo Octagon</span>
         </div>
 
         <div class="home-card" onclick="cambiarVista('extrusion')">
           <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="home-logo">
+          <span style="margin-top: 10px; font-weight: bold; color: #38bdf8;">Módulo Extrusión</span>
         </div>
+      </div>
+
+      <div style="margin-top: 30px;">
+        <button class="btn-action" onclick="abrirModalReglas()" style="background: #334155;">🔥 Ver Reglas de Firebase</button>
       </div>
     </div>
   </div>
 
+  <!-- VISTA 2: OCTAGON -->
   <div id="view-octagon" class="view-section">
     <div class="header">
       <div class="header-left">
         <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="logo-glow">
         <span class="header-title">Octagon</span>
-        <div id="connection-status" class="connecting">
-          <span class="status-dot"></span>
-          <span id="connection-text">Conectando...</span>
-        </div>
       </div>
       <button class="btn-action" onclick="abrirModal()">⚙️ Fichas Técnicas / OT</button>
     </div>
@@ -419,15 +378,12 @@
     </div>
   </div>
 
+  <!-- VISTA 3: EXTRUSIÓN -->
   <div id="view-extrusion" class="view-section">
     <div class="header">
       <div class="header-left">
         <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="logo-glow">
         <span class="header-title">Extrusión</span>
-        <div id="connection-status-2" class="connecting">
-          <span class="status-dot"></span>
-          <span id="connection-text-2">Conectando...</span>
-        </div>
       </div>
       <span style="color: #38bdf8; font-weight: bold; font-size: 0.9rem;">EN TIEMPO REAL</span>
     </div>
@@ -457,6 +413,7 @@
     </div>
   </div>
 
+  <!-- MODAL DE FICHAS TÉCNICAS -->
   <div class="modal-overlay" id="modal-fichas">
     <div class="modal-content">
       <div class="modal-header">
@@ -530,6 +487,48 @@
     </div>
   </div>
 
+  <!-- MODAL DE REGLAS DE FIREBASE -->
+  <div class="modal-overlay" id="modal-reglas">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 style="border:none; margin:0; font-size: 1.1rem; color:#38bdf8;">🔥 Reglas de Seguridad para Firebase</h2>
+        <button class="btn-cerrar" onclick="cerrarModalReglas()">✕ Cerrar</button>
+      </div>
+
+      <p style="font-size:0.9rem; color:#cbd5e1; line-height:1.5;">
+        Para permitir que la aplicación lea y escriba datos en tiempo real sin pedir inicio de sesión, debes pegar las siguientes reglas en la consola de Firebase:
+      </p>
+
+      <ol style="font-size:0.85rem; color:#94a3b8; padding-left: 20px; line-height: 1.6;">
+        <li>Entra a tu consola de Firebase: <a href="https://console.firebase.google.com/" target="_blank" style="color:#38bdf8;">console.firebase.google.com</a></li>
+        <li>Abre tu proyecto <strong>calidadextrusion-d9f60</strong>.</li>
+        <li>En el menú lateral, ve a <strong>Firestore Database</strong>.</li>
+        <li>Haz clic en la pestaña <strong>Reglas (Rules)</strong> en la parte superior.</li>
+        <li>Reemplaza todo el texto que veas por el siguiente bloque de código:</li>
+      </ol>
+
+<pre>
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+</pre>
+
+      <p style="font-size:0.85rem; color:#cbd5e1;">
+        6. Haz clic en el botón azul <strong>Publicar (Publish)</strong>.
+      </p>
+
+      <button onclick="copiarReglas()" style="background:#0284c7; margin-top:10px;">📋 Copiar Reglas al Portapapeles</button>
+      <div id="mensaje-copia" style="display:none; text-align:center; color:#4ade80; font-size:0.85rem; margin-top:6px;">
+        ¡Copiado al portapapeles!
+      </div>
+    </div>
+  </div>
+
   <script>
     let extrusoras = JSON.parse(localStorage.getItem('extrusoras')) || [
       { id: 'EXT-09', producto: '54x50 (OT: 18489)', ancho: 54.0, tolAncho: 0.5, minAncho: 53.5, maxAncho: 54.5, pesoIdeal: 12.0, tolPeso: 1.0, minPeso: 11.0, maxPeso: 13.0 }
@@ -553,6 +552,23 @@
     function cerrarModal() { 
       document.getElementById('modal-fichas').style.display = 'none'; 
       document.getElementById('mensaje-exito').style.display = 'none';
+    }
+
+    function abrirModalReglas() { document.getElementById('modal-reglas').style.display = 'flex'; }
+    function cerrarModalReglas() { document.getElementById('modal-reglas').style.display = 'none'; }
+
+    function copiarReglas() {
+      const codigo = `rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if true;\n    }\n  }\n}`;
+      const el = document.createElement('textarea');
+      el.value = codigo;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      
+      const msg = document.getElementById('mensaje-copia');
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 3000);
     }
 
     function actualizarRangos() {
@@ -693,7 +709,7 @@
       const pesoFuera = pesoMedido < ext.minPeso || pesoMedido > ext.maxPeso;
       const fueraDeRango = anchoFuera || pesoFuera;
 
-      let mensajeAlertaTipo = "✅ Medición Dentro de Rango";
+      let mensajeAlertaTipo = "";
       if (anchoFuera && pesoFuera) {
         mensajeAlertaTipo = "⚠️ Ancho y Peso Fuera de Rango";
       } else if (anchoFuera) {
@@ -713,41 +729,28 @@
         pesoMedido,
         fueraDeRango,
         corregido: false,
-        alertaTipo: mensajeAlertaTipo,
-        targetAncho: ext.ancho,
-        minAncho: ext.minAncho,
-        maxAncho: ext.maxAncho,
-        targetPeso: ext.pesoIdeal,
-        minPeso: ext.minPeso,
-        maxPeso: ext.maxPeso,
-        anchoFuera: anchoFuera,
-        pesoFuera: pesoFuera
+        alertaTipo: mensajeAlertaTipo
       };
 
-      registro.docId = 'local_' + Date.now();
-      historial.unshift(registro);
-      guardarHistorialLocal();
-      renderHistorial();
-      
-      if (registro.fueraDeRango) {
-        lanzarAlerta(registro);
+      let firebaseExito = false;
+      if (window.db && window.fbMethods && !window.useLocalFallback) {
+        try {
+          const { collection, addDoc } = window.fbMethods;
+          await addDoc(collection(window.db, "mediciones"), registro);
+          firebaseExito = true;
+        } catch (e) {
+          console.warn("Firestore inaccesible. Modo local activo:", e.message);
+          window.useLocalFallback = true;
+          document.getElementById('banner-offline').style.display = 'block';
+        }
       }
 
-      if (window.db && !window.useLocalFallback) {
-        try {
-          console.log("📤 Enviando dato a Firebase...");
-          const docRef = await window.db.collection("mediciones").add(registro);
-          console.log("✅ Dato enviado a Firebase con ID:", docRef.id);
-          
-          const localIndex = historial.findIndex(h => h.docId === registro.docId);
-          if (localIndex !== -1) {
-            historial[localIndex].docId = docRef.id;
-            guardarHistorialLocal();
-          }
-        } catch (e) {
-          console.error("❌ Error al enviar a Firebase:", e);
-          alert("⚠️ Error al sincronizar con Firebase:\n\n" + e.message + "\n\nVerifica que Firestore esté habilitado en la consola de Firebase y que las reglas estén configuradas correctamente.");
-        }
+      if (!firebaseExito) {
+        registro.docId = 'local_' + Date.now();
+        historial.unshift(registro);
+        guardarHistorialLocal();
+        renderHistorial();
+        if (registro.fueraDeRango) lanzarAlerta(registro);
       }
 
       document.getElementById('val-medida').value = '';
@@ -755,20 +758,14 @@
     }
 
     async function limpiarHistorial() {
-      if (!confirm("¿Estás seguro de que deseas borrar TODO el historial? Esta acción no se puede deshacer.")) return;
-
-      if (window.db && !window.useLocalFallback) {
+      if (window.db && window.fbMethods && !window.useLocalFallback) {
         try {
-          console.log("🗑️ Limpiando historial en Firebase...");
-          const snapshot = await window.db.collection("mediciones").get();
-          const batch = window.db.batch();
-          snapshot.docs.forEach((doc) => {
-            batch.delete(doc.ref);
-          });
-          await batch.commit();
-          console.log("✅ Historial limpiado en Firebase");
+          const { collection, getDocs, deleteDoc, doc } = window.fbMethods;
+          const snapshot = await getDocs(collection(window.db, "mediciones"));
+          const promises = snapshot.docs.map(d => deleteDoc(doc(window.db, "mediciones", d.id)));
+          await Promise.all(promises);
         } catch (e) {
-          console.error("❌ Error al vaciar en Firebase:", e);
+          console.warn("Error al vaciar en Firebase:", e);
         }
       }
       historial = [];
@@ -777,25 +774,26 @@
     }
 
     async function corregirError(docId) {
-      const regIndex = historial.findIndex(item => item.docId === docId);
-      if (regIndex !== -1) {
-        historial[regIndex].corregido = true;
-        historial[regIndex].fueraDeRango = false;
-        guardarHistorialLocal();
-        renderHistorial();
-      }
-      
-      if (window.db && !docId.startsWith('local_') && !window.useLocalFallback) {
+      if (window.db && window.fbMethods && !docId.startsWith('local_') && !window.useLocalFallback) {
         try {
-          console.log("✅ Corrigiendo error en Firebase:", docId);
-          await window.db.collection("mediciones").doc(docId).update({
+          const { doc, updateDoc } = window.fbMethods;
+          const refDoc = doc(window.db, "mediciones", docId);
+          await updateDoc(refDoc, {
             corregido: true,
             fueraDeRango: false
           });
-          console.log("✅ Error corregido en Firebase");
+          return;
         } catch(e) {
-          console.error("❌ Error actualizando en Firebase:", e);
+          console.warn("Error actualizando en Firebase:", e);
         }
+      }
+      
+      const reg = historial.find(item => item.docId === docId);
+      if (reg) {
+        reg.corregido = true;
+        reg.fueraDeRango = false;
+        guardarHistorialLocal();
+        renderHistorial();
       }
     }
 
@@ -845,10 +843,6 @@
     }
 
     function lanzarAlerta(reg) {
-      if (document.getElementById('view-octagon').classList.contains('active')) {
-        return;
-      }
-
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
@@ -865,33 +859,15 @@
       const banner = document.getElementById('banner-alerta');
       if (banner) {
         document.getElementById('titulo-alerta').innerText = reg.alertaTipo;
-        document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id}`;
+        document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id} -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr`;
         banner.style.display = 'block';
         setTimeout(() => { banner.style.display = 'none'; }, 10000);
       }
 
-      const isExtrusionView = document.getElementById('view-extrusion').classList.contains('active');
       const fsAlerta = document.getElementById('alerta-fullscreen');
-      
-      if (fsAlerta && isExtrusionView) {
+      if (fsAlerta) {
         document.getElementById('fs-titulo').innerText = reg.alertaTipo;
-        
-        const anchoIcon = reg.anchoFuera ? '❌' : '✅';
-        const anchoColor = reg.anchoFuera ? '#fca5a5' : '#4ade80';
-        
-        const pesoIcon = reg.pesoFuera ? '❌' : '✅';
-        const pesoColor = reg.pesoFuera ? '#fca5a5' : '#4ade80';
-
-        let detalleHTML = `<strong>Extrusora:</strong> ${reg.id} | <strong>Producto:</strong> ${reg.producto}<br>`;
-        detalleHTML += `<strong>Operador:</strong> ${reg.operador} (${reg.turno})<br><br>`;
-        
-        detalleHTML += `<span style="color:${anchoColor}; font-size: 1.2rem;"><strong>Ancho:</strong> ${reg.valorMedido} cm ${anchoIcon}</span><br>`;
-        detalleHTML += `<span style="font-size:0.95rem; color:#cbd5e1;">(Objetivo: ${reg.targetAncho} cm | Rango: ${reg.minAncho} - ${reg.maxAncho} cm)</span><br><br>`;
-
-        detalleHTML += `<span style="color:${pesoColor}; font-size: 1.2rem;"><strong>Peso:</strong> ${reg.pesoMedido} gr ${pesoIcon}</span><br>`;
-        detalleHTML += `<span style="font-size:0.95rem; color:#cbd5e1;">(Objetivo: ${reg.targetPeso} gr | Rango: ${reg.minPeso} - ${reg.maxPeso} gr)</span>`;
-
-        document.getElementById('fs-detalle').innerHTML = detalleHTML;
+        document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | Producto: ${reg.producto}\nMedido -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr\nOperador: ${reg.operador}`;
         fsAlerta.style.display = 'flex';
       }
     }
@@ -992,123 +968,43 @@
       doc.save(`Reporte_Calidad_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
-    function actualizarTurnoAutomatico() {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const currentTime = hours * 60 + minutes;
-
-      const inicioDia = 7 * 60;
-      const finDia = 14 * 60 + 30;
-      const finTarde = 22 * 60;
-
-      let turno = "Noche";
-      if (currentTime >= inicioDia && currentTime < finDia) {
-        turno = "Día";
-      } else if (currentTime >= finDia && currentTime < finTarde) {
-        turno = "Tarde";
-      }
-
-      const selectTurno = document.getElementById('input-turno');
-      if (selectTurno) {
-        selectTurno.value = turno;
-      }
-    }
-
-    function actualizarEstadoConexion(estado) {
-      const status1 = document.getElementById('connection-status');
-      const status2 = document.getElementById('connection-status-2');
-      const text1 = document.getElementById('connection-text');
-      const text2 = document.getElementById('connection-text-2');
-      
-      [status1, status2].forEach(status => {
-        if (status) {
-          status.className = estado;
-        }
-      });
-      
-      const textos = {
-        'connected': 'Conectado en Tiempo Real',
-        'disconnected': 'Desconectado',
-        'connecting': 'Conectando...'
-      };
-      
-      [text1, text2].forEach(text => {
-        if (text) {
-          text.textContent = textos[estado] || 'Desconocido';
-        }
-      });
-    }
-
-    function iniciarSincronizacionFirebase() {
-      if (!window.db || window.useLocalFallback) {
-        console.warn("⚠️ Firebase no disponible. Usando modo local.");
-        actualizarEstadoConexion('disconnected');
+    window.iniciarSincronizacionFirebase = function() {
+      if (!window.db || !window.fbMethods) {
+        renderHistorial();
         return;
       }
       
-      console.log("🔄 Iniciando sincronización en tiempo real con Firebase...");
-      actualizarEstadoConexion('connecting');
-      
-      // Verificar conectividad usando Realtime Database
-      if (window.rtdb) {
-        window.rtdb.ref('.info/connected').on('value', (snapshot) => {
-          if (snapshot.val() === true) {
-            console.log("🌐 Conexión a Firebase establecida");
-            actualizarEstadoConexion('connected');
-          } else {
-            console.warn("⚠️ Sin conexión a Firebase");
-            actualizarEstadoConexion('disconnected');
-          }
+      const { collection, onSnapshot, query, orderBy, limit } = window.fbMethods;
+      const q = query(collection(window.db, "mediciones"), orderBy("timestamp", "desc"), limit(50));
+
+      onSnapshot(q, (snapshot) => {
+        const nuevosDatos = [];
+        snapshot.forEach((doc) => {
+          nuevosDatos.push({ docId: doc.id, ...doc.data() });
         });
-      }
-      
-      // Listener de Firestore en tiempo real
-      window.db.collection("mediciones")
-        .orderBy("timestamp", "desc")
-        .limit(50)
-        .onSnapshot((snapshot) => {
-          console.log("📡 Recibiendo datos de Firebase -", snapshot.docs.length, "documentos");
-          
-          const nuevosDatos = [];
-          snapshot.forEach((doc) => {
-            nuevosDatos.push({ docId: doc.id, ...doc.data() });
-          });
 
-          nuevosDatos.sort((a, b) => b.timestamp - a.timestamp);
+        historial = nuevosDatos;
+        guardarHistorialLocal();
+        renderHistorial();
 
-          historial = nuevosDatos;
-          guardarHistorialLocal();
-          renderHistorial();
-
-          if (!primerCarga && historial.length > 0 && historial[0].fueraDeRango) {
-            lanzarAlerta(historial[0]);
-          }
-          primerCarga = false;
-        }, (error) => {
-          console.error("❌ Error de sincronización en tiempo real:", error);
-          console.error("Detalles del error:", error.code, error.message);
-          actualizarEstadoConexion('disconnected');
-          
-          if (error.code === 'permission-denied') {
-            alert("⚠️ Error de permisos en Firebase.\n\nPor favor verifica que las reglas de Firestore estén configuradas correctamente.\n\nCódigo: " + error.code);
-          } else if (error.code === 'unavailable') {
-            alert("⚠️ Firestore no está disponible.\n\nPosibles causas:\n1. Firestore no está habilitado en la consola\n2. Las reglas están bloqueando el acceso\n\nCódigo: " + error.code);
-          }
-        });
-    }
+        if (!primerCarga && historial.length > 0 && historial[0].fueraDeRango) {
+          lanzarAlerta(historial[0]);
+        }
+        primerCarga = false;
+      }, (error) => {
+        console.warn("Sincronización en tiempo real inactiva. Usando respaldo local.", error.message);
+        window.useLocalFallback = true;
+        const bannerOffline = document.getElementById('banner-offline');
+        if (bannerOffline) bannerOffline.style.display = 'block';
+        renderHistorial();
+      });
+    };
 
     window.onload = () => {
       actualizarSelect();
       renderHistorial();
-      actualizarTurnoAutomatico();
-      setInterval(actualizarTurnoAutomatico, 60000);
-      
-      if (window.db) {
-        iniciarSincronizacionFirebase();
-      } else {
-        console.warn("⚠️ Firebase no inicializado");
-        actualizarEstadoConexion('disconnected');
+      if (window.db && window.fbMethods) {
+        window.iniciarSincronizacionFirebase();
       }
     };
   </script>
