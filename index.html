@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Control de Calidad - Planta</title>
+  <title>Control de Calidad - Planta Extrusión</title>
   
   <!-- Librería externa para exportar a PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -59,7 +59,7 @@
     }
     
     body { 
-      max-width: 1200px; 
+      max-width: 1280px; 
       margin: 0 auto; 
       padding: 12px; 
       box-sizing: border-box;
@@ -67,6 +67,26 @@
     
     .view-section { display: none; }
     .view-section.active { display: block; }
+
+    /* DASHBOARD METRICS */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .metric-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 12px 16px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .metric-title { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
+    .metric-value { font-size: 1.5rem; font-weight: 800; color: #f8fafc; margin-top: 4px; }
+    .metric-subtext { font-size: 0.75rem; color: #38bdf8; margin-top: 2px; }
 
     /* BANNERS Y ALERTAS */
     #banner-offline {
@@ -142,6 +162,9 @@
       cursor: pointer; 
       font-weight: bold; 
       font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .btn-action:hover { background: #64748b; }
     
@@ -223,7 +246,7 @@
       margin-top: 10px;
     }
 
-    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    table { width: 100%; border-collapse: collapse; min-width: 650px; }
     th, td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #334155; font-size: 0.85rem; }
     th { background: #0f172a; color: #38bdf8; font-weight: 700; }
     .alerta-row { background: rgba(220, 38, 38, 0.25); color: #fca5a5; font-weight: bold; }
@@ -249,6 +272,33 @@
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+
+    /* CONTROL PANEL BAR */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #334155;
+    }
+    .filter-bar select, .filter-bar input {
+      margin-top: 0;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    .badge-alert { background: rgba(220, 38, 38, 0.3); color: #fca5a5; border: 1px solid #ef4444; }
+    .badge-ok { background: rgba(22, 163, 74, 0.3); color: #86efac; border: 1px solid #22c55e; }
 
     @media (max-width: 640px) {
       body { padding: 8px; }
@@ -291,8 +341,9 @@
         </div>
       </div>
 
-      <div style="margin-top: 30px;">
-        <button class="btn-action" onclick="abrirModalReglas()" style="background: #334155;">🔥 Ver Reglas de Firebase</button>
+      <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn-action" onclick="abrirModalReglas()" style="background: #334155;">🔥 Reglas Firebase</button>
+        <button class="btn-action" onclick="toggleSonidoAudio()" id="btn-toggle-audio" style="background: #0284c7;">🔔 Sonido: Activado</button>
       </div>
     </div>
   </div>
@@ -308,6 +359,30 @@
     </div>
 
     <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú</button>
+
+    <!-- DASHBOARD INDICATORS -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-title">Total Ensayos</span>
+        <span class="metric-value" id="m-total">0</span>
+        <span class="metric-subtext">registros cargados</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Cumplimiento</span>
+        <span class="metric-value" id="m-cumplimiento" style="color: #4ade80;">100%</span>
+        <span class="metric-subtext" id="m-ok-count">0 en norma</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Alertas Activas</span>
+        <span class="metric-value" id="m-alertas" style="color: #ef4444;">0</span>
+        <span class="metric-subtext">pendientes de corrección</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Fichas Activas</span>
+        <span class="metric-value" id="m-fichas">0</span>
+        <span class="metric-subtext">extrusoras configuradas</span>
+      </div>
+    </div>
 
     <div id="banner-alerta">
       <span id="titulo-alerta">🚨 ¡ALERTA DE DESVÍO!</span> <br>
@@ -354,11 +429,27 @@
     <div class="card">
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; border-bottom: 2px solid #334155; padding-bottom: 8px; margin-bottom: 10px;">
         <h2 style="border:none; margin:0;">🖥️ Historial (Octagon)</h2>
-        <div style="display: flex; gap: 6px;">
-          <button onclick="limpiarHistorial()" style="background: #ef4444; width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem;">🗑️ Limpiar</button>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button onclick="exportarCSV()" style="background: #0284c7; width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem;">📊 Exportar CSV</button>
           <button onclick="generarPDF()" style="background: #16a34a; width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem;">📥 Reporte PDF</button>
+          <button onclick="limpiarHistorial()" style="background: #ef4444; width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem;">🗑️ Limpiar</button>
         </div>
       </div>
+
+      <div class="filter-bar">
+        <span style="font-size:0.8rem; color:#94a3b8; font-weight:bold;">Filtrar:</span>
+        <select id="filtro-extrusora" onchange="renderHistorial()" style="width: auto;">
+          <option value="TODAS">Todas las Extrusoras</option>
+        </select>
+        <select id="filtro-estado" onchange="renderHistorial()" style="width: auto;">
+          <option value="TODOS">Todos los Estados</option>
+          <option value="ALERTAS">Solo Alertas (Fuera)</option>
+          <option value="CORREGIDOS">Solo Corregidos</option>
+          <option value="OK">Solo OK</option>
+        </select>
+        <input type="text" id="filtro-buscar" placeholder="Buscar por operador u OT..." oninput="renderHistorial()" style="width: 180px;">
+      </div>
+
       <div class="table-responsive">
         <table>
           <thead>
@@ -394,6 +485,19 @@
       <div style="border-bottom: 2px solid #334155; padding-bottom: 8px; margin-bottom: 10px;">
         <h2 style="border:none; margin:0;">🖥️ Monitoreo de Mediciones (Extrusión)</h2>
       </div>
+
+      <div class="filter-bar">
+        <span style="font-size:0.8rem; color:#94a3b8; font-weight:bold;">Filtrar Planta:</span>
+        <select id="filtro-extrusora-ext" onchange="renderHistorial()" style="width: auto;">
+          <option value="TODAS">Todas las Extrusoras</option>
+        </select>
+        <select id="filtro-estado-ext" onchange="renderHistorial()" style="width: auto;">
+          <option value="TODOS">Todos los Estados</option>
+          <option value="ALERTAS">Solo Alertas</option>
+          <option value="CORREGIDOS">Solo Corregidos</option>
+        </select>
+      </div>
+
       <div class="table-responsive">
         <table>
           <thead>
@@ -536,9 +640,19 @@ service cloud.firestore {
 
     let historial = JSON.parse(localStorage.getItem('mediciones_local')) || [];
     let primerCarga = true;
+    let sonidoHabilitado = true;
 
     function guardarHistorialLocal() {
       localStorage.setItem('mediciones_local', JSON.stringify(historial));
+    }
+
+    function toggleSonidoAudio() {
+      sonidoHabilitado = !sonidoHabilitado;
+      const btn = document.getElementById('btn-toggle-audio');
+      if (btn) {
+        btn.innerText = sonidoHabilitado ? "🔔 Sonido: Activado" : "🔕 Sonido: Desactivado";
+        btn.style.background = sonidoHabilitado ? "#0284c7" : "#475569";
+      }
     }
 
     function cambiarVista(vista) {
@@ -589,17 +703,37 @@ service cloud.firestore {
 
     function actualizarSelect() {
       const select = document.getElementById('select-extrusora');
-      if (!select) return;
-      select.innerHTML = '';
-      if (extrusoras.length === 0) {
-        select.innerHTML = '<option value="">-- No hay extrusoras activas --</option>';
-        document.getElementById('info-objetivos-actuales').innerText = 'Selecciona una extrusora';
-        return;
+      const filtroSelect = document.getElementById('filtro-extrusora');
+      const filtroSelectExt = document.getElementById('filtro-extrusora-ext');
+
+      if (select) {
+        select.innerHTML = '';
+        if (extrusoras.length === 0) {
+          select.innerHTML = '<option value="">-- No hay extrusoras activas --</option>';
+          document.getElementById('info-objetivos-actuales').innerText = 'Selecciona una extrusora';
+        } else {
+          extrusoras.forEach(e => {
+            select.innerHTML += `<option value="${e.id}">${e.id} | ${e.producto}</option>`;
+          });
+          mostrarObjetivosSeleccionados();
+        }
       }
-      extrusoras.forEach(e => {
-        select.innerHTML += `<option value="${e.id}">${e.id} | ${e.producto}</option>`;
-      });
-      mostrarObjetivosSeleccionados();
+
+      const updateFiltro = (fEl) => {
+        if (!fEl) return;
+        const prevVal = fEl.value;
+        fEl.innerHTML = '<option value="TODAS">Todas las Extrusoras</option>';
+        extrusoras.forEach(e => {
+          fEl.innerHTML += `<option value="${e.id}">${e.id}</option>`;
+        });
+        fEl.value = prevVal || "TODAS";
+      };
+
+      updateFiltro(filtroSelect);
+      updateFiltro(filtroSelectExt);
+
+      const mFichas = document.getElementById('m-fichas');
+      if (mFichas) mFichas.innerText = extrusoras.length;
     }
 
     function mostrarObjetivosSeleccionados() {
@@ -758,6 +892,7 @@ service cloud.firestore {
     }
 
     async function limpiarHistorial() {
+      if (!confirm("¿Estás seguro de que deseas vaciar el historial completo?")) return;
       if (window.db && window.fbMethods && !window.useLocalFallback) {
         try {
           const { collection, getDocs, deleteDoc, doc } = window.fbMethods;
@@ -800,10 +935,39 @@ service cloud.firestore {
     function renderHistorial() {
       const tbodyOctagon = document.getElementById('tabla-log-octagon');
       const tbodyExtrusion = document.getElementById('tabla-log-extrusion');
-      
+
+      // Actualizar Métricas
+      const totalCount = historial.length;
+      const alertasCount = historial.filter(r => r.fueraDeRango).length;
+      const okCount = historial.filter(r => !r.fueraDeRango).length;
+      const porcOk = totalCount > 0 ? Math.round((okCount / totalCount) * 100) : 100;
+
+      document.getElementById('m-total').innerText = totalCount;
+      document.getElementById('m-cumplimiento').innerText = `${porcOk}%`;
+      document.getElementById('m-ok-count').innerText = `${okCount} en norma`;
+      document.getElementById('m-alertas').innerText = alertasCount;
+
+      // Filtros Octagon
+      const fExt = document.getElementById('filtro-extrusora')?.value || 'TODAS';
+      const fEst = document.getElementById('filtro-estado')?.value || 'TODOS';
+      const fBus = document.getElementById('filtro-buscar')?.value.toLowerCase().trim() || '';
+
+      const filtrarLista = (list, extVal, estVal) => {
+        return list.filter(reg => {
+          if (extVal !== 'TODAS' && reg.id !== extVal) return false;
+          if (estVal === 'ALERTAS' && !reg.fueraDeRango) return false;
+          if (estVal === 'CORREGIDOS' && !reg.corregido) return false;
+          if (estVal === 'OK' && (reg.fueraDeRango || reg.corregido)) return false;
+          if (fBus && !reg.operador.toLowerCase().includes(fBus) && !reg.producto.toLowerCase().includes(fBus)) return false;
+          return true;
+        });
+      };
+
+      const historialOctagon = filtrarLista(historial, fExt, fEst);
+
       if (tbodyOctagon) {
         tbodyOctagon.innerHTML = '';
-        historial.forEach(reg => {
+        historialOctagon.forEach(reg => {
           let clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
           let estadoTexto = reg.fueraDeRango ? '🚨 FUERA' : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
           tbodyOctagon.innerHTML += `
@@ -820,9 +984,14 @@ service cloud.firestore {
         });
       }
 
+      // Filtros Extrusión
+      const fExtE = document.getElementById('filtro-extrusora-ext')?.value || 'TODAS';
+      const fEstE = document.getElementById('filtro-estado-ext')?.value || 'TODOS';
+      const historialExtrusion = filtrarLista(historial, fExtE, fEstE);
+
       if (tbodyExtrusion) {
         tbodyExtrusion.innerHTML = '';
-        historial.forEach(reg => {
+        historialExtrusion.forEach(reg => {
           let clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
           let estadoAccion = reg.fueraDeRango 
             ? `<button class="btn-corregir" onclick="corregirError('${reg.docId}')">Marcar Corregido</button>` 
@@ -843,18 +1012,20 @@ service cloud.firestore {
     }
 
     function lanzarAlerta(reg) {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(750, ctx.currentTime);
-        gain.gain.setValueAtTime(0.5, ctx.currentTime);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.8);
-      } catch(e) {}
+      if (sonidoHabilitado) {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(750, ctx.currentTime);
+          gain.gain.setValueAtTime(0.5, ctx.currentTime);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.8);
+        } catch(e) {}
+      }
 
       const banner = document.getElementById('banner-alerta');
       if (banner) {
@@ -875,6 +1046,25 @@ service cloud.firestore {
     function cerrarAlertaFullscreen() {
       const fsAlerta = document.getElementById('alerta-fullscreen');
       if (fsAlerta) fsAlerta.style.display = 'none';
+    }
+
+    function exportarCSV() {
+      if (historial.length === 0) return alert('No hay registros para exportar.');
+      let csvContent = "data:text/csv;charset=utf-8,Hora,Operador,Turno,Extrusora,Producto_OT,Ancho_cm,Peso_gr,Estado\n";
+      
+      historial.forEach(r => {
+        let estado = r.fueraDeRango ? "FUERA" : (r.corregido ? "CORREGIDO" : "OK");
+        let fila = `"${r.hora}","${r.operador}","${r.turno}","${r.id}","${r.producto}",${r.valorMedido},${r.pesoMedido},"${estado}"`;
+        csvContent += fila + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Reporte_Calidad_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     function generarPDF() {
