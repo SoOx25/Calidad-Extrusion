@@ -8,7 +8,7 @@
   <!-- Librería externa para exportar a PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- Firebase SDKs (v10 Compat) para Sincronización en Tiempo Real (Más estable en archivos HTML únicos) -->
+  <!-- Firebase SDKs (v10 Compat) para Sincronización en Tiempo Real -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -25,31 +25,11 @@
     };
 
     try {
-      const app = firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-      window.db = db;
-      
-      // Exponemos las funciones modulares de la versión compat para mantener la compatibilidad con el resto del código
-      window.fbMethods = {
-        collection: firebase.firestore.collection,
-        addDoc: firebase.firestore.addDoc,
-        onSnapshot: firebase.firestore.onSnapshot,
-        doc: firebase.firestore.doc,
-        updateDoc: firebase.firestore.updateDoc,
-        deleteDoc: firebase.firestore.deleteDoc,
-        getDocs: firebase.firestore.getDocs,
-        query: firebase.firestore.query,
-        orderBy: firebase.firestore.orderBy,
-        limit: firebase.firestore.limit
-      };
-      
-      console.log("✅ Firebase inicializado correctamente.");
-      
-      if (typeof window.iniciarSincronizacionFirebase === 'function') {
-        window.iniciarSincronizacionFirebase();
-      }
+      firebase.initializeApp(firebaseConfig);
+      window.db = firebase.firestore();
+      console.log("✅ Firebase inicializado correctamente");
     } catch (err) {
-      console.warn("⚠️ Error al inicializar Firebase, operando en modo local:", err);
+      console.error("❌ Error al inicializar Firebase:", err);
       window.useLocalFallback = true;
     }
   </script>
@@ -71,7 +51,6 @@
     .view-section { display: none; }
     .view-section.active { display: block; }
 
-    /* BANNERS Y ALERTAS */
     #banner-offline {
       display: none;
       background: #334155;
@@ -114,7 +93,6 @@
     }
     @keyframes pulsoAlerta { from { background: #dc2626; } to { background: #991b1b; } }
 
-    /* HEADER & NAVEGACIÓN */
     .header { 
       display: flex; 
       flex-wrap: wrap;
@@ -195,7 +173,6 @@
     }
     button:hover { background: #0369a1; }
     
-    /* VISTA HOME */
     .home-container { 
       display: flex; 
       flex-direction: column; 
@@ -230,7 +207,6 @@
     }
     .home-logo { max-height: 120px; width: auto; filter: drop-shadow(0 0 10px #22c55e); }
 
-    /* TABLAS Y MÓVIL RESPONSIVE */
     .table-responsive {
       width: 100%;
       overflow-x: auto;
@@ -249,7 +225,6 @@
     .btn-corregir { background: #16a34a; padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 4px; }
     .btn-corregir:hover { background: #15803d; }
 
-    /* MODAL FICHAS */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; padding: 10px; box-sizing: border-box; }
     .modal-content { background: #1e293b; width: 100%; max-width: 650px; padding: 20px; border-radius: 12px; border: 1px solid #475569; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 12px; }
@@ -696,16 +671,17 @@
         lanzarAlerta(registro);
       }
 
-      if (window.db && window.fbMethods && !window.useLocalFallback) {
+      // Sincronización con Firebase
+      if (window.db && !window.useLocalFallback) {
         try {
-          const { collection, addDoc } = window.fbMethods;
-          const docRef = await addDoc(collection(window.db, "mediciones"), registro);
+          const docRef = await window.db.collection("mediciones").add(registro);
           
           const localIndex = historial.findIndex(h => h.docId === registro.docId);
           if (localIndex !== -1) {
             historial[localIndex].docId = docRef.id;
             guardarHistorialLocal();
           }
+          console.log("✅ Medida sincronizada con Firebase:", docRef.id);
         } catch (e) {
           console.error("❌ Error al sincronizar con Firebase:", e);
           window.useLocalFallback = true;
@@ -724,14 +700,17 @@
     async function limpiarHistorial() {
       if (!confirm("¿Estás seguro de que deseas borrar TODO el historial? Esta acción no se puede deshacer.")) return;
 
-      if (window.db && window.fbMethods && !window.useLocalFallback) {
+      if (window.db && !window.useLocalFallback) {
         try {
-          const { collection, getDocs, deleteDoc, doc } = window.fbMethods;
-          const snapshot = await getDocs(collection(window.db, "mediciones"));
-          const promises = snapshot.docs.map(d => deleteDoc(doc(window.db, "mediciones", d.id)));
-          await Promise.all(promises);
+          const snapshot = await window.db.collection("mediciones").get();
+          const batch = window.db.batch();
+          snapshot.docs.forEach((doc) => {
+            batch.delete(doc.ref);
+          });
+          await batch.commit();
+          console.log("✅ Historial limpiado en Firebase");
         } catch (e) {
-          console.warn("Error al vaciar en Firebase:", e);
+          console.error("❌ Error al vaciar en Firebase:", e);
         }
       }
       historial = [];
@@ -748,16 +727,15 @@
         renderHistorial();
       }
       
-      if (window.db && window.fbMethods && !docId.startsWith('local_') && !window.useLocalFallback) {
+      if (window.db && !docId.startsWith('local_') && !window.useLocalFallback) {
         try {
-          const { doc, updateDoc } = window.fbMethods;
-          const refDoc = doc(window.db, "mediciones", docId);
-          await updateDoc(refDoc, {
+          await window.db.collection("mediciones").doc(docId).update({
             corregido: true,
             fueraDeRango: false
           });
+          console.log("✅ Error corregido en Firebase:", docId);
         } catch(e) {
-          console.warn("Error actualizando en Firebase:", e);
+          console.error("❌ Error actualizando en Firebase:", e);
         }
       }
     }
@@ -808,7 +786,6 @@
     }
 
     function lanzarAlerta(reg) {
-      // 1. No sonar ni mostrar banner en el módulo de Octagon (quien la emite)
       if (document.getElementById('view-octagon').classList.contains('active')) {
         return;
       }
@@ -960,11 +937,11 @@
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
-      const currentTime = hours * 60 + minutes; 
+      const currentTime = hours * 60 + minutes;
 
-      const inicioDia = 7 * 60;        // 07:00 = 420
-      const finDia = 14 * 60 + 30;     // 14:30 = 870
-      const finTarde = 22 * 60;        // 22:00 = 1320
+      const inicioDia = 7 * 60;
+      const finDia = 14 * 60 + 30;
+      const finTarde = 22 * 60;
 
       let turno = "Noche";
       if (currentTime >= inicioDia && currentTime < finDia) {
@@ -979,51 +956,55 @@
       }
     }
 
-    window.iniciarSincronizacionFirebase = function() {
-      if (!window.db || !window.fbMethods) {
+    function iniciarSincronizacionFirebase() {
+      if (!window.db || window.useLocalFallback) {
         console.warn("⚠️ Firebase no disponible. Usando modo local.");
         document.getElementById('banner-offline').style.display = 'block';
         renderHistorial();
         return;
       }
       
-      const { collection, onSnapshot, query, orderBy, limit } = window.fbMethods;
-      const q = query(collection(window.db, "mediciones"), orderBy("timestamp", "desc"), limit(50));
+      console.log("🔄 Iniciando sincronización en tiempo real con Firebase...");
+      
+      window.db.collection("mediciones")
+        .orderBy("timestamp", "desc")
+        .limit(50)
+        .onSnapshot((snapshot) => {
+          console.log("📡 Recibiendo datos de Firebase...");
+          
+          const nuevosDatos = [];
+          snapshot.forEach((doc) => {
+            nuevosDatos.push({ docId: doc.id, ...doc.data() });
+          });
 
-      onSnapshot(q, (snapshot) => {
-        const nuevosDatos = [];
-        snapshot.forEach((docSnapshot) => {
-          nuevosDatos.push({ docId: docSnapshot.id, ...docSnapshot.data() });
+          nuevosDatos.sort((a, b) => b.timestamp - a.timestamp);
+
+          historial = nuevosDatos;
+          guardarHistorialLocal();
+          renderHistorial();
+
+          if (!primerCarga && historial.length > 0 && historial[0].fueraDeRango) {
+            lanzarAlerta(historial[0]);
+          }
+          primerCarga = false;
+        }, (error) => {
+          console.error("❌ Error de sincronización en tiempo real:", error);
+          window.useLocalFallback = true;
+          document.getElementById('banner-offline').style.display = 'block';
+          renderHistorial();
         });
-
-        nuevosDatos.sort((a, b) => b.timestamp - a.timestamp);
-
-        historial = nuevosDatos;
-        guardarHistorialLocal();
-        renderHistorial();
-
-        if (!primerCarga && historial.length > 0 && historial[0].fueraDeRango) {
-          lanzarAlerta(historial[0]);
-        }
-        primerCarga = false;
-      }, (error) => {
-        console.error("❌ Error de sincronización en tiempo real:", error);
-        window.useLocalFallback = true;
-        document.getElementById('banner-offline').style.display = 'block';
-        renderHistorial();
-      });
-    };
+    }
 
     window.onload = () => {
       actualizarSelect();
       renderHistorial();
-      actualizarTurnoAutomatico(); // Establecer turno al cargar
-      setInterval(actualizarTurnoAutomatico, 60000); // Actualizar cada minuto
+      actualizarTurnoAutomatico();
+      setInterval(actualizarTurnoAutomatico, 60000);
       
-      if (window.db && window.fbMethods) {
-        window.iniciarSincronizacionFirebase();
+      if (window.db) {
+        iniciarSincronizacionFirebase();
       } else {
-        console.warn("⚠️ Esperando inicialización de Firebase...");
+        console.warn("⚠️ Firebase no inicializado. Esperando...");
         document.getElementById('banner-offline').style.display = 'block';
       }
     };
