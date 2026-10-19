@@ -297,6 +297,44 @@
       font-weight: normal;
     }
 
+    /* ESTILOS CHECKBOXES EXTRUSORAS OPERATIVAS */
+    .operativas-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 12px;
+    }
+    .grupo-operativas {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: #f1f5f9;
+      background: #1e293b;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #334155;
+    }
+    .checkbox-label input {
+      width: auto;
+      margin-top: 0;
+      cursor: pointer;
+    }
+
     @media (max-width: 640px) {
       body { padding: 8px; }
       .header-title { font-size: 1.1rem; }
@@ -478,6 +516,40 @@
 
     <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú</button>
 
+    <!-- MÓDULO EXTRUSORAS OPERATIVAS -->
+    <div class="card">
+      <h2>⚙️ Control de Extrusoras Operativas y Encargados</h2>
+      <div class="operativas-container">
+        <!-- Grupo 1: 2, 7, 8, 9, 10 -->
+        <div class="grupo-operativas">
+          <label style="color:#38bdf8; margin-top:0;">Grupo 1 (Extrusoras 2, 7, 8, 9, 10)</label>
+          <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="2"> Extr. 2</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="7"> Extr. 7</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="8"> Extr. 8</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="9"> Extr. 9</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="10"> Extr. 10</label>
+          </div>
+          <label>Encargado Grupo 1:</label>
+          <input type="text" id="encargado-g1" placeholder="Nombre del encargado Grupo 1">
+        </div>
+
+        <!-- Grupo 2: 11, 12, 13, 14, 15 -->
+        <div class="grupo-operativas">
+          <label style="color:#38bdf8; margin-top:0;">Grupo 2 (Extrusoras 11, 12, 13, 14, 15)</label>
+          <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="11"> Extr. 11</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="12"> Extr. 12</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="13"> Extr. 13</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="14"> Extr. 14</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="15"> Extr. 15</label>
+          </div>
+          <label>Encargado Grupo 2:</label>
+          <input type="text" id="encargado-g2" placeholder="Nombre del encargado Grupo 2">
+        </div>
+      </div>
+    </div>
+
     <div class="card">
       <div style="border-bottom: 2px solid #334155; padding-bottom: 8px; margin-bottom: 10px;">
         <h2 style="border:none; margin:0;">🖥️ Monitoreo de Mediciones (Extrusión)</h2>
@@ -605,31 +677,26 @@
     // LÓGICA DE TURNOS SEGÚN HORA Y DÍA
     function obtenerTurnoAutomatico() {
       const ahora = new Date();
-      const diaSemana = ahora.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+      const diaSemana = ahora.getDay(); 
       const minutosTotales = ahora.getHours() * 60 + ahora.getMinutes();
 
-      // Lunes (1) a Viernes (5)
       if (diaSemana >= 1 && diaSemana <= 5) {
-        if (minutosTotales >= 420 && minutosTotales < 870) { // 07:00 a 14:30
+        if (minutosTotales >= 420 && minutosTotales < 870) { 
           return { nombre: 'Día', horario: '07:00 a 14:30' };
-        } else if (minutosTotales >= 870 && minutosTotales < 1320) { // 14:30 a 22:00
+        } else if (minutosTotales >= 870 && minutosTotales < 1320) { 
           return { nombre: 'Tarde', horario: '14:30 a 22:00' };
-        } else { // 22:00 a 07:00
+        } else { 
           return { nombre: 'Noche', horario: '22:00 a 07:00' };
         }
-      } 
-      // Sábado (6)
-      else if (diaSemana === 6) {
-        if (minutosTotales >= 420 && minutosTotales < 690) { // 07:00 a 11:30
+      } else if (diaSemana === 6) {
+        if (minutosTotales >= 420 && minutosTotales < 690) { 
           return { nombre: 'Día', horario: '07:00 a 11:30' };
-        } else if (minutosTotales >= 690 && minutosTotales < 960) { // 11:30 a 16:00
+        } else if (minutosTotales >= 690 && minutosTotales < 960) { 
           return { nombre: 'Tarde', horario: '11:30 a 16:00' };
         } else {
           return { nombre: 'Noche', horario: '22:00 a 07:00' };
         }
-      } 
-      // Domingo (0)
-      else {
+      } else {
         return { nombre: 'Especial', horario: 'Horario Especial' };
       }
     }
@@ -764,7 +831,6 @@
         if (infoBox) {
           infoBox.innerHTML = `📌 <b>Ficha:</b> Ancho Obj: ${ext.ancho}cm [${ext.minAncho}-${ext.maxAncho}cm] | Peso Ideal: ${ext.pesoIdeal}gr [${ext.minPeso}-${ext.maxPeso}gr]`;
         }
-        // Actualización dinámica de los placeholders según la ficha técnica seleccionada
         if (valMedidaInput) valMedidaInput.placeholder = `Ej: ${ext.ancho.toFixed(1)}`;
         if (valPesoInput) valPesoInput.placeholder = `Ej: ${ext.pesoIdeal.toFixed(1)}`;
       } else {
@@ -1196,6 +1262,22 @@
       const fechaActual = new Date().toLocaleDateString('es-CL');
       const horaActual = new Date().toLocaleTimeString('es-CL');
 
+      // Recolectar extrusoras operativas seleccionadas
+      const checks = document.querySelectorAll('.chk-op');
+      let activasG1 = [];
+      let activasG2 = [];
+
+      checks.forEach(chk => {
+        if (chk.checked) {
+          const val = parseInt(chk.value, 10);
+          if ([2, 7, 8, 9, 10].includes(val)) activasG1.push(val);
+          if ([11, 12, 13, 14, 15].includes(val)) activasG2.push(val);
+        }
+      });
+
+      const encG1 = document.getElementById('encargado-g1').value.trim() || "No asignado";
+      const encG2 = document.getElementById('encargado-g2').value.trim() || "No asignado";
+
       if (img) {
         const logoWidth = 30;
         const logoHeight = (img.height * logoWidth) / img.width;
@@ -1228,7 +1310,24 @@
       doc.setFont("helvetica", "normal");
       doc.text(String(ultimoTurno), 155, 39);
 
+      // Bloque Extrusoras Operativas en PDF
       let y = 46;
+      doc.setFillColor(241, 245, 249);
+      doc.roundedRect(12, y, 186, 22, 2, 2, 'F');
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.text("EXTRUSORAS OPERATIVAS Y ENCARGADOS:", 15, y + 5);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.5);
+      const txtG1 = `Grupo 1 (Encargado: ${encG1}): ${activasG1.length > 0 ? activasG1.join(', ') : 'Ninguna activa'}`;
+      const txtG2 = `Grupo 2 (Encargado: ${encG2}): ${activasG2.length > 0 ? activasG2.join(', ') : 'Ninguna activa'}`;
+
+      doc.text(txtG1, 15, y + 11);
+      doc.text(txtG2, 15, y + 17);
+
+      y += 28;
       doc.setDrawColor(15, 23, 42);
       doc.setLineWidth(0.5);
       doc.line(12, y, 198, y);
