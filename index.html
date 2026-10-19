@@ -297,35 +297,35 @@
       font-weight: normal;
     }
 
-    /* ESTILOS CHECKBOXES EXTRUSORAS OPERATIVAS */
+    /* ESTILOS COMPACTOS EXTRUSORAS OPERATIVAS */
     .operativas-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 15px;
-      margin-top: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
     }
     .grupo-operativas {
       background: #0f172a;
       border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 6px;
+      padding: 8px 10px;
     }
     .checkbox-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 8px;
-      margin-top: 8px;
-      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+      margin-bottom: 6px;
     }
     .checkbox-label {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
+      gap: 4px;
+      font-size: 0.75rem;
       color: #f1f5f9;
       background: #1e293b;
-      padding: 6px 8px;
-      border-radius: 6px;
+      padding: 3px 6px;
+      border-radius: 4px;
       cursor: pointer;
       border: 1px solid #334155;
     }
@@ -333,6 +333,15 @@
       width: auto;
       margin-top: 0;
       cursor: pointer;
+    }
+    .grupo-operativas input[type="text"] {
+      padding: 6px 8px;
+      font-size: 0.8rem;
+      margin-top: 2px;
+    }
+    .grupo-operativas label {
+      font-size: 0.75rem;
+      margin-top: 4px;
     }
 
     @media (max-width: 640px) {
@@ -444,7 +453,10 @@
 
       <div class="grid-3" style="margin-top: 5px;">
         <div>
-          <label>Extrusora y OT Activa:</label>
+          <label style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Extrusora y OT Activa:</span>
+            <span id="badge-operatividad" style="font-size: 0.7rem; padding: 1px 6px; border-radius: 4px; font-weight: bold;"></span>
+          </label>
           <select id="select-extrusora" onchange="mostrarObjetivosSeleccionados()"></select>
         </div>
         <div>
@@ -516,36 +528,36 @@
 
     <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú</button>
 
-    <!-- MÓDULO EXTRUSORAS OPERATIVAS -->
-    <div class="card">
-      <h2>⚙️ Control de Extrusoras Operativas y Encargados</h2>
+    <!-- MÓDULO EXTRUSORAS OPERATIVAS COMPACTO -->
+    <div class="card" style="padding: 12px; margin-bottom: 12px;">
+      <h2 style="font-size: 1rem; padding-bottom: 6px; margin-bottom: 8px;">⚙️ Extrusoras Operativas</h2>
       <div class="operativas-container">
         <!-- Grupo 1: 2, 7, 8, 9, 10 -->
         <div class="grupo-operativas">
-          <label style="color:#38bdf8; margin-top:0;">Grupo 1 (Extrusoras 2, 7, 8, 9, 10)</label>
+          <label style="color:#38bdf8; margin-top:0;">Grupo 1 (Extr. 2, 7, 8, 9, 10)</label>
           <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="2"> Extr. 2</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="7"> Extr. 7</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="8"> Extr. 8</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="9"> Extr. 9</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="10"> Extr. 10</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="2" onchange="mostrarObjetivosSeleccionados()"> 2</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="7" onchange="mostrarObjetivosSeleccionados()"> 7</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="8" onchange="mostrarObjetivosSeleccionados()"> 8</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="9" onchange="mostrarObjetivosSeleccionados()"> 9</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="10" onchange="mostrarObjetivosSeleccionados()"> 10</label>
           </div>
-          <label>Encargado Grupo 1:</label>
-          <input type="text" id="encargado-g1" placeholder="Nombre del encargado Grupo 1">
+          <label style="margin-bottom:2px;">Encargado:</label>
+          <input type="text" id="encargado-g1" placeholder="Encargado Grupo 1">
         </div>
 
         <!-- Grupo 2: 11, 12, 13, 14, 15 -->
         <div class="grupo-operativas">
-          <label style="color:#38bdf8; margin-top:0;">Grupo 2 (Extrusoras 11, 12, 13, 14, 15)</label>
+          <label style="color:#38bdf8; margin-top:0;">Grupo 2 (Extr. 11, 12, 13, 14, 15)</label>
           <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="11"> Extr. 11</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="12"> Extr. 12</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="13"> Extr. 13</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="14"> Extr. 14</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="15"> Extr. 15</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="11" onchange="mostrarObjetivosSeleccionados()"> 11</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="12" onchange="mostrarObjetivosSeleccionados()"> 12</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="13" onchange="mostrarObjetivosSeleccionados()"> 13</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="14" onchange="mostrarObjetivosSeleccionados()"> 14</label>
+            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="15" onchange="mostrarObjetivosSeleccionados()"> 15</label>
           </div>
-          <label>Encargado Grupo 2:</label>
-          <input type="text" id="encargado-g2" placeholder="Nombre del encargado Grupo 2">
+          <label style="margin-bottom:2px;">Encargado:</label>
+          <input type="text" id="encargado-g2" placeholder="Encargado Grupo 2">
         </div>
       </div>
     </div>
@@ -818,6 +830,12 @@
       if (mFichas) mFichas.innerText = extrusoras.length;
     }
 
+    function verificarOperatividadExtrusora(extId) {
+      const num = parseInt(extId.replace(/\D/g, ''), 10);
+      const chk = document.querySelector(`.chk-op[value="${num}"]`);
+      return chk ? chk.checked : false;
+    }
+
     function mostrarObjetivosSeleccionados() {
       const select = document.getElementById('select-extrusora');
       if (!select) return;
@@ -826,6 +844,7 @@
       const infoBox = document.getElementById('info-objetivos-actuales');
       const valMedidaInput = document.getElementById('val-medida');
       const valPesoInput = document.getElementById('val-peso');
+      const badge = document.getElementById('badge-operatividad');
 
       if (ext) {
         if (infoBox) {
@@ -833,10 +852,24 @@
         }
         if (valMedidaInput) valMedidaInput.placeholder = `Ej: ${ext.ancho.toFixed(1)}`;
         if (valPesoInput) valPesoInput.placeholder = `Ej: ${ext.pesoIdeal.toFixed(1)}`;
+
+        if (badge) {
+          const operativa = verificarOperatividadExtrusora(ext.id);
+          if (operativa) {
+            badge.innerText = "Operativa";
+            badge.style.background = "rgba(22, 163, 74, 0.2)";
+            badge.style.color = "#4ade80";
+            badge.style.border = "1px solid #16a34a";
+          } else {
+            badge.innerText = "Fuera de Línea";
+            badge.style.background = "rgba(220, 38, 38, 0.2)";
+            badge.style.color = "#fca5a5";
+            badge.style.border = "1px solid #dc2626";
+          }
+        }
       } else {
         if (infoBox) infoBox.innerHTML = '';
-        if (valMedidaInput) valMedidaInput.placeholder = 'Ej: 54.0';
-        if (valPesoInput) valPesoInput.placeholder = 'Ej: 12.5';
+        if (badge) badge.innerText = '';
       }
     }
 
@@ -1262,7 +1295,6 @@
       const fechaActual = new Date().toLocaleDateString('es-CL');
       const horaActual = new Date().toLocaleTimeString('es-CL');
 
-      // Recolectar extrusoras operativas seleccionadas
       const checks = document.querySelectorAll('.chk-op');
       let activasG1 = [];
       let activasG2 = [];
@@ -1310,7 +1342,6 @@
       doc.setFont("helvetica", "normal");
       doc.text(String(ultimoTurno), 155, 39);
 
-      // Bloque Extrusoras Operativas en PDF
       let y = 46;
       doc.setFillColor(241, 245, 249);
       doc.roundedRect(12, y, 186, 22, 2, 2, 'F');
