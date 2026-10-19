@@ -644,7 +644,6 @@
       }
 
       if (selectTurno) {
-        // Actualizar opciones con sus corchetes en texto
         const diaSemana = new Date().getDay();
         if (diaSemana >= 1 && diaSemana <= 5) {
           selectTurno.innerHTML = `
@@ -758,10 +757,20 @@
       const id = select.value;
       const ext = extrusoras.find(e => e.id === id);
       const infoBox = document.getElementById('info-objetivos-actuales');
-      if (ext && infoBox) {
-        infoBox.innerHTML = `📌 <b>Ficha:</b> Ancho Obj: ${ext.ancho}cm [${ext.minAncho}-${ext.maxAncho}cm] | Peso Ideal: ${ext.pesoIdeal}gr [${ext.minPeso}-${ext.maxPeso}gr]`;
-      } else if (infoBox) {
-        infoBox.innerHTML = '';
+      const valMedidaInput = document.getElementById('val-medida');
+      const valPesoInput = document.getElementById('val-peso');
+
+      if (ext) {
+        if (infoBox) {
+          infoBox.innerHTML = `📌 <b>Ficha:</b> Ancho Obj: ${ext.ancho}cm [${ext.minAncho}-${ext.maxAncho}cm] | Peso Ideal: ${ext.pesoIdeal}gr [${ext.minPeso}-${ext.maxPeso}gr]`;
+        }
+        // Actualización dinámica de los placeholders según la ficha técnica seleccionada
+        if (valMedidaInput) valMedidaInput.placeholder = `Ej: ${ext.ancho.toFixed(1)}`;
+        if (valPesoInput) valPesoInput.placeholder = `Ej: ${ext.pesoIdeal.toFixed(1)}`;
+      } else {
+        if (infoBox) infoBox.innerHTML = '';
+        if (valMedidaInput) valMedidaInput.placeholder = 'Ej: 54.0';
+        if (valPesoInput) valPesoInput.placeholder = 'Ej: 12.5';
       }
     }
 
@@ -1349,7 +1358,7 @@
     window.onload = () => {
       actualizarSelect();
       actualizarTurnoEnInterfaz();
-      setInterval(actualizarTurnoEnInterfaz, 60000); // Reevalúa el turno automáticamente cada minuto
+      setInterval(actualizarTurnoEnInterfaz, 60000);
       setTimeout(iniciarSincronizacionFirebase, 800);
     };
   </script>
