@@ -131,7 +131,7 @@
       filter: drop-shadow(0 0 8px #22c55e); 
     }
 
-    /* MEJORA 1: Logo principal responsivo para móviles */
+    /* Logo principal responsivo para móviles */
     .home-main-logo { 
       max-width: 85%; 
       max-height: 100px; 
@@ -210,21 +210,22 @@
       max-width: 650px; 
       margin-top: 25px; 
     }
+    /* MODIFICADO: Sin recuadros ni fondos, solo logos clicables */
     .home-card { 
-      background: #1e293b; 
-      border: 1px solid #334155;
+      background: transparent; 
+      border: none;
       border-radius: 16px;
-      padding: 25px 15px; 
+      padding: 15px; 
       cursor: pointer; 
-      transition: transform 0.2s, background-color 0.2s; 
+      transition: transform 0.2s, opacity 0.2s; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
     }
     .home-card:active, .home-card:hover { 
-      transform: scale(1.03); 
-      background: #334155;
+      transform: scale(1.05); 
+      opacity: 0.8;
     }
     .home-logo { max-height: 120px; width: auto; filter: drop-shadow(0 0 10px #22c55e); }
 
@@ -247,7 +248,7 @@
     .btn-corregir { background: #16a34a; padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 4px; }
     .btn-corregir:hover { background: #15803d; }
 
-    /* MODAL FICHAS & REGLAS */
+    /* MODAL FICHAS */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; padding: 10px; box-sizing: border-box; }
     .modal-content { background: #1e293b; width: 100%; max-width: 650px; padding: 20px; border-radius: 12px; border: 1px solid #475569; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 12px; }
@@ -278,7 +279,6 @@
   <div id="alerta-fullscreen">
     <h1 style="font-size: 1.6rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
     <h1 id="fs-titulo" style="font-size: 2rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
-    <!-- MEJORA 3: Contenedor con formato HTML para mejor diferenciación de errores -->
     <div id="fs-detalle" style="font-size: 1.1rem; margin: 0 0 25px 0; max-width: 100%; line-height: 1.5; white-space: normal;"></div>
     <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: 1.1rem; padding: 12px 25px; width: auto; border-radius: 8px; cursor: pointer; font-weight: bold;">Silenciar y Cerrar Alerta</button>
   </div>
@@ -289,7 +289,6 @@
       ℹ️ Sistema activo en Modo Respaldo / Sincronización Local.
     </div>
     <div class="home-container">
-      <!-- MEJORA 1: Clase actualizada para responsividad -->
       <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="home-main-logo">
       <h1 style="color: #38bdf8; font-size: 1.5rem; margin: 0;">Control de Calidad en Tiempo Real</h1>
       <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Selecciona el puesto de trabajo para comenzar</p>
@@ -297,17 +296,11 @@
       <div class="home-grid">
         <div class="home-card" onclick="cambiarVista('octagon')">
           <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="home-logo">
-          <span style="margin-top: 10px; font-weight: bold; color: #38bdf8;">Módulo Octagon</span>
         </div>
 
         <div class="home-card" onclick="cambiarVista('extrusion')">
           <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="home-logo">
-          <span style="margin-top: 10px; font-weight: bold; color: #38bdf8;">Módulo Extrusión</span>
         </div>
-      </div>
-
-      <div style="margin-top: 30px;">
-        <button class="btn-action" onclick="abrirModalReglas()" style="background: #334155;">🔥 Ver Reglas de Firebase</button>
       </div>
     </div>
   </div>
@@ -502,48 +495,6 @@
     </div>
   </div>
 
-  <!-- MODAL DE REGLAS DE FIREBASE -->
-  <div class="modal-overlay" id="modal-reglas">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 style="border:none; margin:0; font-size: 1.1rem; color:#38bdf8;">🔥 Reglas de Seguridad para Firebase</h2>
-        <button class="btn-cerrar" onclick="cerrarModalReglas()">✕ Cerrar</button>
-      </div>
-
-      <p style="font-size:0.9rem; color:#cbd5e1; line-height:1.5;">
-        Para permitir que la aplicación lea y escriba datos en tiempo real sin pedir inicio de sesión, debes pegar las siguientes reglas en la consola de Firebase:
-      </p>
-
-      <ol style="font-size:0.85rem; color:#94a3b8; padding-left: 20px; line-height: 1.6;">
-        <li>Entra a tu consola de Firebase: <a href="https://console.firebase.google.com/" target="_blank" style="color:#38bdf8;">console.firebase.google.com</a></li>
-        <li>Abre tu proyecto <strong>calidadextrusion-d9f60</strong>.</li>
-        <li>En el menú lateral, ve a <strong>Firestore Database</strong>.</li>
-        <li>Haz clic en la pestaña <strong>Reglas (Rules)</strong> en la parte superior.</li>
-        <li>Reemplaza todo el texto que veas por el siguiente bloque de código:</li>
-      </ol>
-
-<pre>
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
-    }
-  }
-}
-</pre>
-
-      <p style="font-size:0.85rem; color:#cbd5e1;">
-        6. Haz clic en el botón azul <strong>Publicar (Publish)</strong>.
-      </p>
-
-      <button onclick="copiarReglas()" style="background:#0284c7; margin-top:10px;">📋 Copiar Reglas al Portapapeles</button>
-      <div id="mensaje-copia" style="display:none; text-align:center; color:#4ade80; font-size:0.85rem; margin-top:6px;">
-        ¡Copiado al portapapeles!
-      </div>
-    </div>
-  </div>
-
   <script>
     let extrusoras = JSON.parse(localStorage.getItem('extrusoras')) || [
       { id: 'EXT-09', producto: '54x50 (OT: 18489)', ancho: 54.0, tolAncho: 0.5, minAncho: 53.5, maxAncho: 54.5, pesoIdeal: 12.0, tolPeso: 1.0, minPeso: 11.0, maxPeso: 13.0 }
@@ -567,23 +518,6 @@ service cloud.firestore {
     function cerrarModal() { 
       document.getElementById('modal-fichas').style.display = 'none'; 
       document.getElementById('mensaje-exito').style.display = 'none';
-    }
-
-    function abrirModalReglas() { document.getElementById('modal-reglas').style.display = 'flex'; }
-    function cerrarModalReglas() { document.getElementById('modal-reglas').style.display = 'none'; }
-
-    function copiarReglas() {
-      const codigo = `rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if true;\n    }\n  }\n}`;
-      const el = document.createElement('textarea');
-      el.value = codigo;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      
-      const msg = document.getElementById('mensaje-copia');
-      msg.style.display = 'block';
-      setTimeout(() => msg.style.display = 'none', 3000);
     }
 
     function actualizarRangos() {
@@ -733,7 +667,6 @@ service cloud.firestore {
         mensajeAlertaTipo = `🚨 Peso Fuera de Rango (${pesoMedido} gr)`;
       }
 
-      // MEJORA 3 y 4: Guardamos todos los datos de referencia en el registro para la alerta y el historial
       const registro = {
         timestamp: Date.now(),
         hora: new Date().toLocaleTimeString('es-CL'),
@@ -756,7 +689,6 @@ service cloud.firestore {
         pesoFuera: pesoFuera
       };
 
-      // CORRECCIÓN BUG CRÍTICO: Actualización optimista (se muestra al instante)
       registro.docId = 'local_' + Date.now();
       historial.unshift(registro);
       guardarHistorialLocal();
@@ -766,13 +698,11 @@ service cloud.firestore {
         lanzarAlerta(registro);
       }
 
-      // Sincronización en segundo plano con Firebase
       if (window.db && window.fbMethods && !window.useLocalFallback) {
         try {
           const { collection, addDoc } = window.fbMethods;
           const docRef = await addDoc(collection(window.db, "mediciones"), registro);
           
-          // Actualizamos el ID temporal por el real de Firebase
           const localIndex = historial.findIndex(h => h.docId === registro.docId);
           if (localIndex !== -1) {
             historial[localIndex].docId = docRef.id;
@@ -790,7 +720,6 @@ service cloud.firestore {
     }
 
     async function limpiarHistorial() {
-      // CORRECCIÓN: Confirmación para evitar borrados accidentales
       if (!confirm("¿Estás seguro de que deseas borrar TODO el historial? Esta acción no se puede deshacer.")) return;
 
       if (window.db && window.fbMethods && !window.useLocalFallback) {
@@ -809,7 +738,6 @@ service cloud.firestore {
     }
 
     async function corregirError(docId) {
-      // CORRECCIÓN: Actualización optimista local inmediata
       const regIndex = historial.findIndex(item => item.docId === docId);
       if (regIndex !== -1) {
         historial[regIndex].corregido = true;
@@ -818,7 +746,6 @@ service cloud.firestore {
         renderHistorial();
       }
       
-      // Sincronización en segundo plano con Firebase
       if (window.db && window.fbMethods && !docId.startsWith('local_') && !window.useLocalFallback) {
         try {
           const { doc, updateDoc } = window.fbMethods;
@@ -879,6 +806,11 @@ service cloud.firestore {
     }
 
     function lanzarAlerta(reg) {
+      // 1. No sonar ni mostrar banner en el módulo de Octagon (quien la emite)
+      if (document.getElementById('view-octagon').classList.contains('active')) {
+        return;
+      }
+
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
@@ -900,14 +832,12 @@ service cloud.firestore {
         setTimeout(() => { banner.style.display = 'none'; }, 10000);
       }
 
-      // MEJORA 2: La alerta de pantalla completa SOLO aparece si estamos en el módulo de extrusión
       const isExtrusionView = document.getElementById('view-extrusion').classList.contains('active');
       const fsAlerta = document.getElementById('alerta-fullscreen');
       
       if (fsAlerta && isExtrusionView) {
         document.getElementById('fs-titulo').innerText = reg.alertaTipo;
         
-        // MEJORA 3: Detalle visual claro comparando medido vs objetivo
         const anchoIcon = reg.anchoFuera ? '❌' : '✅';
         const anchoColor = reg.anchoFuera ? '#fca5a5' : '#4ade80';
         
@@ -1024,6 +954,30 @@ service cloud.firestore {
       doc.save(`Reporte_Calidad_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
+    // 4. Función para cambiar el turno automáticamente según la hora
+    function actualizarTurnoAutomatico() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const currentTime = hours * 60 + minutes; // Minutos desde medianoche
+
+      const inicioDia = 7 * 60;        // 07:00 = 420
+      const finDia = 14 * 60 + 30;     // 14:30 = 870
+      const finTarde = 22 * 60;        // 22:00 = 1320
+
+      let turno = "Noche";
+      if (currentTime >= inicioDia && currentTime < finDia) {
+        turno = "Día";
+      } else if (currentTime >= finDia && currentTime < finTarde) {
+        turno = "Tarde";
+      }
+
+      const selectTurno = document.getElementById('input-turno');
+      if (selectTurno) {
+        selectTurno.value = turno;
+      }
+    }
+
     window.iniciarSincronizacionFirebase = function() {
       if (!window.db || !window.fbMethods) {
         renderHistorial();
@@ -1039,7 +993,6 @@ service cloud.firestore {
           nuevosDatos.push({ docId: doc.id, ...doc.data() });
         });
 
-        // Ordenar localmente por seguridad
         nuevosDatos.sort((a, b) => b.timestamp - a.timestamp);
 
         historial = nuevosDatos;
@@ -1062,6 +1015,9 @@ service cloud.firestore {
     window.onload = () => {
       actualizarSelect();
       renderHistorial();
+      actualizarTurnoAutomatico(); // Establecer turno al cargar
+      setInterval(actualizarTurnoAutomatico, 60000); // Actualizar cada minuto
+      
       if (window.db && window.fbMethods) {
         window.iniciarSincronizacionFirebase();
       }
