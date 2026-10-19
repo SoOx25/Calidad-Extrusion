@@ -262,8 +262,11 @@
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 12px; }
     .btn-cerrar { background: #dc2626; width: auto; margin: 0; padding: 5px 12px; font-size: 0.85rem; }
 
-    .item-extrusora { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #334155; font-size: 0.85rem; }
-    .btn-borrar { background: #ef4444; width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; }
+    .item-extrusora { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #334155; font-size: 0.85rem; gap: 8px; }
+    .item-acciones { display: flex; gap: 6px; }
+    .btn-editar-item { background: #16a34a; width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; border-radius: 4px; }
+    .btn-editar-item:hover { background: #15803d; }
+    .btn-borrar { background: #ef4444; width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; border-radius: 4px; }
 
     /* REJILLAS MÓVILES FLUIDAS */
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
@@ -299,7 +302,7 @@
 </head>
 <body>
 
-  <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN - DISEÑO PANTALLA EN ALTURA) -->
+  <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
   <div id="alerta-fullscreen">
     <h1 id="fs-extrusora-header" style="font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase; text-shadow: 0 4px 15px rgba(0,0,0,0.7), 0 0 20px #ef4444; letter-spacing: 2px;">
       CORREGIR EXTRUSORA EXT-00
@@ -513,7 +516,10 @@
       </div>
 
       <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
-        <h3 style="margin-top: 0; color: #38bdf8; font-size: 0.95rem;">Nueva Ficha Técnica</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 id="titulo-form-ficha" style="margin-top: 0; color: #38bdf8; font-size: 0.95rem;">Nueva Ficha Técnica</h3>
+          <button id="btn-cancelar-edicion" onclick="cancelarEdicionFicha()" style="display:none; background:#475569; width:auto; margin:0; padding:4px 8px; font-size:0.75rem;">✕ Cancelar Edición</button>
+        </div>
         
         <label>N° Extrusora:</label>
         <input type="number" id="cfg-num-ext" placeholder="Ej: 9">
@@ -614,6 +620,7 @@
     function cerrarModal() { 
       document.getElementById('modal-fichas').style.display = 'none'; 
       document.getElementById('mensaje-exito').style.display = 'none';
+      cancelarEdicionFicha();
     }
 
     function actualizarRangos() {
@@ -695,10 +702,54 @@
               <strong>${e.id}</strong> - ${e.producto} <br>
               <small style="color:#94a3b8;">Ancho: ${e.ancho}cm [${e.minAncho}-${e.maxAncho}] | Peso: ${e.pesoIdeal}gr [${e.minPeso}-${e.maxPeso}]</small>
             </div>
-            <button class="btn-borrar" onclick="eliminarExtrusora('${e.id}')">🗑️ Borrar</button>
+            <div class="item-acciones">
+              <button class="btn-editar-item" onclick="cargarParaEditar('${e.id}')">✏️ Editar</button>
+              <button class="btn-borrar" onclick="eliminarExtrusora('${e.id}')">🗑️ Borrar</button>
+            </div>
           </div>
         `;
       });
+    }
+
+    function cargarParaEditar(id) {
+      const ext = extrusoras.find(e => e.id === id);
+      if (!ext) return;
+
+      // Extraer datos
+      const numOnly = parseInt(ext.id.replace(/\D/g, ''), 10);
+      document.getElementById('cfg-num-ext').value = isNaN(numOnly) ? '' : numOnly;
+      document.getElementById('cfg-num-ext').readOnly = true; // Bloquea el ID durante la edición
+
+      // Extraer Ancho x Largo x OT del string del producto
+      const matchProd = ext.producto.match(/^(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)\s*\(OT:\s*(\d+)\)$/);
+      if (matchProd) {
+        document.getElementById('cfg-ancho-prod').value = matchProd[1];
+        document.getElementById('cfg-largo-prod').value = matchProd[2];
+        document.getElementById('cfg-ot').value = matchProd[3];
+      }
+
+      document.getElementById('cfg-ancho').value = ext.ancho;
+      document.getElementById('cfg-tol-ancho').value = ext.tolAncho || 0.5;
+      document.getElementById('cfg-peso-ideal').value = ext.pesoIdeal;
+      document.getElementById('cfg-tol-peso').value = ext.tolPeso || 1.0;
+
+      actualizarRangos();
+
+      document.getElementById('titulo-form-ficha').innerText = `Editar Ficha ${ext.id}`;
+      document.getElementById('btn-cancelar-edicion').style.display = 'inline-block';
+      document.querySelector('.modal-content').scrollTop = 0;
+    }
+
+    function cancelarEdicionFicha() {
+      document.getElementById('cfg-num-ext').value = '';
+      document.getElementById('cfg-num-ext').readOnly = false;
+      document.getElementById('cfg-ancho-prod').value = '';
+      document.getElementById('cfg-largo-prod').value = '';
+      document.getElementById('cfg-ot').value = '';
+
+      document.getElementById('titulo-form-ficha').innerText = 'Nueva Ficha Técnica';
+      document.getElementById('btn-cancelar-edicion').style.display = 'none';
+      document.getElementById('mensaje-exito').style.display = 'none';
     }
 
     async function guardarExtrusora() {
@@ -753,11 +804,7 @@
       }
 
       document.getElementById('mensaje-exito').style.display = 'block';
-
-      document.getElementById('cfg-num-ext').value = '';
-      document.getElementById('cfg-ancho-prod').value = '';
-      document.getElementById('cfg-largo-prod').value = '';
-      document.getElementById('cfg-ot').value = '';
+      cancelarEdicionFicha();
     }
 
     async function eliminarExtrusora(id) {
