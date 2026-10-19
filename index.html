@@ -15,6 +15,7 @@
       getFirestore, 
       collection, 
       addDoc, 
+      setDoc,
       onSnapshot, 
       doc, 
       updateDoc, 
@@ -40,7 +41,7 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       window.db = db;
-      window.fbMethods = { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, getDocs, query, orderBy, limit };
+      window.fbMethods = { collection, addDoc, setDoc, onSnapshot, doc, updateDoc, deleteDoc, getDocs, query, orderBy, limit };
       
       if (typeof window.iniciarSincronizacionFirebase === 'function') {
         window.iniciarSincronizacionFirebase();
@@ -221,22 +222,20 @@
       margin-top: 25px; 
     }
     .home-card { 
-      background: #1e293b; 
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 25px 15px; 
+      background: transparent; 
+      border: none; 
+      padding: 15px; 
       cursor: pointer; 
-      transition: transform 0.2s, background-color 0.2s; 
+      transition: transform 0.2s; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
     }
     .home-card:active, .home-card:hover { 
-      transform: scale(1.03); 
-      background: #334155;
+      transform: scale(1.05); 
     }
-    .home-logo { max-height: 120px; width: auto; filter: drop-shadow(0 0 10px #22c55e); }
+    .home-logo { max-height: 140px; width: auto; filter: drop-shadow(0 0 10px #22c55e); }
 
     /* TABLAS Y MÓVIL RESPONSIVE */
     .table-responsive {
@@ -257,7 +256,7 @@
     .btn-corregir { background: #16a34a; padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 4px; }
     .btn-corregir:hover { background: #15803d; }
 
-    /* MODAL FICHAS & REGLAS */
+    /* MODAL FICHAS */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; padding: 10px; box-sizing: border-box; }
     .modal-content { background: #1e293b; width: 100%; max-width: 650px; padding: 20px; border-radius: 12px; border: 1px solid #475569; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 12px; }
@@ -265,8 +264,6 @@
 
     .item-extrusora { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #334155; font-size: 0.85rem; }
     .btn-borrar { background: #ef4444; width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; }
-
-    pre { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 8px; color: #38bdf8; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
 
     /* REJILLAS MÓVILES FLUIDAS */
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
@@ -291,15 +288,6 @@
       font-size: 0.85rem;
     }
 
-    .badge {
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: bold;
-    }
-    .badge-alert { background: rgba(220, 38, 38, 0.3); color: #fca5a5; border: 1px solid #ef4444; }
-    .badge-ok { background: rgba(22, 163, 74, 0.3); color: #86efac; border: 1px solid #22c55e; }
-
     @media (max-width: 640px) {
       body { padding: 8px; }
       .header-title { font-size: 1.1rem; }
@@ -313,7 +301,7 @@
 
   <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
   <div id="alerta-fullscreen">
-    <h1 style="font-size: 1.8rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
+    <h1 id="fs-extrusora-header" style="font-size: 1.8rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase;">Corregir Extrusora</h1>
     <h1 id="fs-titulo" style="font-size: 2.2rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
     <p id="fs-detalle" style="font-size: 1.2rem; margin: 0 0 25px 0; max-width: 100%; line-height: 1.4;">---</p>
     <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: 1.1rem; padding: 12px 25px; width: auto; border-radius: 8px; cursor: pointer; font-weight: bold;">Silenciar y Cerrar Alerta</button>
@@ -332,17 +320,14 @@
       <div class="home-grid">
         <div class="home-card" onclick="cambiarVista('octagon')">
           <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="home-logo">
-          <span style="margin-top: 10px; font-weight: bold; color: #38bdf8;">Módulo Octagon</span>
         </div>
 
         <div class="home-card" onclick="cambiarVista('extrusion')">
           <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="home-logo">
-          <span style="margin-top: 10px; font-weight: bold; color: #38bdf8;">Módulo Extrusión</span>
         </div>
       </div>
 
       <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-        <button class="btn-action" onclick="abrirModalReglas()" style="background: #334155;">🔥 Reglas Firebase</button>
         <button class="btn-action" onclick="toggleSonidoAudio()" id="btn-toggle-audio" style="background: #0284c7;">🔔 Sonido: Activado</button>
       </div>
     </div>
@@ -591,49 +576,8 @@
     </div>
   </div>
 
-  <!-- MODAL DE REGLAS DE FIREBASE -->
-  <div class="modal-overlay" id="modal-reglas">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 style="border:none; margin:0; font-size: 1.1rem; color:#38bdf8;">🔥 Reglas de Seguridad para Firebase</h2>
-        <button class="btn-cerrar" onclick="cerrarModalReglas()">✕ Cerrar</button>
-      </div>
-
-      <p style="font-size:0.9rem; color:#cbd5e1; line-height:1.5;">
-        Para permitir que la aplicación lea y escriba datos en tiempo real sin pedir inicio de sesión, debes pegar las siguientes reglas en la consola de Firebase:
-      </p>
-
-      <ol style="font-size:0.85rem; color:#94a3b8; padding-left: 20px; line-height: 1.6;">
-        <li>Entra a tu consola de Firebase: <a href="https://console.firebase.google.com/" target="_blank" style="color:#38bdf8;">console.firebase.google.com</a></li>
-        <li>Abre tu proyecto <strong>calidadextrusion-d9f60</strong>.</li>
-        <li>En el menú lateral, ve a <strong>Firestore Database</strong>.</li>
-        <li>Haz clic en la pestaña <strong>Reglas (Rules)</strong> en la parte superior.</li>
-        <li>Reemplaza todo el texto que veas por el siguiente bloque de código:</li>
-      </ol>
-
-<pre>
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
-    }
-  }
-}
-</pre>
-
-      <p style="font-size:0.85rem; color:#cbd5e1;">
-        6. Haz clic en el botón azul <strong>Publicar (Publish)</strong>.
-      </p>
-
-      <button onclick="copiarReglas()" style="background:#0284c7; margin-top:10px;">📋 Copiar Reglas al Portapapeles</button>
-      <div id="mensaje-copia" style="display:none; text-align:center; color:#4ade80; font-size:0.85rem; margin-top:6px;">
-        ¡Copiado al portapapeles!
-      </div>
-    </div>
-  </div>
-
   <script>
+    let vistaActual = 'home';
     let extrusoras = JSON.parse(localStorage.getItem('extrusoras')) || [
       { id: 'EXT-09', producto: '54x50 (OT: 18489)', ancho: 54.0, tolAncho: 0.5, minAncho: 53.5, maxAncho: 54.5, pesoIdeal: 12.0, tolPeso: 1.0, minPeso: 11.0, maxPeso: 13.0 }
     ];
@@ -641,6 +585,7 @@ service cloud.firestore {
     let historial = JSON.parse(localStorage.getItem('mediciones_local')) || [];
     let primerCarga = true;
     let sonidoHabilitado = true;
+    let timerAlertaFullscreen = null;
 
     function guardarHistorialLocal() {
       localStorage.setItem('mediciones_local', JSON.stringify(historial));
@@ -656,6 +601,7 @@ service cloud.firestore {
     }
 
     function cambiarVista(vista) {
+      vistaActual = vista;
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       const target = document.getElementById('view-' + vista);
       if (target) target.classList.add('active');
@@ -666,23 +612,6 @@ service cloud.firestore {
     function cerrarModal() { 
       document.getElementById('modal-fichas').style.display = 'none'; 
       document.getElementById('mensaje-exito').style.display = 'none';
-    }
-
-    function abrirModalReglas() { document.getElementById('modal-reglas').style.display = 'flex'; }
-    function cerrarModalReglas() { document.getElementById('modal-reglas').style.display = 'none'; }
-
-    function copiarReglas() {
-      const codigo = `rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if true;\n    }\n  }\n}`;
-      const el = document.createElement('textarea');
-      el.value = codigo;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      
-      const msg = document.getElementById('mensaje-copia');
-      msg.style.display = 'block';
-      setTimeout(() => msg.style.display = 'none', 3000);
     }
 
     function actualizarRangos() {
@@ -770,7 +699,7 @@ service cloud.firestore {
       });
     }
 
-    function guardarExtrusora() {
+    async function guardarExtrusora() {
       const numExt = document.getElementById('cfg-num-ext').value.trim();
       const anchoProd = document.getElementById('cfg-ancho-prod').value.trim();
       const largoProd = document.getElementById('cfg-largo-prod').value.trim();
@@ -793,23 +722,35 @@ service cloud.firestore {
       const idFormatted = `EXT-${numExt.padStart(2, '0')}`;
       const productoFormatted = `${anchoProd}x${largoProd} (OT: ${ot})`;
 
-      const index = extrusoras.findIndex(e => e.id === idFormatted);
       const nuevaFicha = { 
         id: idFormatted, producto: productoFormatted, 
         ancho, tolAncho, minAncho, maxAncho, 
         pesoIdeal, tolPeso, minPeso, maxPeso 
       };
 
-      if (index >= 0) {
-        extrusoras[index] = nuevaFicha;
-      } else {
-        extrusoras.push(nuevaFicha);
+      try {
+        if (window.fbMethods && window.db) {
+          const { doc, setDoc } = window.fbMethods;
+          // Guardar permanentemente en la colección 'fichas' de Firebase
+          await setDoc(doc(window.db, "fichas", idFormatted), nuevaFicha);
+        } else {
+          const index = extrusoras.findIndex(e => e.id === idFormatted);
+          if (index >= 0) extrusoras[index] = nuevaFicha;
+          else extrusoras.push(nuevaFicha);
+          localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
+          actualizarSelect();
+          renderListaModal();
+        }
+      } catch (e) {
+        console.warn("Error al guardar ficha en Firebase, guardando en LocalStorage:", e);
+        const index = extrusoras.findIndex(e => e.id === idFormatted);
+        if (index >= 0) extrusoras[index] = nuevaFicha;
+        else extrusoras.push(nuevaFicha);
+        localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
+        actualizarSelect();
+        renderListaModal();
       }
 
-      localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
-      actualizarSelect();
-      renderListaModal();
-      
       document.getElementById('mensaje-exito').style.display = 'block';
 
       document.getElementById('cfg-num-ext').value = '';
@@ -818,11 +759,25 @@ service cloud.firestore {
       document.getElementById('cfg-ot').value = '';
     }
 
-    function eliminarExtrusora(id) {
-      extrusoras = extrusoras.filter(e => e.id !== id);
-      localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
-      actualizarSelect();
-      renderListaModal();
+    async function eliminarExtrusora(id) {
+      if (!confirm(`¿Eliminar la ficha técnica para la ${id}?`)) return;
+      
+      try {
+        if (window.fbMethods && window.db) {
+          const { doc, deleteDoc } = window.fbMethods;
+          await deleteDoc(doc(window.db, "fichas", id));
+        } else {
+          extrusoras = extrusoras.filter(e => e.id !== id);
+          localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
+          actualizarSelect();
+          renderListaModal();
+        }
+      } catch (e) {
+        extrusoras = extrusoras.filter(e => e.id !== id);
+        localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
+        actualizarSelect();
+        renderListaModal();
+      }
     }
 
     async function registrarMedida() {
@@ -839,6 +794,8 @@ service cloud.firestore {
       if (isNaN(valorMedido) || isNaN(pesoMedido)) return alert('Ingresa tanto el ancho como el peso medido');
 
       const ext = extrusoras.find(e => e.id === id);
+      if (!ext) return alert('No se encontró la ficha técnica seleccionada');
+
       const anchoFuera = valorMedido < ext.minAncho || valorMedido > ext.maxAncho;
       const pesoFuera = pesoMedido < ext.minPeso || pesoMedido > ext.maxPeso;
       const fueraDeRango = anchoFuera || pesoFuera;
@@ -866,110 +823,115 @@ service cloud.firestore {
         alertaTipo: mensajeAlertaTipo
       };
 
-      let firebaseExito = false;
-      if (window.db && window.fbMethods && !window.useLocalFallback) {
-        try {
+      try {
+        if (window.fbMethods && window.db) {
           const { collection, addDoc } = window.fbMethods;
           await addDoc(collection(window.db, "mediciones"), registro);
-          firebaseExito = true;
-        } catch (e) {
-          console.warn("Firestore inaccesible. Modo local activo:", e.message);
-          window.useLocalFallback = true;
-          document.getElementById('banner-offline').style.display = 'block';
+        } else {
+          historial.unshift(registro);
+          guardarHistorialLocal();
+          renderHistorial();
+          if (fueraDeRango) lanzarAlerta(registro);
         }
-      }
-
-      if (!firebaseExito) {
-        registro.docId = 'local_' + Date.now();
+        
+        document.getElementById('val-medida').value = '';
+        document.getElementById('val-peso').value = '';
+      } catch (e) {
         historial.unshift(registro);
         guardarHistorialLocal();
         renderHistorial();
-        if (registro.fueraDeRango) lanzarAlerta(registro);
+        if (fueraDeRango) lanzarAlerta(registro);
+        document.getElementById('val-medida').value = '';
+        document.getElementById('val-peso').value = '';
       }
-
-      document.getElementById('val-medida').value = '';
-      document.getElementById('val-peso').value = '';
     }
 
     async function limpiarHistorial() {
-      if (!confirm("¿Estás seguro de que deseas vaciar el historial completo?")) return;
-      if (window.db && window.fbMethods && !window.useLocalFallback) {
-        try {
+      if (!confirm('¿Estás seguro de borrar todas las mediciones del historial?')) return;
+      try {
+        if (window.fbMethods && window.db) {
           const { collection, getDocs, deleteDoc, doc } = window.fbMethods;
           const snapshot = await getDocs(collection(window.db, "mediciones"));
           const promises = snapshot.docs.map(d => deleteDoc(doc(window.db, "mediciones", d.id)));
           await Promise.all(promises);
-        } catch (e) {
-          console.warn("Error al vaciar en Firebase:", e);
         }
-      }
+      } catch (e) {}
       historial = [];
-      guardarHistorialLocal();
+      localStorage.removeItem('mediciones_local');
       renderHistorial();
     }
 
     async function corregirError(docId) {
-      if (window.db && window.fbMethods && !docId.startsWith('local_') && !window.useLocalFallback) {
-        try {
+      try {
+        if (window.fbMethods && window.db && typeof docId === 'string') {
           const { doc, updateDoc } = window.fbMethods;
           const refDoc = doc(window.db, "mediciones", docId);
           await updateDoc(refDoc, {
             corregido: true,
             fueraDeRango: false
           });
-          return;
-        } catch(e) {
-          console.warn("Error actualizando en Firebase:", e);
+        } else {
+          const reg = historial.find(r => r.timestamp === docId || r.docId === docId);
+          if (reg) {
+            reg.corregido = true;
+            reg.fueraDeRango = false;
+            guardarHistorialLocal();
+            renderHistorial();
+          }
         }
-      }
-      
-      const reg = historial.find(item => item.docId === docId);
-      if (reg) {
-        reg.corregido = true;
-        reg.fueraDeRango = false;
-        guardarHistorialLocal();
-        renderHistorial();
+      } catch(e) {
+        const reg = historial.find(r => r.docId === docId || r.timestamp === docId);
+        if (reg) {
+          reg.corregido = true;
+          reg.fueraDeRango = false;
+          guardarHistorialLocal();
+          renderHistorial();
+        }
       }
     }
 
+    function actualizarDashboardMetrics() {
+      const total = historial.length;
+      const okCount = historial.filter(r => !r.fueraDeRango).length;
+      const alertasCount = historial.filter(r => r.fueraDeRango).length;
+      const cumplimiento = total > 0 ? Math.round((okCount / total) * 100) : 100;
+
+      const mTotal = document.getElementById('m-total');
+      const mCump = document.getElementById('m-cumplimiento');
+      const mOkCount = document.getElementById('m-ok-count');
+      const mAlertas = document.getElementById('m-alertas');
+
+      if (mTotal) mTotal.innerText = total;
+      if (mCump) mCump.innerText = `${cumplimiento}%`;
+      if (mOkCount) mOkCount.innerText = `${okCount} en norma`;
+      if (mAlertas) mAlertas.innerText = alertasCount;
+    }
+
     function renderHistorial() {
+      actualizarDashboardMetrics();
+
+      const fExt = (document.getElementById('filtro-extrusora') || {}).value || "TODAS";
+      const fEst = (document.getElementById('filtro-estado') || {}).value || "TODOS";
+      const fBus = ((document.getElementById('filtro-buscar') || {}).value || "").toLowerCase().trim();
+
+      const fExtExt = (document.getElementById('filtro-extrusora-ext') || {}).value || "TODAS";
+      const fEstExt = (document.getElementById('filtro-estado-ext') || {}).value || "TODOS";
+
       const tbodyOctagon = document.getElementById('tabla-log-octagon');
       const tbodyExtrusion = document.getElementById('tabla-log-extrusion');
 
-      // Actualizar Métricas
-      const totalCount = historial.length;
-      const alertasCount = historial.filter(r => r.fueraDeRango).length;
-      const okCount = historial.filter(r => !r.fueraDeRango).length;
-      const porcOk = totalCount > 0 ? Math.round((okCount / totalCount) * 100) : 100;
-
-      document.getElementById('m-total').innerText = totalCount;
-      document.getElementById('m-cumplimiento').innerText = `${porcOk}%`;
-      document.getElementById('m-ok-count').innerText = `${okCount} en norma`;
-      document.getElementById('m-alertas').innerText = alertasCount;
-
-      // Filtros Octagon
-      const fExt = document.getElementById('filtro-extrusora')?.value || 'TODAS';
-      const fEst = document.getElementById('filtro-estado')?.value || 'TODOS';
-      const fBus = document.getElementById('filtro-buscar')?.value.toLowerCase().trim() || '';
-
-      const filtrarLista = (list, extVal, estVal) => {
-        return list.filter(reg => {
-          if (extVal !== 'TODAS' && reg.id !== extVal) return false;
-          if (estVal === 'ALERTAS' && !reg.fueraDeRango) return false;
-          if (estVal === 'CORREGIDOS' && !reg.corregido) return false;
-          if (estVal === 'OK' && (reg.fueraDeRango || reg.corregido)) return false;
-          if (fBus && !reg.operador.toLowerCase().includes(fBus) && !reg.producto.toLowerCase().includes(fBus)) return false;
-          return true;
-        });
-      };
-
-      const historialOctagon = filtrarLista(historial, fExt, fEst);
-
       if (tbodyOctagon) {
         tbodyOctagon.innerHTML = '';
-        historialOctagon.forEach(reg => {
+        historial.filter(r => {
+          if (fExt !== "TODAS" && r.id !== fExt) return false;
+          if (fEst === "ALERTAS" && !r.fueraDeRango) return false;
+          if (fEst === "CORREGIDOS" && !r.corregido) return false;
+          if (fEst === "OK" && (r.fueraDeRango || r.corregido)) return false;
+          if (fBus && !r.operador.toLowerCase().includes(fBus) && !r.producto.toLowerCase().includes(fBus)) return false;
+          return true;
+        }).forEach(reg => {
           let clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
-          let estadoTexto = reg.fueraDeRango ? '🚨 FUERA' : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
+          let estadoTexto = reg.fueraDeRango ? '🚨 FUERA DE RANGO' : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
           tbodyOctagon.innerHTML += `
             <tr class="${clase}">
               <td>${reg.hora}</td>
@@ -984,17 +946,18 @@ service cloud.firestore {
         });
       }
 
-      // Filtros Extrusión
-      const fExtE = document.getElementById('filtro-extrusora-ext')?.value || 'TODAS';
-      const fEstE = document.getElementById('filtro-estado-ext')?.value || 'TODOS';
-      const historialExtrusion = filtrarLista(historial, fExtE, fEstE);
-
       if (tbodyExtrusion) {
         tbodyExtrusion.innerHTML = '';
-        historialExtrusion.forEach(reg => {
+        historial.filter(r => {
+          if (fExtExt !== "TODAS" && r.id !== fExtExt) return false;
+          if (fEstExt === "ALERTAS" && !r.fueraDeRango) return false;
+          if (fEstExt === "CORREGIDOS" && !r.corregido) return false;
+          return true;
+        }).forEach(reg => {
           let clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
+          let idKey = reg.docId || reg.timestamp;
           let estadoAccion = reg.fueraDeRango 
-            ? `<button class="btn-corregir" onclick="corregirError('${reg.docId}')">Marcar Corregido</button>` 
+            ? `<button class="btn-corregir" onclick="corregirError('${idKey}')">Error Corregido</button>` 
             : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
           tbodyExtrusion.innerHTML += `
             <tr class="${clase}">
@@ -1012,110 +975,145 @@ service cloud.firestore {
     }
 
     function lanzarAlerta(reg) {
-      if (sonidoHabilitado) {
-        try {
-          const ctx = new (window.AudioContext || window.webkitAudioContext)();
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(750, ctx.currentTime);
-          gain.gain.setValueAtTime(0.5, ctx.currentTime);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start();
-          osc.stop(ctx.currentTime + 0.8);
-        } catch(e) {}
-      }
+      if (vistaActual === 'extrusion') {
+        if (sonidoHabilitado) {
+          try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(750, ctx.currentTime);
+            gain.gain.setValueAtTime(0.5, ctx.currentTime);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.8);
+          } catch(e) {}
+        }
 
-      const banner = document.getElementById('banner-alerta');
-      if (banner) {
-        document.getElementById('titulo-alerta').innerText = reg.alertaTipo;
-        document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id} -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr`;
-        banner.style.display = 'block';
-        setTimeout(() => { banner.style.display = 'none'; }, 10000);
-      }
+        const fsAlerta = document.getElementById('alerta-fullscreen');
+        if (fsAlerta) {
+          document.getElementById('fs-extrusora-header').innerText = `CORREGIR EXTRUSORA ${reg.id}`;
+          document.getElementById('fs-titulo').innerText = reg.alertaTipo;
+          document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | Producto: ${reg.producto}\nMedido -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr\nOperador: ${reg.operador}`;
+          fsAlerta.style.display = 'flex';
 
-      const fsAlerta = document.getElementById('alerta-fullscreen');
-      if (fsAlerta) {
-        document.getElementById('fs-titulo').innerText = reg.alertaTipo;
-        document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | Producto: ${reg.producto}\nMedido -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr\nOperador: ${reg.operador}`;
-        fsAlerta.style.display = 'flex';
+          if (timerAlertaFullscreen) clearTimeout(timerAlertaFullscreen);
+          timerAlertaFullscreen = setTimeout(() => {
+            cerrarAlertaFullscreen();
+          }, 30000);
+        }
+      } else if (vistaActual === 'octagon') {
+        const banner = document.getElementById('banner-alerta');
+        if (banner) {
+          document.getElementById('titulo-alerta').innerText = reg.alertaTipo;
+          document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id} -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr`;
+          banner.style.display = 'block';
+          setTimeout(() => { banner.style.display = 'none'; }, 10000);
+        }
       }
     }
 
     function cerrarAlertaFullscreen() {
+      if (timerAlertaFullscreen) {
+        clearTimeout(timerAlertaFullscreen);
+        timerAlertaFullscreen = null;
+      }
       const fsAlerta = document.getElementById('alerta-fullscreen');
       if (fsAlerta) fsAlerta.style.display = 'none';
     }
 
     function exportarCSV() {
-      if (historial.length === 0) return alert('No hay registros para exportar.');
-      let csvContent = "data:text/csv;charset=utf-8,Hora,Operador,Turno,Extrusora,Producto_OT,Ancho_cm,Peso_gr,Estado\n";
-      
+      if (historial.length === 0) return alert('No hay mediciones para exportar');
+      let csv = "Hora,Operador,Turno,Extrusora,Producto,AnchoMedido_cm,PesoMedido_gr,Estado\n";
       historial.forEach(r => {
-        let estado = r.fueraDeRango ? "FUERA" : (r.corregido ? "CORREGIDO" : "OK");
-        let fila = `"${r.hora}","${r.operador}","${r.turno}","${r.id}","${r.producto}",${r.valorMedido},${r.pesoMedido},"${estado}"`;
-        csvContent += fila + "\n";
+        let est = r.fueraDeRango ? "FUERA DE RANGO" : (r.corregido ? "CORREGIDO" : "OK");
+        csv += `"${r.hora}","${r.operador}","${r.turno}","${r.id}","${r.producto}",${r.valorMedido},${r.pesoMedido},"${est}"\n`;
       });
-
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `Reporte_Calidad_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Reporte_Calidad_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
     function generarPDF() {
       if (historial.length === 0) return alert('No hay registros en el historial para exportar.');
       
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
 
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = 'https://iili.io/nw6Sq0v.png';
+
+      img.onload = () => {
+        dibujarPDF(doc, img);
+      };
+      img.onerror = () => {
+        dibujarPDF(doc, null);
+      };
+    }
+
+    function dibujarPDF(doc, img) {
       const ultimoOperador = historial[0].operador || "No especificado";
       const ultimoTurno = historial[0].turno || "No especificado";
+      const fechaActual = new Date().toLocaleDateString('es-CL');
+      const horaActual = new Date().toLocaleTimeString('es-CL');
+
+      if (img) {
+        const logoWidth = 30;
+        const logoHeight = (img.height * logoWidth) / img.width;
+        doc.addImage(img, 'PNG', 12, 10, logoWidth, logoHeight);
+      }
 
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
+      doc.setFontSize(15);
       doc.setTextColor(15, 23, 42);
-      doc.text("Reporte Diario - Control de Calidad Extrusión", 14, 18);
+      doc.text("REPORTE CONTROL DE CALIDAD", 48, 18);
 
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100, 116, 139);
-      doc.text(`Fecha: ${new Date().toLocaleDateString('es-CL')} ${new Date().toLocaleTimeString('es-CL')}`, 14, 24);
+      doc.text(`Planta Extrusión — Fecha de emisión: ${fechaActual} ${horaActual}`, 48, 25);
 
-      doc.setFillColor(241, 245, 249);
-      doc.roundedRect(14, 28, 182, 12, 2, 2, "F");
-      
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(15, 23, 42);
-      doc.text("Operador:", 18, 36);
-      doc.setFont("helvetica", "normal");
-      doc.text(ultimoOperador, 40, 36);
+      doc.setDrawColor(203, 213, 225);
+      doc.setLineWidth(0.4);
+      doc.line(12, 32, 198, 32);
 
-      doc.setFont("helvetica", "bold");
-      doc.text("Turno:", 135, 36);
-      doc.setFont("helvetica", "normal");
-      doc.text(ultimoTurno, 150, 36);
-
-      let y = 48;
-      doc.setFillColor(15, 23, 42);
-      doc.rect(14, y, 182, 8, "F");
-      
-      doc.setTextColor(255, 255, 255);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(8.5);
-      
-      doc.text("Hora", 18, y + 5.5);
-      doc.text("Extr.", 45, y + 5.5);
-      doc.text("Producto / OT", 75, y + 5.5);
-      doc.text("Ancho Medido", 130, y + 5.5);
-      doc.text("Peso Medido", 158, y + 5.5);
-      doc.text("Estado", 182, y + 5.5, { align: "right" });
+      doc.setTextColor(15, 23, 42);
+      doc.text("OPERADOR OCTAGON:", 12, 39);
+      doc.setFont("helvetica", "normal");
+      doc.text(String(ultimoOperador), 50, 39);
 
-      y += 8;
+      doc.setFont("helvetica", "bold");
+      doc.text("TURNO:", 140, 39);
+      doc.setFont("helvetica", "normal");
+      doc.text(String(ultimoTurno), 155, 39);
+
+      let y = 46;
+      doc.setDrawColor(15, 23, 42);
+      doc.setLineWidth(0.5);
+      doc.line(12, y, 198, y);
+
+      doc.setTextColor(15, 23, 42);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8.5);
+
+      doc.text("HORA", 14, y + 5);
+      doc.text("EXTR.", 36, y + 5);
+      doc.text("PRODUCTO / OT", 60, y + 5);
+      doc.text("ANCHO", 125, y + 5);
+      doc.text("PESO", 152, y + 5);
+      doc.text("ESTADO", 196, y + 5, { align: "right" });
+
+      y += 7;
+      doc.line(12, y, 198, y);
+
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8.5);
 
@@ -1123,79 +1121,110 @@ service cloud.firestore {
         if (y > 275) {
           doc.addPage();
           y = 20;
-        }
 
-        if (index % 2 === 0) {
-          doc.setFillColor(248, 250, 252);
-          doc.rect(14, y, 182, 8, "F");
+          doc.setDrawColor(15, 23, 42);
+          doc.setLineWidth(0.5);
+          doc.line(12, y, 198, y);
+
+          doc.setTextColor(15, 23, 42);
+          doc.setFont("helvetica", "bold");
+          doc.text("HORA", 14, y + 5);
+          doc.text("EXTR.", 36, y + 5);
+          doc.text("PRODUCTO / OT", 60, y + 5);
+          doc.text("ANCHO", 125, y + 5);
+          doc.text("PESO", 152, y + 5);
+          doc.text("ESTADO", 196, y + 5, { align: "right" });
+
+          y += 7;
+          doc.line(12, y, 198, y);
+          doc.setFont("helvetica", "normal");
         }
 
         doc.setTextColor(15, 23, 42);
-        doc.text(String(reg.hora), 18, y + 5.5);
-        doc.text(String(reg.id), 45, y + 5.5);
-        doc.text(String(reg.producto), 75, y + 5.5);
-        doc.text(`${reg.valorMedido} cm`, 130, y + 5.5);
-        doc.text(`${reg.pesoMedido} gr`, 158, y + 5.5);
+        doc.text(String(reg.hora), 14, y + 5);
+        doc.text(String(reg.id), 36, y + 5);
+        doc.text(String(reg.producto), 60, y + 5);
+        doc.text(`${reg.valorMedido} cm`, 125, y + 5);
+        doc.text(`${reg.pesoMedido} gr`, 152, y + 5);
 
         if (reg.fueraDeRango) {
           doc.setTextColor(220, 38, 38);
           doc.setFont("helvetica", "bold");
-          doc.text("FUERA", 182, y + 5.5, { align: "right" });
+          doc.text("FUERA", 196, y + 5, { align: "right" });
           doc.setFont("helvetica", "normal");
         } else if (reg.corregido) {
           doc.setTextColor(22, 163, 74);
           doc.setFont("helvetica", "bold");
-          doc.text("CORREGIDO", 182, y + 5.5, { align: "right" });
+          doc.text("CORREGIDO", 196, y + 5, { align: "right" });
           doc.setFont("helvetica", "normal");
         } else {
           doc.setTextColor(22, 163, 74);
-          doc.text("OK", 182, y + 5.5, { align: "right" });
+          doc.text("OK", 196, y + 5, { align: "right" });
         }
 
-        y += 8;
+        y += 7;
+        doc.setDrawColor(241, 245, 249);
+        doc.setLineWidth(0.2);
+        doc.line(12, y, 198, y);
       });
 
       doc.save(`Reporte_Calidad_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
-    window.iniciarSincronizacionFirebase = function() {
-      if (!window.db || !window.fbMethods) {
-        renderHistorial();
-        return;
-      }
-      
-      const { collection, onSnapshot, query, orderBy, limit } = window.fbMethods;
-      const q = query(collection(window.db, "mediciones"), orderBy("timestamp", "desc"), limit(50));
+    function iniciarSincronizacionFirebase() {
+      try {
+        if (!window.fbMethods || !window.db) throw new Error("Firebase no inicializado");
+        const { collection, onSnapshot, query, orderBy, limit } = window.fbMethods;
+        
+        // 1. Escuchador de Mediciones
+        const qMediciones = query(collection(window.db, "mediciones"), orderBy("timestamp", "desc"), limit(50));
+        onSnapshot(qMediciones, (snapshot) => {
+          const nuevosDatos = [];
+          snapshot.forEach((doc) => {
+            nuevosDatos.push({ docId: doc.id, ...doc.data() });
+          });
 
-      onSnapshot(q, (snapshot) => {
-        const nuevosDatos = [];
-        snapshot.forEach((doc) => {
-          nuevosDatos.push({ docId: doc.id, ...doc.data() });
+          historial = nuevosDatos;
+          renderHistorial();
+
+          if (!primerCarga && historial.length > 0 && historial[0].fueraDeRango) {
+            lanzarAlerta(historial[0]);
+          }
+          primerCarga = false;
+        }, (error) => {
+          usarHistorialLocal();
         });
 
-        historial = nuevosDatos;
-        guardarHistorialLocal();
-        renderHistorial();
+        // 2. Escuchador de Fichas Técnicas (Sincronización permanente)
+        const qFichas = collection(window.db, "fichas");
+        onSnapshot(qFichas, (snapshot) => {
+          const nuevasFichas = [];
+          snapshot.forEach((doc) => {
+            nuevasFichas.push(doc.data());
+          });
+          if (nuevasFichas.length > 0) {
+            extrusoras = nuevasFichas;
+            localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
+            actualizarSelect();
+            renderListaModal();
+          }
+        });
 
-        if (!primerCarga && historial.length > 0 && historial[0].fueraDeRango) {
-          lanzarAlerta(historial[0]);
-        }
-        primerCarga = false;
-      }, (error) => {
-        console.warn("Sincronización en tiempo real inactiva. Usando respaldo local.", error.message);
-        window.useLocalFallback = true;
-        const bannerOffline = document.getElementById('banner-offline');
-        if (bannerOffline) bannerOffline.style.display = 'block';
-        renderHistorial();
-      });
-    };
+      } catch (e) {
+        usarHistorialLocal();
+      }
+    }
+
+    function usarHistorialLocal() {
+      const bannerOff = document.getElementById('banner-offline');
+      if (bannerOff) bannerOff.style.display = 'block';
+      historial = JSON.parse(localStorage.getItem('mediciones_local')) || [];
+      renderHistorial();
+    }
 
     window.onload = () => {
       actualizarSelect();
-      renderHistorial();
-      if (window.db && window.fbMethods) {
-        window.iniciarSincronizacionFirebase();
-      }
+      setTimeout(iniciarSincronizacionFirebase, 800);
     };
   </script>
 </body>
