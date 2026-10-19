@@ -69,25 +69,27 @@
     .view-section { display: none; }
     .view-section.active { display: block; }
 
-    /* DASHBOARD METRICS */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
+    /* BADGE INDICADOR DE ALERTAS ACTIVAS EN LA ESQUINA SUPERIOR DERECHA */
+    #badge-alertas-top {
+      display: none;
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 1000;
+      background: #ef4444;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+      border: 2px solid #fef08a;
+      animation: palpitarAlerta 1s infinite alternate;
     }
-    .metric-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      padding: 12px 16px;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    @keyframes palpitarAlerta {
+      from { transform: scale(1); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
+      to { transform: scale(1.08); box-shadow: 0 0 20px rgba(239, 68, 68, 1); }
     }
-    .metric-title { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
-    .metric-value { font-size: 1.5rem; font-weight: 800; color: #f8fafc; margin-top: 4px; }
-    .metric-subtext { font-size: 0.75rem; color: #38bdf8; margin-top: 2px; }
 
     /* BANNERS Y ALERTAS */
     #banner-offline {
@@ -181,7 +183,7 @@
     h2 { color: #f1f5f9; border-bottom: 2px solid #334155; padding-bottom: 8px; margin-top: 0; font-size: 1.1rem; }
     label { display: block; margin-top: 10px; font-weight: 600; color: #94a3b8; font-size: 0.85rem; }
     
-    input, select, button { 
+    input, select, button, textarea { 
       width: 100%; 
       padding: 10px 12px; 
       margin-top: 4px; 
@@ -355,6 +357,11 @@
 </head>
 <body>
 
+  <!-- INDICADOR PALPITANTE DE ALERTAS ACTIVAS (ESQUINA SUPERIOR DERECHA) -->
+  <div id="badge-alertas-top">
+    🚨 ALERTAS ACTIVAS: <span id="m-alertas-count">0</span>
+  </div>
+
   <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
   <div id="alerta-fullscreen">
     <h1 id="fs-extrusora-header" style="font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase; text-shadow: 0 4px 15px rgba(0,0,0,0.7), 0 0 20px #ef4444; letter-spacing: 2px;">
@@ -403,33 +410,49 @@
 
     <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú</button>
 
-    <!-- DASHBOARD INDICATORS -->
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <span class="metric-title">Total Ensayos</span>
-        <span class="metric-value" id="m-total">0</span>
-        <span class="metric-subtext">registros cargados</span>
-      </div>
-      <div class="metric-card">
-        <span class="metric-title">Cumplimiento</span>
-        <span class="metric-value" id="m-cumplimiento" style="color: #4ade80;">100%</span>
-        <span class="metric-subtext" id="m-ok-count">0 en norma</span>
-      </div>
-      <div class="metric-card">
-        <span class="metric-title">Alertas Activas</span>
-        <span class="metric-value" id="m-alertas" style="color: #ef4444;">0</span>
-        <span class="metric-subtext">pendientes de corrección</span>
-      </div>
-      <div class="metric-card">
-        <span class="metric-title">Fichas Activas</span>
-        <span class="metric-value" id="m-fichas">0</span>
-        <span class="metric-subtext">extrusoras configuradas</span>
-      </div>
-    </div>
-
     <div id="banner-alerta">
       <span id="titulo-alerta">🚨 ¡ALERTA DE DESVÍO!</span> <br>
       <span id="detalle-alerta" style="font-size: 0.95rem; font-weight: normal;">---</span>
+    </div>
+
+    <!-- SISTEMA DE REPORTE DE ALERTAS Y DESVÍOS (FORMULARIO) -->
+    <div class="card" style="border: 1px solid #ef4444; background: rgba(30, 41, 59, 0.95);">
+      <h2 style="color: #fca5a5; border-bottom: 2px solid #ef4444;">🚨 Registro de Alertas y Desvíos de Calidad</h2>
+      
+      <div class="grid-3">
+        <div>
+          <label>Extrusora:</label>
+          <select id="alerta-extrusora" onchange="sincronizarOTAlerta()"></select>
+        </div>
+        <div>
+          <label>OT Activa:</label>
+          <select id="alerta-ot"></select>
+        </div>
+        <div>
+          <label>N° Bobina:</label>
+          <input type="number" id="alerta-bobina" placeholder="Ej: 14">
+        </div>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <label>Tipo de Desvío:</label>
+        <select id="alerta-tipo-desvio">
+          <option value="Espesor Promedio">Espesor Promedio</option>
+          <option value="Circulo Micronométrico Sucio Realizar Limpieza al Equipo">Circulo Micronométrico Sucio Realizar Limpieza al Equipo</option>
+          <option value="Espesor Demasiado Bajo">Espesor Demasiado Bajo</option>
+          <option value="Espesor Demasiado Alto">Espesor Demasiado Alto</option>
+          <option value="Geles en Muestra">Geles en Muestra</option>
+          <option value="Piel de Naranja">Piel de Naranja</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <label>Comentarios / Observación:</label>
+        <textarea id="alerta-comentario" rows="2" placeholder="Agrega aquí detalles o comentarios adicionales sobre el desvío..."></textarea>
+      </div>
+
+      <button onclick="registrarAlertaDesvio()" style="background: #dc2626; font-size: 0.95rem; margin-top: 12px;">⚠️ Notificar Alerta de Desvío</button>
     </div>
 
     <div class="card">
@@ -797,6 +820,7 @@
 
     function actualizarSelect() {
       const select = document.getElementById('select-extrusora');
+      const selectAlertaExt = document.getElementById('alerta-extrusora');
       const filtroSelect = document.getElementById('filtro-extrusora');
       const filtroSelectExt = document.getElementById('filtro-extrusora-ext');
 
@@ -813,6 +837,14 @@
         }
       }
 
+      if (selectAlertaExt) {
+        selectAlertaExt.innerHTML = '';
+        extrusoras.forEach(e => {
+          selectAlertaExt.innerHTML += `<option value="${e.id}">${e.id}</option>`;
+        });
+        sincronizarOTAlerta();
+      }
+
       const updateFiltro = (fEl) => {
         if (!fEl) return;
         const prevVal = fEl.value;
@@ -825,9 +857,19 @@
 
       updateFiltro(filtroSelect);
       updateFiltro(filtroSelectExt);
+    }
 
-      const mFichas = document.getElementById('m-fichas');
-      if (mFichas) mFichas.innerText = extrusoras.length;
+    function sincronizarOTAlerta() {
+      const extId = document.getElementById('alerta-extrusora').value;
+      const selectOT = document.getElementById('alerta-ot');
+      if (!selectOT) return;
+      selectOT.innerHTML = '';
+      const ext = extrusoras.find(e => e.id === extId);
+      if (ext) {
+        selectOT.innerHTML = `<option value="${ext.producto}">${ext.producto}</option>`;
+      } else {
+        selectOT.innerHTML = `<option value="S/I">Sin OT asignada</option>`;
+      }
     }
 
     function verificarOperatividadExtrusora(extId) {
@@ -1012,6 +1054,56 @@
       }
     }
 
+    async function registrarAlertaDesvio() {
+      const extId = document.getElementById('alerta-extrusora').value;
+      const ot = document.getElementById('alerta-ot').value;
+      const bobina = document.getElementById('alerta-bobina').value.trim();
+      const tipoDesvio = document.getElementById('alerta-tipo-desvio').value;
+      const comentario = document.getElementById('alerta-comentario').value.trim();
+      const operador = document.getElementById('input-operador').value.trim() || "Octagon";
+      const turno = document.getElementById('input-turno').value;
+
+      if (!bobina) return alert('Por favor ingresa el N° de Bobina');
+
+      const registro = {
+        timestamp: Date.now(),
+        hora: new Date().toLocaleTimeString('es-CL'),
+        operador,
+        turno,
+        id: extId,
+        producto: `${ot} | Bobina #${bobina}`,
+        valorMedido: 0,
+        pesoMedido: 0,
+        fueraDeRango: true,
+        corregido: false,
+        alertaTipo: `⚠️ ${tipoDesvio}${comentario ? ': ' + comentario : ''}`
+      };
+
+      try {
+        if (window.fbMethods && window.db) {
+          const { collection, addDoc } = window.fbMethods;
+          await addDoc(collection(window.db, "mediciones"), registro);
+        } else {
+          historial.unshift(registro);
+          guardarHistorialLocal();
+          renderHistorial();
+          lanzarAlerta(registro);
+        }
+
+        document.getElementById('alerta-bobina').value = '';
+        document.getElementById('alerta-comentario').value = '';
+        alert('⚠️ Alerta enviada con éxito');
+      } catch (e) {
+        historial.unshift(registro);
+        guardarHistorialLocal();
+        renderHistorial();
+        lanzarAlerta(registro);
+        document.getElementById('alerta-bobina').value = '';
+        document.getElementById('alerta-comentario').value = '';
+        alert('⚠️ Alerta enviada con éxito');
+      }
+    }
+
     async function registrarMedida() {
       const operador = document.getElementById('input-operador').value.trim();
       const turno = document.getElementById('input-turno').value;
@@ -1122,25 +1214,24 @@
       }
     }
 
-    function actualizarDashboardMetrics() {
-      const total = historial.length;
-      const okCount = historial.filter(r => !r.fueraDeRango).length;
+    function actualizarBadgeAlertasTop() {
       const alertasCount = historial.filter(r => r.fueraDeRango).length;
-      const cumplimiento = total > 0 ? Math.round((okCount / total) * 100) : 100;
+      const badge = document.getElementById('badge-alertas-top');
+      const countEl = document.getElementById('m-alertas-count');
 
-      const mTotal = document.getElementById('m-total');
-      const mCump = document.getElementById('m-cumplimiento');
-      const mOkCount = document.getElementById('m-ok-count');
-      const mAlertas = document.getElementById('m-alertas');
+      if (countEl) countEl.innerText = alertasCount;
 
-      if (mTotal) mTotal.innerText = total;
-      if (mCump) mCump.innerText = `${cumplimiento}%`;
-      if (mOkCount) mOkCount.innerText = `${okCount} en norma`;
-      if (mAlertas) mAlertas.innerText = alertasCount;
+      if (badge) {
+        if (alertasCount > 0) {
+          badge.style.display = 'block';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
     }
 
     function renderHistorial() {
-      actualizarDashboardMetrics();
+      actualizarBadgeAlertasTop();
 
       const fExt = (document.getElementById('filtro-extrusora') || {}).value || "TODAS";
       const fEst = (document.getElementById('filtro-estado') || {}).value || "TODOS";
@@ -1163,15 +1254,15 @@
           return true;
         }).forEach(reg => {
           let clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
-          let estadoTexto = reg.fueraDeRango ? '🚨 FUERA DE RANGO' : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
+          let estadoTexto = reg.fueraDeRango ? (reg.alertaTipo || '🚨 FUERA DE RANGO') : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
           tbodyOctagon.innerHTML += `
             <tr class="${clase}">
               <td>${reg.hora}</td>
               <td>${reg.operador} (${reg.turno})</td>
               <td><strong>${reg.id}</strong></td>
               <td>${reg.producto}</td>
-              <td><strong>${reg.valorMedido} cm</strong></td>
-              <td><strong>${reg.pesoMedido} gr</strong></td>
+              <td><strong>${reg.valorMedido ? reg.valorMedido + ' cm' : '-'}</strong></td>
+              <td><strong>${reg.pesoMedido ? reg.pesoMedido + ' gr' : '-'}</strong></td>
               <td>${estadoTexto}</td>
             </tr>
           `;
@@ -1197,8 +1288,8 @@
               <td>${reg.operador} (${reg.turno})</td>
               <td><strong>${reg.id}</strong></td>
               <td>${reg.producto}</td>
-              <td><strong>${reg.valorMedido} cm</strong></td>
-              <td><strong>${reg.pesoMedido} gr</strong></td>
+              <td><strong>${reg.valorMedido ? reg.valorMedido + ' cm' : '-'}</strong></td>
+              <td><strong>${reg.pesoMedido ? reg.pesoMedido + ' gr' : '-'}</strong></td>
               <td>${estadoAccion}</td>
             </tr>
           `;
@@ -1227,7 +1318,7 @@
         if (fsAlerta) {
           document.getElementById('fs-extrusora-header').innerText = `CORREGIR EXTRUSORA ${reg.id}`;
           document.getElementById('fs-titulo').innerText = reg.alertaTipo;
-          document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | OT / Producto: ${reg.producto}\nMediciones -> Ancho: ${reg.valorMedido} cm | Peso: ${reg.pesoMedido} gr\nOperador: ${reg.operador}`;
+          document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | OT / Producto: ${reg.producto}\nOperador: ${reg.operador}`;
           fsAlerta.style.display = 'flex';
 
           if (timerAlertaFullscreen) clearTimeout(timerAlertaFullscreen);
@@ -1239,7 +1330,7 @@
         const banner = document.getElementById('banner-alerta');
         if (banner) {
           document.getElementById('titulo-alerta').innerText = reg.alertaTipo;
-          document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id} -> Ancho: ${reg.valorMedido}cm | Peso: ${reg.pesoMedido}gr`;
+          document.getElementById('detalle-alerta').innerText = `Operador: ${reg.operador} (${reg.turno}) | Extrusora ${reg.id} -> ${reg.producto}`;
           banner.style.display = 'block';
           setTimeout(() => { banner.style.display = 'none'; }, 10000);
         }
@@ -1259,7 +1350,7 @@
       if (historial.length === 0) return alert('No hay mediciones para exportar');
       let csv = "Hora,Operador,Turno,Extrusora,Producto,AnchoMedido_cm,PesoMedido_gr,Estado\n";
       historial.forEach(r => {
-        let est = r.fueraDeRango ? "FUERA DE RANGO" : (r.corregido ? "CORREGIDO" : "OK");
+        let est = r.fueraDeRango ? (r.alertaTipo || "FUERA DE RANGO") : (r.corregido ? "CORREGIDO" : "OK");
         csv += `"${r.hora}","${r.operador}","${r.turno}","${r.id}","${r.producto}",${r.valorMedido},${r.pesoMedido},"${est}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1407,8 +1498,8 @@
         doc.text(String(reg.hora), 14, y + 5);
         doc.text(String(reg.id), 36, y + 5);
         doc.text(String(reg.producto), 60, y + 5);
-        doc.text(`${reg.valorMedido} cm`, 125, y + 5);
-        doc.text(`${reg.pesoMedido} gr`, 152, y + 5);
+        doc.text(reg.valorMedido ? `${reg.valorMedido} cm` : '-', 125, y + 5);
+        doc.text(reg.pesoMedido ? `${reg.pesoMedido} gr` : '-', 152, y + 5);
 
         if (reg.fueraDeRango) {
           doc.setTextColor(220, 38, 38);
