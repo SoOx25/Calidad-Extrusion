@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Calidad - Planta</title>
+  <!-- Librería externa para exportar a PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- SDKs de Firebase (v10) para Sincronización en Tiempo Real -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      onSnapshot, 
+      doc, 
+      updateDoc, 
+      deleteDoc, 
+      getDocs, 
+      query, 
+      orderBy, 
+      limit 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Configuración de Firebase integrada
+    const firebaseConfig = {
+      apiKey: "AIzaSyAT-1T7ldwa89OYwITwkiuYqaoP58Cl9Tw",
+      authDomain: "calidadextrusion-d9f60.firebaseapp.com",
+      databaseURL: "https://calidadextrusion-d9f60-default-rtdb.firebaseio.com",
+      projectId: "calidadextrusion-d9f60",
+      storageBucket: "calidadextrusion-d9f60.firebasestorage.app",
+      messagingSenderId: "428155690081",
+      appId: "1:428155690081:web:c42883fc7dda8989975e20",
+      measurementId: "G-GHFYQBLLJ9"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.db = db;
+    window.fbMethods = { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, getDocs, query, orderBy, limit };
+  </script>
+
+  <style>
+    :root { background: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    body { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #334155; padding-bottom: 15px; background: transparent; }
+    .header-left { display: flex; align-items: center; gap: 15px; }
+    .header-title { font-size: 1.5rem; font-weight: bold; color: #38bdf8; letter-spacing: 1px; }
+
+    .logo-glow { 
+      max-height: 70px; 
+      width: auto; 
+      background: transparent; 
+      filter: drop-shadow(0 0 10px #22c55e) drop-shadow(0 0 20px #22c55e); 
+    }
+
+    .btn-admin { background: #475569; width: auto; margin: 0; padding: 10px 18px; border-radius: 6px; border: none; color: white; cursor: pointer; font-weight: bold; }
+    .btn-admin:hover { background: #64748b; }
+    
+    .card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+    h2 { color: #f1f5f9; border-bottom: 2px solid #334155; padding-bottom: 8px; margin-top: 0; font-size: 1.2rem; }
+    label { display: block; margin-top: 12px; font-weight: 600; color: #94a3b8; font-size: 0.9rem; }
+    input, select, button { width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 1rem; box-sizing: border-box; }
+    button { background: #0284c7; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; transition: background 0.2s; }
+    button:hover { background: #0369a1; }
+    
+    #banner-alerta { display: none; background: #dc2626; color: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-size: 1.3rem; font-weight: bold; }
+
+    #alerta-fullscreen {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #dc2626;
+      color: white;
+      z-index: 9999;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+      animation: pulsoAlerta 0.8s infinite alternate;
+    }
+    @keyframes pulsoAlerta { from { background: #dc2626; } to { background: #991b1b; } }
+
+    .home-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; }
+    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; width: 100%; max-width: 800px; margin-top: 30px; }
+    .home-card { background: transparent; border: none; padding: 20px; cursor: pointer; transition: transform 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .home-card:hover { transform: scale(1.08); }
+    .home-logo { max-height: 165px; width: auto; background: transparent; filter: drop-shadow(0 0 12px #22c55e) drop-shadow(0 0 25px #22c55e); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); justify-content: center; align-items: center; z-index: 1000; }
+    .modal-content { background: #1e293b; width: 90%; max-width: 650px; padding: 25px; border-radius: 12px; border: 1px solid #475569; max-height: 85vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px; }
+    .btn-cerrar { background: #dc2626; width: auto; margin: 0; padding: 5px 12px; font-size: 0.9rem; }
+    .btn-cerrar:hover { background: #b91c1c; }
+
+    .item-extrusora { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px 15px; border-radius: 6px; margin-top: 8px; border: 1px solid #334155; }
+    .btn-borrar { background: #ef4444; width: auto; margin: 0; padding: 6px 10px; font-size: 0.85rem; }
+    .btn-borrar:hover { background: #b91c1c; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; text-align: center; border-bottom: 1px solid #334155; font-size: 0.95rem; }
+    th { background: #0f172a; color: #38bdf8; }
+    .alerta-row { background: rgba(220, 38, 38, 0.25); color: #fca5a5; font-weight: bold; }
+    .ok-row { color: #4ade80; }
+    .corregido-row { background: rgba(22, 163, 74, 0.25); color: #4ade80; font-weight: bold; }
+    .btn-volver { background: #334155; width: auto; padding: 6px 14px; font-size: 0.85rem; margin-bottom: 15px; display: inline-block; }
+    .btn-corregir { background: #16a34a; padding: 6px 12px; font-size: 0.85rem; width: auto; margin: 0; border-radius: 4px; }
+    .btn-corregir:hover { background: #15803d; }
+  </style>
+</head>
+<body>
+
+  <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
+  <div id="alerta-fullscreen">
+    <h1 style="font-size: 2.2rem; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px;">Corregir Extrusora</h1>
+    <h1 id="fs-titulo" style="font-size: 3rem; margin: 0 0 15px 0; color: #fff;">🚨 ¡ALERTA CRÍTICA!</h1>
+    <p id="fs-detalle" style="font-size: 1.5rem; margin: 0 0 30px 0; max-width: 900px; line-height: 1.4;">---</p>
+    <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: 1.2rem; padding: 12px 25px; width: auto; border-radius: 8px; cursor: pointer; font-weight: bold;">Silenciar y Cerrar Alerta</button>
+  </div>
+
+  <!-- VISTA 1: HOME -->
+  <div id="view-home" class="view-section active">
+    <div class="home-container">
+      <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="logo-glow" style="max-height: 110px; margin-bottom: 15px;">
+      <h1 style="color: #38bdf8; font-size: 1.8rem; margin: 0;">Control de Calidad en Tiempo Real</h1>
+      
+      <div class="home-grid">
+        <div class="home-card" onclick="cambiarVista('octagon')">
+          <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="home-logo">
+        </div>
+
+        <div class="home-card" onclick="cambiarVista('extrusion')">
+          <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="home-logo">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 2: OCTAGON -->
+  <div id="view-octagon" class="view-section">
+    <div class="header">
+      <div class="header-left">
+        <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="logo-glow">
+        <span class="header-title">Octagon</span>
+      </div>
+      <button class="btn-admin" onclick="abrirModal()">⚙️ Fichas Técnicas / OT</button>
+    </div>
+
+    <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú Principal</button>
+
+    <div id="banner-alerta">
+      <span id="titulo-alerta">🚨 ¡ALERTA DE DESVÍO!</span> <br>
+      <span id="detalle-alerta" style="font-size: 1rem; font-weight: normal;">---</span>
+    </div>
+
+    <div class="card">
+      <h2>📏 Registrar Resultado Calidad</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div>
+          <label>Operador Octagon:</label>
+          <input type="text" id="input-operador" placeholder="Nombre del operador">
+        </div>
+        <div>
+          <label>Turno:</label>
+          <select id="input-turno">
+            <option value="Día">Día</option>
+            <option value="Tarde">Tarde</option>
+            <option value="Noche">Noche</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 5px;">
+        <div>
+          <label>Extrusora y Orden Activa:</label>
+          <select id="select-extrusora" onchange="mostrarObjetivosSeleccionados()"></select>
+        </div>
+        <div>
+          <label>Ancho Plano Medido (cm):</label>
+          <input type="number" step="0.1" id="val-medida" placeholder="Ej: 54.0">
+        </div>
+        <div>
+          <label>Peso Medido (gr):</label>
+          <input type="number" step="0.1" id="val-peso" placeholder="Ej: 12.5">
+        </div>
+      </div>
+      
+      <div id="info-objetivos-actuales" style="margin-top: 10px; font-size: 0.9rem; color: #38bdf8; background: #0f172a; padding: 8px; border-radius: 6px;"></div>
+      <button onclick="registrarMedida()">📤 Registrar y Verificar Medida</button>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; padding-bottom: 8px; margin-bottom: 15px;">
+        <h2 style="border:none; margin:0;">🖥️ Historial de Mediciones (Octagon)</h2>
+        <div>
+          <button onclick="limpiarHistorial()" style="background: #ef4444; width: auto; margin: 0; padding: 8px 15px; font-size: 0.9rem; margin-right: 10px;">🗑️ Limpiar Historial</button>
+          <button onclick="generarPDF()" style="background: #16a34a; width: auto; margin: 0; padding: 8px 15px; font-size: 0.9rem;">📥 Descargar Reporte (PDF)</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th>Operador / Turno</th>
+            <th>Extrusora</th>
+            <th>Producto / OT</th>
+            <th>Ancho</th>
+            <th>Peso</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-log-octagon"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VISTA 3: EXTRUSIÓN -->
+  <div id="view-extrusion" class="view-section">
+    <div class="header">
+      <div class="header-left">
+        <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="logo-glow">
+        <span class="header-title">Extrusión</span>
+      </div>
+      <span style="color: #38bdf8; font-weight: bold; font-size: 1.1rem;">MONITOREO EN TIEMPO REAL</span>
+    </div>
+
+    <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú Principal</button>
+
+    <div class="card">
+      <div style="border-bottom: 2px solid #334155; padding-bottom: 8px; margin-bottom: 15px;">
+        <h2 style="border:none; margin:0;">🖥️ Resultados en Tiempo Real (Extrusión)</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th>Operador / Turno</th>
+            <th>Extrusora</th>
+            <th>Producto / OT</th>
+            <th>Ancho</th>
+            <th>Peso</th>
+            <th>Acción / Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-log-extrusion"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MODAL DE FICHAS TÉCNICAS -->
+  <div class="modal-overlay" id="modal-fichas">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 style="border:none; margin:0;">⚙️ Fichas Técnicas por Extrusora</h2>
+        <button class="btn-cerrar" onclick="cerrarModal()">✕ Cerrar</button>
+      </div>
+
+      <div style="background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <h3 style="margin-top: 0; color: #38bdf8; font-size: 1rem;">Nueva Ficha Técnica</h3>
+        
+        <label>N° Extrusora:</label>
+        <input type="number" id="cfg-num-ext" placeholder="Ej: 9">
+
+        <label>Producto (Dimensiones cm):</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="number" id="cfg-ancho-prod" placeholder="Ancho (ej: 54)" oninput="actualizarRangos()">
+          <span style="font-weight: bold; color: #38bdf8;">X</span>
+          <input type="number" id="cfg-largo-prod" placeholder="Largo (ej: 50)">
+        </div>
+
+        <label>N° Orden de Trabajo (OT):</label>
+        <input type="number" id="cfg-ot" placeholder="Ej: 18489">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-top: 5px;">
+          <div>
+            <label>Ancho Obj. (cm):</label>
+            <input type="number" step="0.1" id="cfg-ancho" value="54.0" oninput="actualizarRangos()">
+          </div>
+          <div>
+            <label>Tol. Ancho ±:</label>
+            <input type="number" step="0.1" id="cfg-tol-ancho" value="0.5" oninput="actualizarRangos()">
+          </div>
+          <div>
+            <label>Ancho Mín:</label>
+            <input type="number" step="0.1" id="cfg-min-ancho" value="53.5" readonly style="background:#1e293b; color:#94a3b8;">
+          </div>
+          <div>
+            <label>Ancho Máx:</label>
+            <input type="number" step="0.1" id="cfg-max-ancho" value="54.5" readonly style="background:#1e293b; color:#94a3b8;">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-top: 5px;">
+          <div>
+            <label>Peso Ideal (gr):</label>
+            <input type="number" step="0.1" id="cfg-peso-ideal" value="12.0" oninput="actualizarRangos()">
+          </div>
+          <div>
+            <label>Tol. Peso ±:</label>
+            <input type="number" step="0.1" id="cfg-tol-peso" value="1.0" oninput="actualizarRangos()">
+          </div>
+          <div>
+            <label>Peso Mín:</label>
+            <input type="number" step="0.1" id="cfg-min-peso" value="11.0" readonly style="background:#1e293b; color:#94a3b8;">
+          </div>
+          <div>
+            <label>Peso Máx:</label>
+            <input type="number" step="0.1" id="cfg-max-peso" value="13.0" readonly style="background:#1e293b; color:#94a3b8;">
+          </div>
+        </div>
+
+        <button onclick="guardarExtrusora()" style="background:#16a34a; margin-top: 15px;">💾 Guardar Ficha Técnica</button>
+        
+        <div id="mensaje-exito" style="display:none; margin-top: 12px; padding: 10px; background: rgba(22, 163, 74, 0.2); border: 1px solid #16a34a; border-radius: 6px; text-align: center;">
+          <span style="color: #4ade80; font-weight: bold; display: block;">✅ Ficha Técnica Guardada con Éxito</span>
+          <span style="color: #94a3b8; font-size: 0.85rem;">Puedes gestionar las fichas técnicas en uso más abajo</span>
+        </div>
+      </div>
+
+      <h3 style="font-size: 1rem; color: #94a3b8;">Extrusoras Activas:</h3>
+      <div id="lista-extrusoras"></div>
+    </div>
+  </div>
+
+  <script>
+    let extrusoras = JSON.parse(localStorage.getItem('extrusoras')) || [
+      { id: 'EXT-09', producto: '54x50 (OT: 18489)', ancho: 54.0, tolAncho: 0.5, minAncho: 53.5, maxAncho: 54.5, pesoIdeal: 12.0, tolPeso: 1.0, minPeso: 11.0, maxPeso: 13.0 }
+    ];
+
+    let historial = [];
+    let primerCarga = true;
+
+    function cambiarVista(vista) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-' + vista).classList.add('active');
+      window.scrollTo(0,0);
+    }
+
+    function abrirModal() { document.getElementById('modal-fichas').style.display = 'flex'; renderListaModal(); }
+    function cerrarModal() { 
+      document.getElementById('modal-fichas').style.display = 'none'; 
+      document.getElementById('mensaje-exito').style.display = 'none';
+    }
+
+    function actualizarRangos() {
+      const anchoInput = document.getElementById('cfg-ancho-prod').value;
+      if (anchoInput && document.activeElement.id === 'cfg-ancho-prod') {
+        document.getElementById('cfg-ancho').value = parseFloat(anchoInput).toFixed(1);
+      }
+      const anchoObj = parseFloat(document.getElementById('cfg-ancho').value) || 0;
+      const tolAncho = parseFloat(document.getElementById('cfg-tol-ancho').value) || 0;
+      document.getElementById('cfg-min-ancho').value = (anchoObj - tolAncho).toFixed(1);
+      document.getElementById('cfg-max-ancho').value = (anchoObj + tolAncho).toFixed(1);
+
+      const pesoIdeal = parseFloat(document.getElementById('cfg-peso-ideal').value) || 0;
+      const tolPeso = parseFloat(document.getElementById('cfg-tol-peso').value) || 0;
+      document.getElementById('cfg-min-peso').value = (pesoIdeal - tolPeso).toFixed(1);
+      document.getElementById('cfg-max-peso').value = (pesoIdeal + tolPeso).toFixed(1);
+    }
+
+    function actualizarSelect() {
+      const select = document.getElementById('select-extrusora');
+      if (!select) return;
+      select.innerHTML = '';
+      if (extrusoras.length === 0) {
+        select.innerHTML = '<option value="">-- No hay extrusoras activas --</option>';
+        document.getElementById('info-objetivos-actuales').innerText = 'Selecciona una extrusora';
+        return;
+      }
+      extrusoras.forEach(e => {
+        select.innerHTML += `<option value="${e.id}">${e.id} | ${e.producto}</option>`;
+      });
+      mostrarObjetivosSeleccionados();
+    }
+
+    function mostrarObjetivosSeleccionados() {
+      const select = document.getElementById('select-extrusora');
+      if (!select) return;
+      const id = select.value;
+      const ext = extrusoras.find(e => e.id === id);
+      const infoBox = document.getElementById('info-objetivos-actuales');
+      if (ext && infoBox) {
+        infoBox.innerHTML = `📌 <b>Objetivo Ficha:</b> Ancho Obj: ${ext.ancho}cm [Rango: ${ext.minAncho}-${ext.maxAncho}cm] | Peso Ideal: ${ext.pesoIdeal}gr [Rango: ${ext.minPeso}-${ext.maxPeso}gr]`;
+      } else if (infoBox) {
+        infoBox.innerHTML = '';
+      }
+    }
+
+    function renderListaModal() {
+      const contenedor = document.getElementById('lista-extrusoras');
+      if (!contenedor) return;
+      contenedor.innerHTML = '';
+      if (extrusoras.length === 0) {
+        contenedor.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Sin extrusoras configuradas.</p>';
+        return;
+      }
+      extrusoras.forEach(e => {
+        contenedor.innerHTML += `
+          <div class="item-extrusora">
+            <div>
+              <strong>${e.id}</strong> - ${e.producto} <br>
+              <small style="color:#94a3b8;">Ancho: ${e.ancho}cm [${e.minAncho}-${e.maxAncho}] | Peso: ${e.pesoIdeal}gr [${e.minPeso}-${e.maxPeso}]</small>
+            </div>
+            <button class="btn-borrar" onclick="eliminarExtrusora('${e.id}')">🗑️ Eliminar</button>
+          </div>
+        `;
+      });
+    }
+
+    function guardarExtrusora() {
+      const numExt = document.getElementById('cfg-num-ext').value.trim();
+      const anchoProd = document.getElementById('cfg-ancho-prod').value.trim();
+      const largoProd = document.getElementById('cfg-largo-prod').value.trim();
+      const ot = document.getElementById('cfg-ot').value.trim();
+      
+      const ancho = parseFloat(document.getElementById('cfg-ancho').value);
+      const tolAncho = parseFloat(document.getElementById('cfg-tol-ancho').value);
+      const minAncho = parseFloat(document.getElementById('cfg-min-ancho').value);
+      const maxAncho = parseFloat(document.getElementById('cfg-max-ancho').value);
+
+      const pesoIdeal = parseFloat(document.getElementById('cfg-peso-ideal').value);
+      const tolPeso = parseFloat(document.getElementById('cfg-tol-peso').value);
+      const minPeso = parseFloat(document.getElementById('cfg-min-peso').value);
+      const maxPeso = parseFloat(document.getElementById('cfg-max-peso').value);
+
+      if (!numExt || !anchoProd || !largoProd || !ot) {
+        return alert('Por favor completa los datos principales de la ficha');
+      }
+
+      const idFormatted = `EXT-${numExt.padStart(2, '0')}`;
+      const productoFormatted = `${anchoProd}x${largoProd} (OT: ${ot})`;
+
+      const index = extrusoras.findIndex(e => e.id === idFormatted);
+      const nuevaFicha = { 
+        id: idFormatted, producto: productoFormatted, 
+        ancho, tolAncho, minAncho, maxAncho, 
+        pesoIdeal, tolPeso, minPeso, maxPeso 
+      };
+
+      if (index >= 0) {
+        extrusoras[index] = nuevaFicha;
+      } else {
+        extrusoras.push(nuevaFicha);
+      }
+
+      localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
+      actualizarSelect();
+      renderListaModal();
+      
+      document.getElementById('mensaje-exito').style.display = 'block';
+
+      document.getElementById('cfg-num-ext').value = '';
+      document.getElementById('cfg-ancho-prod').value = '';
+      document.getElementById('cfg-largo-prod').value = '';
+      document.getElementById('cfg-ot').value = '';
+    }
+
+    function eliminarExtrusora(id) {
+      if (!confirm(`¿Eliminar la ficha técnica para la ${id}?`)) return;
+      extrusoras = extrusoras.filter(e => e.id !== id);
+      localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
+      actualizarSelect();
+      renderListaModal();
+    }
+
+    async function registrarMedida() {
+      const operador = document.getElementById('input-operador').value.trim();
+      const turno = document.getElementById('input-turno').value;
+      const id = document.getElementById('select-extrusora').value;
+
+      if (!operador) return alert('Por favor ingresa el nombre del Operador de Octagon');
+      if (!id) return alert('Selecciona una extrusora válida');
+
+      const valorMedido = parseFloat(document.getElementById('val-medida').value);
+      const pesoMedido = parseFloat(document.getElementById('val-peso').value);
+
+      if (isNaN(valorMedido) || isNaN(pesoMedido)) return alert('Ingresa tanto el ancho como el peso medido');
+
+      const ext = extrusoras.find(e => e.id === id);
+      const anchoFuera = valorMedido < ext.minAncho || valorMedido > ext.maxAncho;
+      const pesoFuera = pesoMedido < ext.minPeso || pesoMedido > ext.maxPeso;
+      const fueraDeRango = anchoFuera || pesoFuera;
+
+      let mensajeAlertaTipo = "";
+      if (anchoFuera && pesoFuera) {
+        mensajeAlertaTipo = "⚠️ Ancho y Peso Fuera de Rango";
+      } else if (anchoFuera) {
+        mensajeAlertaTipo = `🚨 Ancho Fuera de Rango (${valorMedido} cm)`;
+      } else if (pesoFuera) {
+        mensajeAlertaTipo = `🚨 Peso Fuera de Rango (${pesoMedido} gr)`;
+      }
+
+      const registro = {
+        timestamp: Date.now(),
+        hora: new Date().toLocaleTimeString('es-CL'),
+        operador,
+        turno,
+        id: ext.id,
+        producto: ext.producto,
+        valorMedido,
+        pesoMedido,
+        fueraDeRango,
+        corregido: false,
+        alertaTipo: mensajeAlertaTipo
+      };
+
+      try {
+        const { collection, addDoc } = window.fbMethods;
+        await addDoc(collection(window.db, "mediciones"), registro);
+        
+        document.getElementById('val-medida').value = '';
+        document.getElementById('val-peso').value = '';
+      } catch (e) {
+        alert("Error al guardar en Firebase: " + e.message);
+      }
+    }
+
+    async function limpiarHistorial() {
+      if (!confirm('¿Estás seguro de borrar todas las mediciones registradas en Firebase?')) return;
+      try {
+        const { collection, getDocs, deleteDoc, doc } = window.fbMethods;
+        const snapshot = await getDocs(collection(window.db, "mediciones"));
+        const promises = snapshot.docs.map(d => deleteDoc(doc(window.db, "mediciones", d.id)));
+        await Promise.all(promises);
+      } catch (e) {
+        alert("Error al vaciar base de datos: " + e.message);
+      }
+    }
+
+    async function corregirError(docId) {
+      try {
+        const { doc, updateDoc } = window.fbMethods;
+        const refDoc = doc(window.db, "mediciones", docId);
+        await updateDoc(refDoc, {
+          corregido: true,
+          fueraDeRango: false
+        });
+      } catch(e) {
+        alert("Error al actualizar estado: " + e.message);
+      }
+    }
+
+    function renderHistorial() {
+      const tbodyOctagon = document.getElementById('tabla-log-octagon');
+      const tbodyExtrusion = document.getElementById('tabla-log-extrusion');
+      
+      if (tbodyOctagon) {
+        tbodyOctagon.innerHTML = '';
+        historial.forEach(reg => {
+          let clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
+          let estadoTexto = reg.fueraDeRango ? '🚨 FUERA DE RANGO' : (reg.correg
