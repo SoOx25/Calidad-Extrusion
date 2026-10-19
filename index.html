@@ -8,23 +8,11 @@
   <!-- Librería externa para exportar a PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- SDKs de Firebase (v10) para Sincronización en Tiempo Real -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getFirestore, 
-      collection, 
-      addDoc, 
-      onSnapshot, 
-      doc, 
-      updateDoc, 
-      deleteDoc, 
-      getDocs, 
-      query, 
-      orderBy, 
-      limit 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <!-- Firebase SDKs (v10 Compat) para Sincronización en Tiempo Real (Más estable en archivos HTML únicos) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
+  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAT-1T7ldwa89OYwITwkiuYqaoP58Cl9Tw",
       authDomain: "calidadextrusion-d9f60.firebaseapp.com",
@@ -37,16 +25,31 @@
     };
 
     try {
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
       window.db = db;
-      window.fbMethods = { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, getDocs, query, orderBy, limit };
+      
+      // Exponemos las funciones modulares de la versión compat para mantener la compatibilidad con el resto del código
+      window.fbMethods = {
+        collection: firebase.firestore.collection,
+        addDoc: firebase.firestore.addDoc,
+        onSnapshot: firebase.firestore.onSnapshot,
+        doc: firebase.firestore.doc,
+        updateDoc: firebase.firestore.updateDoc,
+        deleteDoc: firebase.firestore.deleteDoc,
+        getDocs: firebase.firestore.getDocs,
+        query: firebase.firestore.query,
+        orderBy: firebase.firestore.orderBy,
+        limit: firebase.firestore.limit
+      };
+      
+      console.log("✅ Firebase inicializado correctamente.");
       
       if (typeof window.iniciarSincronizacionFirebase === 'function') {
         window.iniciarSincronizacionFirebase();
       }
     } catch (err) {
-      console.warn("Error al inicializar Firebase, operando en modo local:", err);
+      console.warn("⚠️ Error al inicializar Firebase, operando en modo local:", err);
       window.useLocalFallback = true;
     }
   </script>
@@ -131,7 +134,6 @@
       filter: drop-shadow(0 0 8px #22c55e); 
     }
 
-    /* Logo principal responsivo para móviles */
     .home-main-logo { 
       max-width: 85%; 
       max-height: 100px; 
@@ -210,7 +212,6 @@
       max-width: 650px; 
       margin-top: 25px; 
     }
-    /* MODIFICADO: Sin recuadros ni fondos, solo logos clicables */
     .home-card { 
       background: transparent; 
       border: none;
@@ -257,9 +258,6 @@
     .item-extrusora { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #334155; font-size: 0.85rem; }
     .btn-borrar { background: #ef4444; width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; }
 
-    pre { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 8px; color: #38bdf8; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
-
-    /* REJILLAS MÓVILES FLUIDAS */
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
@@ -286,7 +284,7 @@
   <!-- VISTA 1: HOME -->
   <div id="view-home" class="view-section active">
     <div id="banner-offline">
-      ℹ️ Sistema activo en Modo Respaldo / Sincronización Local.
+      ℹ️ Sistema activo en Modo Respaldo / Sincronización Local (Sin conexión a Firebase).
     </div>
     <div class="home-container">
       <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="home-main-logo">
@@ -709,10 +707,14 @@
             guardarHistorialLocal();
           }
         } catch (e) {
-          console.warn("Firestore inaccesible. Modo local activo:", e.message);
+          console.error("❌ Error al sincronizar con Firebase:", e);
           window.useLocalFallback = true;
           document.getElementById('banner-offline').style.display = 'block';
+          alert("⚠️ No se pudo conectar a Firebase. Los datos se guardaron solo localmente.");
         }
+      } else if (!window.db) {
+        console.warn("⚠️ Firebase no está inicializado. Operando en modo local.");
+        document.getElementById('banner-offline').style.display = 'block';
       }
 
       document.getElementById('val-medida').value = '';
@@ -954,12 +956,11 @@
       doc.save(`Reporte_Calidad_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
-    // 4. Función para cambiar el turno automáticamente según la hora
     function actualizarTurnoAutomatico() {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
-      const currentTime = hours * 60 + minutes; // Minutos desde medianoche
+      const currentTime = hours * 60 + minutes; 
 
       const inicioDia = 7 * 60;        // 07:00 = 420
       const finDia = 14 * 60 + 30;     // 14:30 = 870
@@ -980,6 +981,8 @@
 
     window.iniciarSincronizacionFirebase = function() {
       if (!window.db || !window.fbMethods) {
+        console.warn("⚠️ Firebase no disponible. Usando modo local.");
+        document.getElementById('banner-offline').style.display = 'block';
         renderHistorial();
         return;
       }
@@ -989,8 +992,8 @@
 
       onSnapshot(q, (snapshot) => {
         const nuevosDatos = [];
-        snapshot.forEach((doc) => {
-          nuevosDatos.push({ docId: doc.id, ...doc.data() });
+        snapshot.forEach((docSnapshot) => {
+          nuevosDatos.push({ docId: docSnapshot.id, ...docSnapshot.data() });
         });
 
         nuevosDatos.sort((a, b) => b.timestamp - a.timestamp);
@@ -1004,10 +1007,9 @@
         }
         primerCarga = false;
       }, (error) => {
-        console.warn("Sincronización en tiempo real inactiva. Usando respaldo local.", error.message);
+        console.error("❌ Error de sincronización en tiempo real:", error);
         window.useLocalFallback = true;
-        const bannerOffline = document.getElementById('banner-offline');
-        if (bannerOffline) bannerOffline.style.display = 'block';
+        document.getElementById('banner-offline').style.display = 'block';
         renderHistorial();
       });
     };
@@ -1020,6 +1022,9 @@
       
       if (window.db && window.fbMethods) {
         window.iniciarSincronizacionFirebase();
+      } else {
+        console.warn("⚠️ Esperando inicialización de Firebase...");
+        document.getElementById('banner-offline').style.display = 'block';
       }
     };
   </script>
