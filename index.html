@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Control de Calidad - Planta Extrusión</title>
   
+  <!-- Tipografía Corporativa Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <!-- Librería externa para exportar a PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -12,18 +15,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
-      getFirestore, 
-      collection, 
-      addDoc, 
-      setDoc,
-      onSnapshot, 
-      doc, 
-      updateDoc, 
-      deleteDoc, 
-      getDocs, 
-      query, 
-      orderBy, 
-      limit 
+      getFirestore, collection, addDoc, setDoc, onSnapshot, doc, 
+      updateDoc, deleteDoc, getDocs, query, orderBy, limit 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -54,50 +47,62 @@
 
   <style>
     :root { 
-      background: #0f172a; 
-      color: #f8fafc; 
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      --bg-body: #f1f5f9;
+      --bg-card: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --primary: #0f4c81; /* Azul corporativo */
+      --primary-hover: #0a3a63;
+      --success: #059669;
+      --success-hover: #047857;
+      --warning: #d97706;
+      --warning-hover: #b45309;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --font-main: 'Inter', system-ui, -apple-system, sans-serif;
     }
     
+    * { box-sizing: border-box; }
+    
     body { 
-      max-width: 1280px; 
-      margin: 0 auto; 
-      padding: 12px; 
-      box-sizing: border-box;
+      background: var(--bg-body); 
+      color: var(--text-primary); 
+      font-family: var(--font-main); 
+      margin: 0; 
+      padding: 16px; 
+      line-height: 1.5;
     }
     
     .view-section { display: none; }
-    .view-section.active { display: block; }
+    .view-section.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* BANNER DE ALERTAS ACTIVAS EN EL MEDIO DE LA PÁGINA */
+    /* BANNER DE ALERTAS */
     #banner-alertas-medio {
       display: none;
-      background: linear-gradient(135deg, #dc2626, #991b1b);
-      color: white;
+      background: #fef2f2;
+      color: var(--danger);
       padding: 12px 20px;
-      border-radius: 10px;
+      border-radius: 8px;
       text-align: center;
-      margin-bottom: 15px;
-      font-weight: 800;
-      font-size: 1rem;
-      border: 2px solid #fef08a;
-      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5);
-      animation: palpitarAlerta 1s infinite alternate;
-    }
-    @keyframes palpitarAlerta {
-      from { transform: scale(1); }
-      to { transform: scale(1.02); }
+      margin-bottom: 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 1px solid #fecaca;
+      box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
     }
 
     #banner-offline {
       display: none;
-      background: #334155;
-      color: #38bdf8;
-      border: 1px solid #0284c7;
+      background: #f0f9ff;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
       padding: 10px 14px;
       border-radius: 8px;
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
       font-size: 0.85rem;
       font-weight: 600;
     }
@@ -106,18 +111,16 @@
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #dc2626;
+      background: var(--danger);
       color: white;
       z-index: 9999;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 20px;
+      padding: 24px;
       box-sizing: border-box;
-      animation: pulsoAlerta 0.8s infinite alternate;
     }
-    @keyframes pulsoAlerta { from { background: #dc2626; } to { background: #991b1b; } }
 
     /* HEADER & NAVEGACIÓN */
     .header { 
@@ -125,72 +128,88 @@
       flex-wrap: wrap;
       justify-content: space-between; 
       align-items: center; 
-      gap: 10px;
-      margin-bottom: 15px; 
-      border-bottom: 2px solid #334155; 
-      padding-bottom: 12px; 
+      gap: 12px;
+      margin-bottom: 20px; 
+      padding-bottom: 16px; 
+      border-bottom: 1px solid var(--border-color); 
     }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .header-title { font-size: 1.3rem; font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-title { font-size: 1.25rem; font-weight: 700; color: var(--primary); letter-spacing: -0.025em; }
 
-    .logo-glow { 
-      max-height: 50px; 
-      width: auto; 
-      filter: drop-shadow(0 0 8px #22c55e); 
-    }
+    .logo-glow { max-height: 48px; width: auto; }
 
+    /* BOTONES */
     .btn-action { 
-      background: #475569; 
-      width: auto; 
-      margin: 0; 
-      padding: 8px 14px; 
+      background: var(--bg-card); 
+      border: 1px solid var(--border-color); 
+      color: var(--text-secondary); 
+      padding: 8px 16px; 
       border-radius: 6px; 
-      border: none; 
-      color: white; 
+      font-weight: 600; 
+      font-size: 0.875rem;
       cursor: pointer; 
-      font-weight: bold; 
-      font-size: 0.85rem;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      transition: all 0.2s;
     }
-    .btn-action:hover { background: #64748b; }
+    .btn-action:hover { background: #f8fafc; border-color: #cbd5e1; color: var(--text-primary); }
     
+    .btn-primary { background: var(--primary); color: white; border: none; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    
+    .btn-success { background: var(--success); color: white; border: none; }
+    .btn-success:hover { background: var(--success-hover); }
+    
+    .btn-warning { background: var(--warning); color: white; border: none; }
+    .btn-warning:hover { background: var(--warning-hover); }
+    
+    .btn-danger { background: var(--danger); color: white; border: none; }
+    .btn-danger:hover { background: var(--danger-hover); }
+
+    /* TARJETAS */
     .card { 
-      background: #1e293b; 
-      border-radius: 12px; 
-      padding: 16px; 
-      border: 1px solid #334155; 
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); 
-      margin-bottom: 15px;
+      background: var(--bg-card); 
+      border-radius: 10px; 
+      padding: 20px; 
+      border: 1px solid var(--border-color); 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+      margin-bottom: 20px;
     }
 
-    h2 { color: #f1f5f9; border-bottom: 2px solid #334155; padding-bottom: 8px; margin-top: 0; font-size: 1.1rem; }
-    label { display: block; margin-top: 10px; font-weight: 600; color: #94a3b8; font-size: 0.85rem; }
+    h2 { 
+      color: var(--text-primary); 
+      border-bottom: 1px solid var(--border-color); 
+      padding-bottom: 10px; 
+      margin-top: 0; 
+      font-size: 1.1rem; 
+      font-weight: 700; 
+    }
     
-    input, select, button, textarea { 
+    label { display: block; margin-top: 12px; font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 4px; }
+    
+    input, select, textarea { 
       width: 100%; 
       padding: 10px 12px; 
-      margin-top: 4px; 
       border-radius: 6px; 
-      border: 1px solid #475569; 
-      background: #0f172a; 
-      color: white; 
-      font-size: 0.95rem; 
-      box-sizing: border-box; 
+      border: 1px solid var(--border-color); 
+      background: var(--bg-card); 
+      color: var(--text-primary); 
+      font-size: 0.9rem; 
+      font-family: var(--font-main);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
     }
 
-    button { 
-      background: #0284c7; 
-      border: none; 
-      font-weight: bold; 
-      cursor: pointer; 
-      margin-top: 12px; 
-      transition: background 0.2s; 
+    button[type="button"], button[onclick] { 
+      font-family: var(--font-main);
       touch-action: manipulation;
     }
-    button:hover { background: #0369a1; }
-    
+
     /* VISTA HOME */
     .home-container { 
       display: flex; 
@@ -202,155 +221,151 @@
     }
     .home-grid { 
       display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-      gap: 25px; 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+      gap: 24px; 
       width: 100%; 
-      max-width: 650px; 
-      margin-top: 25px; 
+      max-width: 600px; 
+      margin-top: 32px; 
     }
     .home-card { 
-      background: transparent; 
-      border: none; 
-      padding: 15px; 
+      background: var(--bg-card); 
+      border: 1px solid var(--border-color); 
+      border-radius: 12px; 
+      padding: 24px; 
       cursor: pointer; 
-      transition: transform 0.2s; 
+      transition: all 0.2s; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
     }
-    .home-card:active, .home-card:hover { 
-      transform: scale(1.05); 
-    }
-    .home-logo { max-height: 140px; width: auto; filter: drop-shadow(0 0 10px #22c55e); }
+    .home-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.08); border-color: var(--primary); }
+    .home-logo { max-height: 100px; width: auto; }
 
-    /* TABLAS Y MÓVIL RESPONSIVE */
+    /* TABLAS */
     .table-responsive {
       width: 100%;
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      margin-top: 10px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
     }
-
-    table { width: 100%; border-collapse: collapse; min-width: 650px; }
-    th, td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #334155; font-size: 0.85rem; }
-    th { background: #0f172a; color: #38bdf8; font-weight: 700; }
-    .alerta-row { background: rgba(220, 38, 38, 0.25); color: #fca5a5; font-weight: bold; }
-    .ok-row { color: #4ade80; }
-    .corregido-row { background: rgba(22, 163, 74, 0.25); color: #4ade80; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; min-width: 650px; background: var(--bg-card); }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
+    th { background: #f8fafc; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
     
-    .btn-volver { background: #334155; width: auto; padding: 6px 14px; font-size: 0.85rem; margin-bottom: 12px; display: inline-block; }
-    .btn-corregir { background: #16a34a; padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 4px; }
-    .btn-corregir:hover { background: #15803d; }
+    .alerta-row { background: #fef2f2; color: var(--danger); font-weight: 600; }
+    .ok-row { color: var(--success); }
+    .corregido-row { background: #f0fdf4; color: var(--success); font-weight: 600; }
+    
+    .btn-volver { 
+      background: transparent; 
+      color: var(--text-secondary); 
+      border: 1px solid var(--border-color); 
+      width: auto; 
+      padding: 6px 14px; 
+      font-size: 0.85rem; 
+      margin-bottom: 16px; 
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-volver:hover { background: #f1f5f9; color: var(--text-primary); }
 
-    /* MODAL / VENTANA FLOTANTE GENERAL */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; padding: 10px; box-sizing: border-box; }
-    .modal-content { background: #1e293b; width: 100%; max-width: 650px; padding: 20px; border-radius: 12px; border: 1px solid #475569; max-height: 90vh; overflow-y: auto; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 12px; }
-    .btn-cerrar { background: #dc2626; width: auto; margin: 0; padding: 5px 12px; font-size: 0.85rem; }
+    .btn-corregir { background: var(--success); padding: 6px 12px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 6px; color: white; border: none; cursor: pointer; }
+    .btn-corregir:hover { background: var(--success-hover); }
 
-    .item-extrusora { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #334155; font-size: 0.85rem; gap: 8px; }
-    .item-acciones { display: flex; gap: 6px; }
-    .btn-editar-item { background: #16a34a; width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; border-radius: 4px; }
-    .btn-editar-item:hover { background: #15803d; }
-    .btn-borrar { background: #ef4444; width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; border-radius: 4px; }
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-content { background: var(--bg-card); width: 100%; max-width: 600px; padding: 24px; border-radius: 12px; border: 1px solid var(--border-color); max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px; }
+    .btn-cerrar { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); width: auto; margin: 0; padding: 6px 12px; font-size: 0.85rem; border-radius: 6px; cursor: pointer; }
+    .btn-cerrar:hover { background: #f1f5f9; }
 
-    /* REJILLAS MÓVILES FLUIDAS */
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+    .item-extrusora { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border-color); font-size: 0.875rem; gap: 12px; }
+    .item-acciones { display: flex; gap: 8px; }
+    .btn-editar-item { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; cursor: pointer; }
+    .btn-editar-item:hover { background: #f1f5f9; }
+    .btn-borrar { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; cursor: pointer; }
+    .btn-borrar:hover { background: #fee2e2; }
 
-    /* CONTROL PANEL BAR */
+    /* REJILLAS */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; }
+
     .filter-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      background: #0f172a;
-      padding: 10px;
+      gap: 12px;
+      align-items: flex-end;
+      background: #f8fafc;
+      padding: 12px;
       border-radius: 8px;
-      margin-bottom: 12px;
-      border: 1px solid #334155;
+      margin-bottom: 16px;
+      border: 1px solid var(--border-color);
     }
-    .filter-bar select, .filter-bar input {
-      margin-top: 0;
-      padding: 6px 10px;
-      font-size: 0.85rem;
-    }
+    .filter-bar select, .filter-bar input { margin-top: 4px; padding: 8px 10px; font-size: 0.85rem; }
 
-    .horario-tag { color: #94a3b8; font-weight: normal; }
+    .horario-tag { color: var(--text-muted); font-weight: 500; font-size: 0.8rem; }
 
-    /* ESTILOS COMPACTOS EXTRUSORAS OPERATIVAS */
-    .operativas-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .grupo-operativas {
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      padding: 8px 10px;
-    }
-    .checkbox-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 4px;
-      margin-bottom: 6px;
-    }
+    /* EXTRUSORAS OPERATIVAS */
+    .operativas-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+    .operativas-header h2 { margin: 0; border: none; padding: 0; font-size: 1rem; }
+    .operativas-actions { display: flex; gap: 8px; }
+    
+    .display-operativas { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .display-card { background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .display-card .label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .display-card .value { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .display-card .subvalue { font-size: 0.875rem; color: var(--text-secondary); }
+
+    .form-operativas { display: none; margin-top: 16px; }
+    .grupo-operativas { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; }
+    .checkbox-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; margin-bottom: 12px; }
     .checkbox-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: #f1f5f9;
-      background: #1e293b;
-      padding: 3px 6px;
-      border-radius: 4px;
-      cursor: pointer;
-      border: 1px solid #334155;
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text-primary);
+      background: #f8fafc; padding: 6px 10px; border-radius: 6px; cursor: pointer; border: 1px solid var(--border-color); transition: all 0.2s;
     }
-    .checkbox-label input { width: auto; margin-top: 0; cursor: pointer; }
-    .grupo-operativas input[type="text"] { padding: 6px 8px; font-size: 0.8rem; margin-top: 2px; }
-    .grupo-operativas label { font-size: 0.75rem; margin-top: 4px; }
+    .checkbox-label:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    .checkbox-label input { width: auto; margin: 0; cursor: pointer; accent-color: var(--primary); }
   </style>
 </head>
 <body>
 
-  <!-- ALERTA PANTALLA COMPLETA (EXTRUSIÓN) -->
+  <!-- ALERTA PANTALLA COMPLETA -->
   <div id="alerta-fullscreen">
-    <h1 id="fs-extrusora-header" style="font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; color: #fef08a; margin: 0 0 10px 0; text-transform: uppercase; text-shadow: 0 4px 15px rgba(0,0,0,0.7), 0 0 20px #ef4444; letter-spacing: 2px;">
+    <h1 id="fs-extrusora-header" style="font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: #ffffff; margin: 0 0 16px 0; text-transform: uppercase; letter-spacing: 1px;">
       CORREGIR EXTRUSORA EXT-00
     </h1>
-    <h1 id="fs-titulo" style="font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 800; margin: 0 0 15px 0; color: #ffffff;">🚨 ¡ALERTA CRÍTICA!</h1>
-    <p id="fs-detalle" style="font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 600; margin: 0 0 30px 0; max-width: 90%; line-height: 1.5; background: rgba(0,0,0,0.3); padding: 15px 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">---</p>
-    <button onclick="cerrarAlertaFullscreen()" style="background: white; color: #dc2626; font-size: clamp(1.1rem, 1.8vw, 1.5rem); padding: 16px 35px; width: auto; border-radius: 10px; cursor: pointer; font-weight: 900; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">Silenciar y Cerrar Alerta</button>
+    <h1 id="fs-titulo" style="font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; margin: 0 0 24px 0; color: #fecaca;">🚨 ALERTA CRÍTICA DE CALIDAD</h1>
+    <p id="fs-detalle" style="font-size: clamp(1rem, 1.5vw, 1.25rem); font-weight: 500; margin: 0 0 32px 0; max-width: 800px; line-height: 1.6; background: rgba(0,0,0,0.2); padding: 20px 32px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">---</p>
+    <button onclick="cerrarAlertaFullscreen()" style="background: white; color: var(--danger); font-size: 1.1rem; padding: 16px 40px; width: auto; border-radius: 8px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: none;">Silenciar y Cerrar Alerta</button>
   </div>
 
   <!-- VISTA 1: HOME -->
   <div id="view-home" class="view-section active">
-    <div id="banner-offline">
-      ℹ️ Sistema activo en Modo Respaldo / Sincronización Local.
-    </div>
+    <div id="banner-offline">ℹ️ Sistema activo en Modo Respaldo / Sincronización Local.</div>
     <div class="home-container">
-      <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="logo-glow" style="max-height: 90px; margin-bottom: 10px;">
-      <h1 style="color: #38bdf8; font-size: 1.5rem; margin: 0;">Control de Calidad en Tiempo Real</h1>
-      <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Selecciona el puesto de trabajo para comenzar</p>
+      <img src="https://iili.io/nw6Sq0v.png" alt="Logo Principal" class="logo-glow" style="max-height: 80px; margin-bottom: 16px;">
+      <h1 style="color: var(--primary); font-size: 1.75rem; margin: 0; font-weight: 700;">Control de Calidad en Tiempo Real</h1>
+      <p style="color: var(--text-muted); font-size: 1rem; margin-top: 8px;">Seleccione el puesto de trabajo para comenzar</p>
       
       <div class="home-grid">
         <div class="home-card" onclick="cambiarVista('octagon')">
           <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="home-logo">
+          <span style="margin-top: 12px; font-weight: 600; color: var(--text-primary);">Estación Octagon</span>
         </div>
-
         <div class="home-card" onclick="cambiarVista('extrusion')">
           <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="home-logo">
+          <span style="margin-top: 12px; font-weight: 600; color: var(--text-primary);">Planta Extrusión</span>
         </div>
       </div>
 
-      <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-        <button class="btn-action" onclick="toggleSonidoAudio()" id="btn-toggle-audio" style="background: #0284c7;">🔔 Sonido: Activado</button>
+      <div style="margin-top: 40px;">
+        <button class="btn-action btn-primary" onclick="toggleSonidoAudio()" id="btn-toggle-audio">🔔 Sonido: Activado</button>
       </div>
     </div>
   </div>
@@ -360,28 +375,24 @@
     <div class="header">
       <div class="header-left">
         <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="logo-glow">
-        <span class="header-title">Octagon</span>
+        <span class="header-title">Estación Octagon</span>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <button class="btn-action" onclick="abrirModalDesvio()" style="background: #dc2626;">🚨 Registrar Alerta / Desvío</button>
+        <button class="btn-action btn-danger" onclick="abrirModalDesvio()">🚨 Registrar Desvío</button>
         <button class="btn-action" onclick="abrirModal()">⚙️ Fichas Técnicas</button>
       </div>
     </div>
 
-    <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú</button>
+    <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú Principal</button>
 
-    <!-- BANNER DE ALERTAS ACTIVAS EN EL MEDIO -->
-    <div id="banner-alertas-medio">
-      🚨 ¡ATENCIÓN! HAY <span id="m-alertas-count">0</span> ALERTAS ACTIVAS PENDIENTES DE CORRECCIÓN
-    </div>
+    <div id="banner-alertas-medio">🚨 ¡ATENCIÓN! HAY <span id="m-alertas-count">0</span> ALERTAS ACTIVAS PENDIENTES DE CORRECCIÓN</div>
 
     <div class="card">
-      <h2>📏 Registrar Resultado Calidad</h2>
-      
+      <h2>📏 Registrar Resultado de Calidad</h2>
       <div class="grid-2">
         <div>
           <label>Operador Octagon:</label>
-          <input type="text" id="input-operador" placeholder="Nombre del operador">
+          <input type="text" id="input-operador" placeholder="Nombre completo del operador">
         </div>
         <div>
           <label id="label-turno">Turno:</label>
@@ -394,11 +405,11 @@
         </div>
       </div>
 
-      <div class="grid-3" style="margin-top: 5px;">
+      <div class="grid-3" style="margin-top: 8px;">
         <div>
           <label style="display: flex; justify-content: space-between; align-items: center;">
             <span>Extrusora y OT Activa:</span>
-            <span id="badge-operatividad" style="font-size: 0.7rem; padding: 1px 6px; border-radius: 4px; font-weight: bold;"></span>
+            <span id="badge-operatividad" style="font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;"></span>
           </label>
           <select id="select-extrusora" onchange="mostrarObjetivosSeleccionados()"></select>
         </div>
@@ -412,32 +423,38 @@
         </div>
       </div>
       
-      <div id="info-objetivos-actuales" style="margin-top: 10px; font-size: 0.85rem; color: #38bdf8; background: #0f172a; padding: 8px; border-radius: 6px;"></div>
-      <button onclick="registrarMedida()">📤 Registrar y Verificar Medida</button>
+      <div id="info-objetivos-actuales" style="margin-top: 16px; font-size: 0.85rem; color: var(--primary); background: #f0f9ff; padding: 12px; border-radius: 8px; border: 1px solid #bae6fd;"></div>
+      <button class="btn-primary" style="width: 100%; margin-top: 16px; padding: 12px;" onclick="registrarMedida()">📤 Registrar y Verificar Medida</button>
     </div>
 
     <div class="card">
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; border-bottom: 2px solid #334155; padding-bottom: 8px; margin-bottom: 10px;">
-        <h2 style="border:none; margin:0;">🖥️ Historial (Octagon)</h2>
-        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-          <button onclick="exportarCSV()" style="background: #0284c7; width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem;">📊 Exportar CSV</button>
-          <button onclick="generarPDF()" style="background: #16a34a; width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem;">📥 Reporte PDF</button>
-          <button onclick="limpiarHistorial()" style="background: #ef4444; width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem;">🗑️ Limpiar</button>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px;">
+        <h2 style="border:none; margin:0; padding:0;">🖥️ Historial de Mediciones</h2>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-action" onclick="exportarCSV()">📊 Exportar CSV</button>
+          <button class="btn-action btn-success" onclick="generarPDF()">📥 Reporte PDF</button>
+          <button class="btn-action btn-danger" onclick="limpiarHistorial()">🗑️ Limpiar</button>
         </div>
       </div>
 
       <div class="filter-bar">
-        <span style="font-size:0.8rem; color:#94a3b8; font-weight:bold;">Filtrar:</span>
-        <select id="filtro-extrusora" onchange="renderHistorial()" style="width: auto;">
-          <option value="TODAS">Todas las Extrusoras</option>
-        </select>
-        <select id="filtro-estado" onchange="renderHistorial()" style="width: auto;">
-          <option value="TODOS">Todos los Estados</option>
-          <option value="ALERTAS">Solo Alertas (Fuera)</option>
-          <option value="CORREGIDOS">Solo Corregidos</option>
-          <option value="OK">Solo OK</option>
-        </select>
-        <input type="text" id="filtro-buscar" placeholder="Buscar por operador u OT..." oninput="renderHistorial()" style="width: 180px;">
+        <div>
+          <label style="margin-top:0;">Filtrar Extrusora:</label>
+          <select id="filtro-extrusora" onchange="renderHistorial()"><option value="TODAS">Todas</option></select>
+        </div>
+        <div>
+          <label style="margin-top:0;">Filtrar Estado:</label>
+          <select id="filtro-estado" onchange="renderHistorial()">
+            <option value="TODOS">Todos los Estados</option>
+            <option value="ALERTAS">Solo Alertas</option>
+            <option value="CORREGIDOS">Solo Corregidos</option>
+            <option value="OK">Solo OK</option>
+          </select>
+        </div>
+        <div style="flex: 1; min-width: 150px;">
+          <label style="margin-top:0;">Buscar:</label>
+          <input type="text" id="filtro-buscar" placeholder="Operador u OT..." oninput="renderHistorial()">
+        </div>
       </div>
 
       <div class="table-responsive">
@@ -464,62 +481,85 @@
     <div class="header">
       <div class="header-left">
         <img src="https://iili.io/nwPYiyN.png" alt="Logo Extrusión" class="logo-glow">
-        <span class="header-title">Extrusión</span>
+        <span class="header-title">Planta Extrusión</span>
       </div>
-      <span style="color: #38bdf8; font-weight: bold; font-size: 0.9rem;">EN TIEMPO REAL</span>
+      <span style="color: var(--success); font-weight: 700; font-size: 0.85rem; background: #f0fdf4; padding: 4px 12px; border-radius: 20px; border: 1px solid #bbf7d0;">● EN TIEMPO REAL</span>
     </div>
 
-    <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú</button>
+    <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú Principal</button>
 
-    <!-- MÓDULO EXTRUSORAS OPERATIVAS COMPACTO -->
-    <div class="card" style="padding: 12px; margin-bottom: 12px;">
-      <h2 style="font-size: 1rem; padding-bottom: 6px; margin-bottom: 8px;">⚙️ Extrusoras Operativas</h2>
-      <div class="operativas-container">
-        <!-- Grupo 1: 2, 7, 8, 9, 10 -->
-        <div class="grupo-operativas">
-          <label style="color:#38bdf8; margin-top:0;">Grupo 1 (Extr. 2, 7, 8, 9, 10)</label>
-          <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="2" onchange="mostrarObjetivosSeleccionados()"> 2</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="7" onchange="mostrarObjetivosSeleccionados()"> 7</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="8" onchange="mostrarObjetivosSeleccionados()"> 8</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="9" onchange="mostrarObjetivosSeleccionados()"> 9</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="10" onchange="mostrarObjetivosSeleccionados()"> 10</label>
-          </div>
-          <label style="margin-bottom:2px;">Encargado:</label>
-          <input type="text" id="encargado-g1" placeholder="Encargado Grupo 1">
+    <!-- MÓDULO EXTRUSORAS OPERATIVAS CON LÓGICA DE TURNOS -->
+    <div class="card">
+      <div class="operativas-header">
+        <h2>⚙️ Extrusoras Operativas y Encargados</h2>
+        <div class="operativas-actions">
+          <button id="btn-editar-operativas" class="btn-action btn-warning" onclick="toggleEditarOperativas(true)">✏️ Editar</button>
+          <button id="btn-conservar-operativas" class="btn-action btn-success" onclick="toggleEditarOperativas(false)" style="display: none;">💾 Conservar</button>
+          <button class="btn-action btn-primary" onclick="solicitarCambioTurno()">🔄 Cambiar Turno</button>
         </div>
+      </div>
+      
+      <!-- MODO LECTURA -->
+      <div id="display-operativas" class="display-operativas">
+        <div class="display-card">
+          <div class="label">Grupo 1 (Extr. 2, 7, 8, 9, 10)</div>
+          <div class="value" id="display-enc-g1">Encargado: No asignado</div>
+          <div class="subvalue" id="display-ext-g1">Extrusoras: Ninguna activa</div>
+        </div>
+        <div class="display-card">
+          <div class="label">Grupo 2 (Extr. 11, 12, 13, 14, 15)</div>
+          <div class="value" id="display-enc-g2">Encargado: No asignado</div>
+          <div class="subvalue" id="display-ext-g2">Extrusoras: Ninguna activa</div>
+        </div>
+      </div>
 
-        <!-- Grupo 2: 11, 12, 13, 14, 15 -->
-        <div class="grupo-operativas">
-          <label style="color:#38bdf8; margin-top:0;">Grupo 2 (Extr. 11, 12, 13, 14, 15)</label>
-          <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="11" onchange="mostrarObjetivosSeleccionados()"> 11</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="12" onchange="mostrarObjetivosSeleccionados()"> 12</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="13" onchange="mostrarObjetivosSeleccionados()"> 13</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="14" onchange="mostrarObjetivosSeleccionados()"> 14</label>
-            <label class="checkbox-label"><input type="checkbox" class="chk-op" value="15" onchange="mostrarObjetivosSeleccionados()"> 15</label>
+      <!-- MODO EDICIÓN -->
+      <div id="form-operativas" class="form-operativas">
+        <div class="grid-2">
+          <div class="grupo-operativas">
+            <label style="color: var(--primary); margin-top: 0; font-weight: 700;">Grupo 1</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="2" onchange="actualizarDisplayOperativas()"> 2</label>
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="7" onchange="actualizarDisplayOperativas()"> 7</label>
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="8" onchange="actualizarDisplayOperativas()"> 8</label>
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="9" onchange="actualizarDisplayOperativas()"> 9</label>
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="10" onchange="actualizarDisplayOperativas()"> 10</label>
+            </div>
+            <label>Encargado:</label>
+            <input type="text" id="encargado-g1" placeholder="Nombre del encargado" oninput="actualizarDisplayOperativas()">
           </div>
-          <label style="margin-bottom:2px;">Encargado:</label>
-          <input type="text" id="encargado-g2" placeholder="Encargado Grupo 2">
+
+          <div class="grupo-operativas">
+            <label style="color: var(--primary); margin-top: 0; font-weight: 700;">Grupo 2</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="11" onchange="actualizarDisplayOperativas()"> 11</label>
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="12" onchange="actualizarDisplayOperativas()"> 12</label>
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="13" onchange="actualizarDisplayOperativas()"> 13</label>
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="14" onchange="actualizarDisplayOperativas()"> 14</label>
+              <label class="checkbox-label"><input type="checkbox" class="chk-op" value="15" onchange="actualizarDisplayOperativas()"> 15</label>
+            </div>
+            <label>Encargado:</label>
+            <input type="text" id="encargado-g2" placeholder="Nombre del encargado" oninput="actualizarDisplayOperativas()">
+          </div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <div style="border-bottom: 2px solid #334155; padding-bottom: 8px; margin-bottom: 10px;">
-        <h2 style="border:none; margin:0;">🖥️ Monitoreo de Mediciones (Extrusión)</h2>
-      </div>
-
+      <h2 style="margin-bottom: 16px;">🖥️ Monitoreo de Mediciones</h2>
       <div class="filter-bar">
-        <span style="font-size:0.8rem; color:#94a3b8; font-weight:bold;">Filtrar Planta:</span>
-        <select id="filtro-extrusora-ext" onchange="renderHistorial()" style="width: auto;">
-          <option value="TODAS">Todas las Extrusoras</option>
-        </select>
-        <select id="filtro-estado-ext" onchange="renderHistorial()" style="width: auto;">
-          <option value="TODOS">Todos los Estados</option>
-          <option value="ALERTAS">Solo Alertas</option>
-          <option value="CORREGIDOS">Solo Corregidos</option>
-        </select>
+        <div>
+          <label style="margin-top:0;">Planta:</label>
+          <select id="filtro-extrusora-ext" onchange="renderHistorial()"><option value="TODAS">Todas</option></select>
+        </div>
+        <div>
+          <label style="margin-top:0;">Estado:</label>
+          <select id="filtro-estado-ext" onchange="renderHistorial()">
+            <option value="TODOS">Todos</option>
+            <option value="ALERTAS">Solo Alertas</option>
+            <option value="CORREGIDOS">Solo Corregidos</option>
+          </select>
+        </div>
       </div>
 
       <div class="table-responsive">
@@ -541,25 +581,24 @@
     </div>
   </div>
 
-  <!-- VENTANA FLOTANTE (MODAL) PARA REGISTRAR ALERTA/DESVÍO -->
+  <!-- MODAL: REGISTRAR ALERTA/DESVÍO -->
   <div class="modal-overlay" id="modal-desvios">
-    <div class="modal-content" style="border: 1px solid #ef4444;">
+    <div class="modal-content" style="border-top: 4px solid var(--danger);">
       <div class="modal-header">
-        <h2 style="border:none; margin:0; color: #fca5a5; font-size: 1.1rem;">🚨 Registrar Alerta y Desvío de Calidad</h2>
+        <h2 style="border:none; margin:0; color: var(--danger); font-size: 1.1rem;">🚨 Registrar Alerta y Desvío</h2>
         <button class="btn-cerrar" onclick="cerrarModalDesvio()">✕ Cerrar</button>
       </div>
-
       <div>
         <label>Tipo de Desvío:</label>
         <select id="alerta-tipo-desvio" onchange="actualizarCamposDesvio()">
           <option value="Espesor Promedio">Espesor Promedio</option>
-          <option value="Circulo Micronométrico Sucio, Realizar Limpieza al Equipo">Circulo Micronométrico Sucio, Realizar Limpieza al Equipo</option>
+          <option value="Circulo Micronométrico Sucio">Circulo Micronométrico Sucio</option>
           <option value="Geles en Muestra">Geles en Muestra</option>
           <option value="Piel de Naranja">Piel de Naranja</option>
           <option value="Otro">Otro</option>
         </select>
 
-        <div class="grid-2" style="margin-top: 5px;">
+        <div class="grid-2" style="margin-top: 12px;">
           <div>
             <label>Extrusora:</label>
             <select id="alerta-extrusora" onchange="sincronizarOTAlerta()"></select>
@@ -570,27 +609,27 @@
           </div>
         </div>
 
-        <div id="grupo-bobina" style="margin-top: 5px;">
+        <div id="grupo-bobina" style="margin-top: 12px;">
           <label>N° Bobina:</label>
           <input type="number" id="alerta-bobina" placeholder="Ej: 14">
         </div>
 
-        <div id="grupo-porcentaje" style="margin-top: 5px; display: none;">
+        <div id="grupo-porcentaje" style="margin-top: 12px; display: none;">
           <label>Porcentaje (%):</label>
           <input type="number" step="0.1" id="alerta-porcentaje" placeholder="Ej: 5.5">
         </div>
 
-        <div id="grupo-comentario" style="margin-top: 5px;">
+        <div id="grupo-comentario" style="margin-top: 12px;">
           <label>Comentario / Detalle:</label>
-          <textarea id="alerta-comentario" rows="2" placeholder="Agrega aquí detalles u observaciones..."></textarea>
+          <textarea id="alerta-comentario" rows="2" placeholder="Observaciones adicionales..."></textarea>
         </div>
 
-        <button onclick="registrarAlertaDesvio()" style="background: #dc2626; margin-top: 15px;">⚠️ Enviar Notificación de Alerta</button>
+        <button class="btn-danger" style="width: 100%; margin-top: 20px; padding: 12px;" onclick="registrarAlertaDesvio()">⚠️ Enviar Notificación de Alerta</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DE FICHAS TÉCNICAS -->
+  <!-- MODAL: FICHAS TÉCNICAS -->
   <div class="modal-overlay" id="modal-fichas">
     <div class="modal-content">
       <div class="modal-header">
@@ -598,71 +637,44 @@
         <button class="btn-cerrar" onclick="cerrarModal()">✕ Cerrar</button>
       </div>
 
-      <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 id="titulo-form-ficha" style="margin-top: 0; color: #38bdf8; font-size: 0.95rem;">Nueva Ficha Técnica</h3>
-          <button id="btn-cancelar-edicion" onclick="cancelarEdicionFicha()" style="display:none; background:#475569; width:auto; margin:0; padding:4px 8px; font-size:0.75rem;">✕ Cancelar Edición</button>
+      <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border-color);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 id="titulo-form-ficha" style="margin: 0; color: var(--primary); font-size: 1rem; font-weight: 700;">Nueva Ficha Técnica</h3>
+          <button id="btn-cancelar-edicion" onclick="cancelarEdicionFicha()" style="display:none; background: var(--bg-card); border: 1px solid var(--border-color); width:auto; margin:0; padding:4px 10px; font-size:0.8rem; border-radius: 6px; cursor: pointer;">✕ Cancelar</button>
         </div>
         
         <label>N° Extrusora:</label>
         <input type="number" id="cfg-num-ext" placeholder="Ej: 9">
 
         <label>Producto (Dimensiones cm):</label>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <input type="number" id="cfg-ancho-prod" placeholder="Ancho (ej: 54)" oninput="actualizarRangos()">
-          <span style="font-weight: bold; color: #38bdf8;">X</span>
-          <input type="number" id="cfg-largo-prod" placeholder="Largo (ej: 50)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="number" id="cfg-ancho-prod" placeholder="Ancho" oninput="actualizarRangos()">
+          <span style="font-weight: 700; color: var(--text-muted);">X</span>
+          <input type="number" id="cfg-largo-prod" placeholder="Largo">
         </div>
 
         <label>N° Orden de Trabajo (OT):</label>
         <input type="number" id="cfg-ot" placeholder="Ej: 18489">
 
-        <div class="grid-4" style="margin-top: 5px;">
-          <div>
-            <label>Ancho Obj:</label>
-            <input type="number" step="0.1" id="cfg-ancho" value="54.0" oninput="actualizarRangos()">
-          </div>
-          <div>
-            <label>Tol. Ancho ±:</label>
-            <input type="number" step="0.1" id="cfg-tol-ancho" value="0.5" oninput="actualizarRangos()">
-          </div>
-          <div>
-            <label>Ancho Mín:</label>
-            <input type="number" step="0.1" id="cfg-min-ancho" value="53.5" readonly style="background:#1e293b; color:#94a3b8;">
-          </div>
-          <div>
-            <label>Ancho Máx:</label>
-            <input type="number" step="0.1" id="cfg-max-ancho" value="54.5" readonly style="background:#1e293b; color:#94a3b8;">
-          </div>
+        <div class="grid-4" style="margin-top: 12px;">
+          <div><label>Ancho Obj:</label><input type="number" step="0.1" id="cfg-ancho" value="54.0" oninput="actualizarRangos()"></div>
+          <div><label>Tol. Ancho ±:</label><input type="number" step="0.1" id="cfg-tol-ancho" value="0.5" oninput="actualizarRangos()"></div>
+          <div><label>Ancho Mín:</label><input type="number" step="0.1" id="cfg-min-ancho" value="53.5" readonly style="background:#f1f5f9; color:var(--text-muted);"></div>
+          <div><label>Ancho Máx:</label><input type="number" step="0.1" id="cfg-max-ancho" value="54.5" readonly style="background:#f1f5f9; color:var(--text-muted);"></div>
         </div>
 
-        <div class="grid-4" style="margin-top: 5px;">
-          <div>
-            <label>Peso Ideal:</label>
-            <input type="number" step="0.1" id="cfg-peso-ideal" value="44.4" oninput="actualizarRangos()">
-          </div>
-          <div>
-            <label>Tol. Peso ±:</label>
-            <input type="number" step="0.1" id="cfg-tol-peso" value="1.0" oninput="actualizarRangos()">
-          </div>
-          <div>
-            <label>Peso Mín:</label>
-            <input type="number" step="0.1" id="cfg-min-peso" value="43.4" readonly style="background:#1e293b; color:#94a3b8;">
-          </div>
-          <div>
-            <label>Peso Máx:</label>
-            <input type="number" step="0.1" id="cfg-max-peso" value="45.4" readonly style="background:#1e293b; color:#94a3b8;">
-          </div>
+        <div class="grid-4" style="margin-top: 12px;">
+          <div><label>Peso Ideal:</label><input type="number" step="0.1" id="cfg-peso-ideal" value="44.4" oninput="actualizarRangos()"></div>
+          <div><label>Tol. Peso ±:</label><input type="number" step="0.1" id="cfg-tol-peso" value="1.0" oninput="actualizarRangos()"></div>
+          <div><label>Peso Mín:</label><input type="number" step="0.1" id="cfg-min-peso" value="43.4" readonly style="background:#f1f5f9; color:var(--text-muted);"></div>
+          <div><label>Peso Máx:</label><input type="number" step="0.1" id="cfg-max-peso" value="45.4" readonly style="background:#f1f5f9; color:var(--text-muted);"></div>
         </div>
 
-        <button onclick="guardarExtrusora()" style="background:#16a34a; margin-top: 12px;">💾 Guardar Ficha Técnica</button>
-        
-        <div id="mensaje-exito" style="display:none; margin-top: 10px; padding: 8px; background: rgba(22, 163, 74, 0.2); border: 1px solid #16a34a; border-radius: 6px; text-align: center; font-size: 0.85rem; color: #4ade80;">
-          ✅ Ficha Guardada con Éxito
-        </div>
+        <button class="btn-success" style="width: 100%; margin-top: 16px; padding: 10px;" onclick="guardarExtrusora()">💾 Guardar Ficha Técnica</button>
+        <div id="mensaje-exito" style="display:none; margin-top: 12px; padding: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; text-align: center; font-size: 0.85rem; color: var(--success); font-weight: 600;">✅ Ficha Guardada con Éxito</div>
       </div>
 
-      <h3 style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 5px;">Extrusoras Configuradas:</h3>
+      <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">Extrusoras Configuradas:</h3>
       <div id="lista-extrusoras"></div>
     </div>
   </div>
@@ -672,37 +684,28 @@
     let extrusoras = JSON.parse(localStorage.getItem('extrusoras')) || [
       { id: 'EXT-09', producto: '54x50 (OT: 18489)', ancho: 54.0, tolAncho: 0.5, minAncho: 53.5, maxAncho: 54.5, pesoIdeal: 44.4, tolPeso: 1.0, minPeso: 43.4, maxPeso: 45.4 }
     ];
-
     let historial = JSON.parse(localStorage.getItem('mediciones_local')) || [];
     let primerCarga = true;
     let sonidoHabilitado = true;
     let timerAlertaFullscreen = null;
+    let lastKnownTimestamp = Date.now();
 
-    // LÓGICA DE TURNOS SEGÚN HORA Y DÍA
+    // --- LÓGICA DE TURNOS ---
     function obtenerTurnoAutomatico() {
       const ahora = new Date();
       const diaSemana = ahora.getDay(); 
       const minutosTotales = ahora.getHours() * 60 + ahora.getMinutes();
 
       if (diaSemana >= 1 && diaSemana <= 5) {
-        if (minutosTotales >= 420 && minutosTotales < 870) { 
-          return { nombre: 'Día', horario: '07:00 a 14:30' };
-        } else if (minutosTotales >= 870 && minutosTotales < 1320) { 
-          return { nombre: 'Tarde', horario: '14:30 a 22:00' };
-        } else { 
-          return { nombre: 'Noche', horario: '22:00 a 07:00' };
-        }
+        if (minutosTotales >= 420 && minutosTotales < 870) return { nombre: 'Día', horario: '07:00 a 14:30' };
+        if (minutosTotales >= 870 && minutosTotales < 1320) return { nombre: 'Tarde', horario: '14:30 a 22:00' };
+        return { nombre: 'Noche', horario: '22:00 a 07:00' };
       } else if (diaSemana === 6) {
-        if (minutosTotales >= 420 && minutosTotales < 690) { 
-          return { nombre: 'Día', horario: '07:00 a 11:30' };
-        } else if (minutosTotales >= 690 && minutosTotales < 960) { 
-          return { nombre: 'Tarde', horario: '11:30 a 16:00' };
-        } else {
-          return { nombre: 'Noche', horario: '22:00 a 07:00' };
-        }
-      } else {
-        return { nombre: 'Especial', horario: 'Horario Especial' };
+        if (minutosTotales >= 420 && minutosTotales < 690) return { nombre: 'Día', horario: '07:00 a 11:30' };
+        if (minutosTotales >= 690 && minutosTotales < 960) return { nombre: 'Tarde', horario: '11:30 a 16:00' };
+        return { nombre: 'Noche', horario: '22:00 a 07:00' };
       }
+      return { nombre: 'Especial', horario: 'Horario Especial' };
     }
 
     function actualizarTurnoEnInterfaz() {
@@ -710,39 +713,125 @@
       const selectTurno = document.getElementById('input-turno');
       const labelTurno = document.getElementById('label-turno');
 
-      if (labelTurno) {
-        labelTurno.innerHTML = `Turno: <b>${turnoAuto.nombre}</b> <span class="horario-tag">[${turnoAuto.horario}]</span>`;
-      }
-
+      if (labelTurno) labelTurno.innerHTML = `Turno: <b>${turnoAuto.nombre}</b> <span class="horario-tag">[${turnoAuto.horario}]</span>`;
       if (selectTurno) {
         const diaSemana = new Date().getDay();
+        let options = '';
         if (diaSemana >= 1 && diaSemana <= 5) {
-          selectTurno.innerHTML = `
-            <option value="Día">Día [07:00 a 14:30]</option>
-            <option value="Tarde">Tarde [14:30 a 22:00]</option>
-            <option value="Noche">Noche [22:00 a 07:00]</option>
-            <option value="Especial">Especial [Horario Especial]</option>
-          `;
+          options = `<option value="Día">Día [07:00 a 14:30]</option><option value="Tarde">Tarde [14:30 a 22:00]</option><option value="Noche">Noche [22:00 a 07:00]</option><option value="Especial">Especial</option>`;
         } else if (diaSemana === 6) {
-          selectTurno.innerHTML = `
-            <option value="Día">Día [07:00 a 11:30]</option>
-            <option value="Tarde">Tarde [11:30 a 16:00]</option>
-            <option value="Noche">Noche [22:00 a 07:00]</option>
-            <option value="Especial">Especial [Horario Especial]</option>
-          `;
+          options = `<option value="Día">Día [07:00 a 11:30]</option><option value="Tarde">Tarde [11:30 a 16:00]</option><option value="Noche">Noche [22:00 a 07:00]</option><option value="Especial">Especial</option>`;
         } else {
-          selectTurno.innerHTML = `
-            <option value="Especial">Especial [Horario Especial]</option>
-            <option value="Día">Día [07:00 a 14:30]</option>
-            <option value="Tarde">Tarde [14:30 a 22:00]</option>
-            <option value="Noche">Noche [22:00 a 07:00]</option>
-          `;
+          options = `<option value="Especial">Especial</option><option value="Día">Día [07:00 a 14:30]</option><option value="Tarde">Tarde [14:30 a 22:00]</option><option value="Noche">Noche [22:00 a 07:00]</option>`;
         }
-        
+        selectTurno.innerHTML = options;
         selectTurno.value = turnoAuto.nombre;
       }
     }
 
+    // --- LÓGICA DE EXTRUSORAS OPERATIVAS Y CAMBIO DE TURNO ---
+    function toggleEditarOperativas(editing) {
+      const displayDiv = document.getElementById('display-operativas');
+      const formDiv = document.getElementById('form-operativas');
+      const btnEditar = document.getElementById('btn-editar-operativas');
+      const btnConservar = document.getElementById('btn-conservar-operativas');
+
+      if (editing) {
+        displayDiv.style.display = 'none';
+        formDiv.style.display = 'block';
+        btnEditar.style.display = 'none';
+        btnConservar.style.display = 'inline-flex';
+      } else {
+        // Validar antes de conservar
+        const g1 = Array.from(document.querySelectorAll('.chk-op')).filter(cb => [2,7,8,9,10].includes(parseInt(cb.value)) && cb.checked);
+        const g2 = Array.from(document.querySelectorAll('.chk-op')).filter(cb => [11,12,13,14,15].includes(parseInt(cb.value)) && cb.checked);
+        const enc1 = document.getElementById('encargado-g1').value.trim();
+        const enc2 = document.getElementById('encargado-g2').value.trim();
+
+        if (g1.length === 0 && g2.length === 0) {
+          alert('⚠️ Debe seleccionar al menos una extrusora operativa antes de conservar.');
+          return;
+        }
+
+        guardarEstadoOperativas();
+        formDiv.style.display = 'none';
+        displayDiv.style.display = 'grid';
+        btnEditar.style.display = 'inline-flex';
+        btnConservar.style.display = 'none';
+        actualizarDisplayOperativas(); // Refrescar vista de lectura
+      }
+    }
+
+    function actualizarDisplayOperativas() {
+      const g1 = Array.from(document.querySelectorAll('.chk-op')).filter(cb => [2,7,8,9,10].includes(parseInt(cb.value)) && cb.checked).map(cb => cb.value);
+      const g2 = Array.from(document.querySelectorAll('.chk-op')).filter(cb => [11,12,13,14,15].includes(parseInt(cb.value)) && cb.checked).map(cb => cb.value);
+      const enc1 = document.getElementById('encargado-g1').value.trim() || 'No asignado';
+      const enc2 = document.getElementById('encargado-g2').value.trim() || 'No asignado';
+
+      document.getElementById('display-enc-g1').textContent = `Encargado: ${enc1}`;
+      document.getElementById('display-ext-g1').textContent = `Extrusoras: ${g1.length > 0 ? g1.join(', ') : 'Ninguna'}`;
+      document.getElementById('display-enc-g2').textContent = `Encargado: ${enc2}`;
+      document.getElementById('display-ext-g2').textContent = `Extrusoras: ${g2.length > 0 ? g2.join(', ') : 'Ninguna'}`;
+    }
+
+    function guardarEstadoOperativas() {
+      const estado = {
+        g1: Array.from(document.querySelectorAll('.chk-op')).filter(cb => [2,7,8,9,10].includes(parseInt(cb.value)) && cb.checked).map(cb => cb.value),
+        g2: Array.from(document.querySelectorAll('.chk-op')).filter(cb => [11,12,13,14,15].includes(parseInt(cb.value)) && cb.checked).map(cb => cb.value),
+        encG1: document.getElementById('encargado-g1').value.trim(),
+        encG2: document.getElementById('encargado-g2').value.trim()
+      };
+      localStorage.setItem('estado_operativas', JSON.stringify(estado));
+    }
+
+    function cargarEstadoOperativas() {
+      const estado = JSON.parse(localStorage.getItem('estado_operativas'));
+      if (estado) {
+        document.querySelectorAll('.chk-op').forEach(cb => {
+          cb.checked = estado.g1.includes(cb.value) || estado.g2.includes(cb.value);
+        });
+        document.getElementById('encargado-g1').value = estado.encG1 || '';
+        document.getElementById('encargado-g2').value = estado.encG2 || '';
+        toggleEditarOperativas(false); // Iniciar en modo lectura
+      } else {
+        toggleEditarOperativas(true); // Si no hay datos, forzar edición
+      }
+    }
+
+    async function solicitarCambioTurno() {
+      if (historial.length > 0) {
+        const confirmar = confirm("⚠️ Es obligatorio descargar el reporte del turno actual antes de cambiar.\n\n¿Desea generar y descargar el PDF del avance ahora?");
+        if (confirmar) {
+          await generarPDFPromise();
+          const limpiar = confirm("✅ Reporte descargado.\n\n¿Desea limpiar el historial y configurar el nuevo turno?");
+          if (limpiar) {
+            historial = [];
+            localStorage.removeItem('mediciones_local');
+            renderHistorial();
+            // Resetear operativas para forzar nueva configuración
+            localStorage.removeItem('estado_operativas');
+            document.getElementById('encargado-g1').value = '';
+            document.getElementById('encargado-g2').value = '';
+            document.querySelectorAll('.chk-op').forEach(cb => cb.checked = false);
+            toggleEditarOperativas(true);
+            actualizarTurnoEnInterfaz();
+            alert("🔄 Turno cambiado. Por favor, configure las extrusoras operativas del nuevo turno.");
+          }
+        }
+      } else {
+        const limpiar = confirm("No hay registros en este turno. ¿Desea reiniciar la configuración de operativas para el nuevo turno?");
+        if (limpiar) {
+          localStorage.removeItem('estado_operativas');
+          document.getElementById('encargado-g1').value = '';
+          document.getElementById('encargado-g2').value = '';
+          document.querySelectorAll('.chk-op').forEach(cb => cb.checked = false);
+          toggleEditarOperativas(true);
+          actualizarTurnoEnInterfaz();
+        }
+      }
+    }
+
+    // --- FUNCIONES GENERALES ---
     function guardarHistorialLocal() {
       localStorage.setItem('mediciones_local', JSON.stringify(historial));
     }
@@ -752,7 +841,7 @@
       const btn = document.getElementById('btn-toggle-audio');
       if (btn) {
         btn.innerText = sonidoHabilitado ? "🔔 Sonido: Activado" : "🔕 Sonido: Desactivado";
-        btn.style.background = sonidoHabilitado ? "#0284c7" : "#475569";
+        btn.className = sonidoHabilitado ? "btn-action btn-primary" : "btn-action";
       }
     }
 
@@ -779,36 +868,17 @@
       document.getElementById('modal-desvios').style.display = 'none';
     }
 
-    // CONTROL DINÁMICO DE CAMPOS SEGÚN EL TIPO DE DESVÍO
     function actualizarCamposDesvio() {
       const tipo = document.getElementById('alerta-tipo-desvio').value;
-      const grupoBobina = document.getElementById('grupo-bobina');
-      const grupoPorcentaje = document.getElementById('grupo-porcentaje');
-      const grupoComentario = document.getElementById('grupo-comentario');
-
-      // Valores por defecto: ocultar todo
-      grupoBobina.style.display = 'none';
-      grupoPorcentaje.style.display = 'none';
-      grupoComentario.style.display = 'none';
-
-      if (tipo === 'Espesor Promedio') {
-        grupoBobina.style.display = 'block';
-        grupoComentario.style.display = 'block';
-      } else if (tipo === 'Circulo Micronométrico Sucio, Realizar Limpieza al Equipo') {
-        // Sin bobina ni comentario
-      } else if (tipo === 'Geles en Muestra' || tipo === 'Piel de Naranja') {
-        grupoBobina.style.display = 'block';
-        grupoPorcentaje.style.display = 'block';
-      } else if (tipo === 'Otro') {
-        grupoComentario.style.display = 'block';
-      }
+      document.getElementById('grupo-bobina').style.display = (tipo === 'Espesor Promedio' || tipo === 'Geles en Muestra' || tipo === 'Piel de Naranja') ? 'block' : 'none';
+      document.getElementById('grupo-porcentaje').style.display = (tipo === 'Geles en Muestra' || tipo === 'Piel de Naranja') ? 'block' : 'none';
+      document.getElementById('grupo-comentario').style.display = (tipo === 'Espesor Promedio' || tipo === 'Otro') ? 'block' : 'none';
     }
 
     function actualizarRangos() {
       const anchoInput = document.getElementById('cfg-ancho-prod').value;
-      if (anchoInput && document.activeElement.id === 'cfg-ancho-prod') {
-        document.getElementById('cfg-ancho').value = parseFloat(anchoInput).toFixed(1);
-      }
+      if (anchoInput && document.activeElement.id === 'cfg-ancho-prod') document.getElementById('cfg-ancho').value = parseFloat(anchoInput).toFixed(1);
+      
       const anchoObj = parseFloat(document.getElementById('cfg-ancho').value) || 0;
       const tolAncho = parseFloat(document.getElementById('cfg-tol-ancho').value) || 0;
       document.getElementById('cfg-min-ancho').value = (anchoObj - tolAncho).toFixed(1);
@@ -821,44 +891,22 @@
     }
 
     function actualizarSelect() {
-      const select = document.getElementById('select-extrusora');
-      const selectAlertaExt = document.getElementById('alerta-extrusora');
-      const filtroSelect = document.getElementById('filtro-extrusora');
-      const filtroSelectExt = document.getElementById('filtro-extrusora-ext');
-
-      if (select) {
-        select.innerHTML = '';
-        if (extrusoras.length === 0) {
-          select.innerHTML = '<option value="">-- No hay extrusoras activas --</option>';
-          document.getElementById('info-objetivos-actuales').innerText = 'Selecciona una extrusora';
+      const selects = ['select-extrusora', 'alerta-extrusora', 'filtro-extrusora', 'filtro-extrusora-ext'];
+      selects.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const prevVal = el.value;
+        el.innerHTML = id.includes('filtro') ? '<option value="TODAS">Todas</option>' : '';
+        if (extrusoras.length === 0 && id === 'select-extrusora') {
+          el.innerHTML = '<option value="">-- No hay extrusoras --</option>';
+          document.getElementById('info-objetivos-actuales').innerText = 'Configure una ficha técnica primero.';
         } else {
-          extrusoras.forEach(e => {
-            select.innerHTML += `<option value="${e.id}">${e.id} | ${e.producto}</option>`;
-          });
-          mostrarObjetivosSeleccionados();
+          extrusoras.forEach(e => { el.innerHTML += `<option value="${e.id}">${e.id} | ${e.producto}</option>`; });
+          if (id === 'select-extrusora') mostrarObjetivosSeleccionados();
+          if (id === 'alerta-extrusora') sincronizarOTAlerta();
         }
-      }
-
-      if (selectAlertaExt) {
-        selectAlertaExt.innerHTML = '';
-        extrusoras.forEach(e => {
-          selectAlertaExt.innerHTML += `<option value="${e.id}">${e.id}</option>`;
-        });
-        sincronizarOTAlerta();
-      }
-
-      const updateFiltro = (fEl) => {
-        if (!fEl) return;
-        const prevVal = fEl.value;
-        fEl.innerHTML = '<option value="TODAS">Todas las Extrusoras</option>';
-        extrusoras.forEach(e => {
-          fEl.innerHTML += `<option value="${e.id}">${e.id}</option>`;
-        });
-        fEl.value = prevVal || "TODAS";
-      };
-
-      updateFiltro(filtroSelect);
-      updateFiltro(filtroSelectExt);
+        el.value = prevVal || (id.includes('filtro') ? "TODAS" : "");
+      });
     }
 
     function sincronizarOTAlerta() {
@@ -867,11 +915,7 @@
       if (!selectOT) return;
       selectOT.innerHTML = '';
       const ext = extrusoras.find(e => e.id === extId);
-      if (ext) {
-        selectOT.innerHTML = `<option value="${ext.producto}">${ext.producto}</option>`;
-      } else {
-        selectOT.innerHTML = `<option value="S/I">Sin OT asignada</option>`;
-      }
+      selectOT.innerHTML = ext ? `<option value="${ext.producto}">${ext.producto}</option>` : `<option value="S/I">Sin OT</option>`;
     }
 
     function verificarOperatividadExtrusora(extId) {
@@ -883,36 +927,24 @@
     function mostrarObjetivosSeleccionados() {
       const select = document.getElementById('select-extrusora');
       if (!select) return;
-      const id = select.value;
-      const ext = extrusoras.find(e => e.id === id);
+      const ext = extrusoras.find(e => e.id === select.value);
       const infoBox = document.getElementById('info-objetivos-actuales');
-      const valMedidaInput = document.getElementById('val-medida');
-      const valPesoInput = document.getElementById('val-peso');
       const badge = document.getElementById('badge-operatividad');
 
       if (ext) {
-        if (infoBox) {
-          infoBox.innerHTML = `📌 <b>Ficha:</b> Ancho Obj: ${ext.ancho}cm [${ext.minAncho}-${ext.maxAncho}cm] | Peso Ideal: ${ext.pesoIdeal}gr [${ext.minPeso}-${ext.maxPeso}gr]`;
-        }
-        if (valMedidaInput) valMedidaInput.placeholder = `Ej: ${ext.ancho.toFixed(1)}`;
-        if (valPesoInput) valPesoInput.placeholder = `Ej: ${ext.pesoIdeal.toFixed(1)}`;
+        infoBox.innerHTML = `📌 <b>Ficha:</b> Ancho Obj: ${ext.ancho}cm [${ext.minAncho}-${ext.maxAncho}cm] | Peso Ideal: ${ext.pesoIdeal}gr [${ext.minPeso}-${ext.maxPeso}gr]`;
+        document.getElementById('val-medida').placeholder = `Ej: ${ext.ancho.toFixed(1)}`;
+        document.getElementById('val-peso').placeholder = `Ej: ${ext.pesoIdeal.toFixed(1)}`;
 
         if (badge) {
           const operativa = verificarOperatividadExtrusora(ext.id);
-          if (operativa) {
-            badge.innerText = "Operativa";
-            badge.style.background = "rgba(22, 163, 74, 0.2)";
-            badge.style.color = "#4ade80";
-            badge.style.border = "1px solid #16a34a";
-          } else {
-            badge.innerText = "Fuera de Línea";
-            badge.style.background = "rgba(220, 38, 38, 0.2)";
-            badge.style.color = "#fca5a5";
-            badge.style.border = "1px solid #dc2626";
-          }
+          badge.innerText = operativa ? "Operativa" : "Fuera de Línea";
+          badge.style.background = operativa ? "#f0fdf4" : "#fef2f2";
+          badge.style.color = operativa ? "var(--success)" : "var(--danger)";
+          badge.style.border = `1px solid ${operativa ? "#bbf7d0" : "#fecaca"}`;
         }
       } else {
-        if (infoBox) infoBox.innerHTML = '';
+        infoBox.innerHTML = '';
         if (badge) badge.innerText = '';
       }
     }
@@ -920,17 +952,13 @@
     function renderListaModal() {
       const contenedor = document.getElementById('lista-extrusoras');
       if (!contenedor) return;
-      contenedor.innerHTML = '';
-      if (extrusoras.length === 0) {
-        contenedor.innerHTML = '<p style="color:#64748b; font-size:0.85rem;">Sin extrusoras configuradas.</p>';
-        return;
-      }
+      contenedor.innerHTML = extrusoras.length === 0 ? '<p style="color:var(--text-muted); font-size:0.85rem;">Sin extrusoras configuradas.</p>' : '';
       extrusoras.forEach(e => {
         contenedor.innerHTML += `
           <div class="item-extrusora">
             <div>
               <strong>${e.id}</strong> - ${e.producto} <br>
-              <small style="color:#94a3b8;">Ancho: ${e.ancho}cm [${e.minAncho}-${e.maxAncho}] | Peso: ${e.pesoIdeal}gr [${e.minPeso}-${e.maxPeso}]</small>
+              <small style="color:var(--text-muted);">Ancho: ${e.ancho}cm [${e.minAncho}-${e.maxAncho}] | Peso: ${e.pesoIdeal}gr [${e.minPeso}-${e.maxPeso}]</small>
             </div>
             <div class="item-acciones">
               <button class="btn-editar-item" onclick="cargarParaEditar('${e.id}')">✏️ Editar</button>
@@ -944,37 +972,27 @@
     function cargarParaEditar(id) {
       const ext = extrusoras.find(e => e.id === id);
       if (!ext) return;
-
-      const numOnly = parseInt(ext.id.replace(/\D/g, ''), 10);
-      document.getElementById('cfg-num-ext').value = isNaN(numOnly) ? '' : numOnly;
+      document.getElementById('cfg-num-ext').value = parseInt(ext.id.replace(/\D/g, ''), 10);
       document.getElementById('cfg-num-ext').readOnly = true;
-
       const matchProd = ext.producto.match(/^(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)\s*\(OT:\s*(\d+)\)$/);
       if (matchProd) {
         document.getElementById('cfg-ancho-prod').value = matchProd[1];
         document.getElementById('cfg-largo-prod').value = matchProd[2];
         document.getElementById('cfg-ot').value = matchProd[3];
       }
-
       document.getElementById('cfg-ancho').value = ext.ancho;
       document.getElementById('cfg-tol-ancho').value = ext.tolAncho || 0.5;
       document.getElementById('cfg-peso-ideal').value = ext.pesoIdeal;
       document.getElementById('cfg-tol-peso').value = ext.tolPeso || 1.0;
-
       actualizarRangos();
-
       document.getElementById('titulo-form-ficha').innerText = `Editar Ficha ${ext.id}`;
       document.getElementById('btn-cancelar-edicion').style.display = 'inline-block';
-      document.querySelector('.modal-content').scrollTop = 0;
     }
 
     function cancelarEdicionFicha() {
       document.getElementById('cfg-num-ext').value = '';
       document.getElementById('cfg-num-ext').readOnly = false;
-      document.getElementById('cfg-ancho-prod').value = '';
-      document.getElementById('cfg-largo-prod').value = '';
-      document.getElementById('cfg-ot').value = '';
-
+      ['cfg-ancho-prod', 'cfg-largo-prod', 'cfg-ot'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('titulo-form-ficha').innerText = 'Nueva Ficha Técnica';
       document.getElementById('btn-cancelar-edicion').style.display = 'none';
       document.getElementById('mensaje-exito').style.display = 'none';
@@ -986,71 +1004,51 @@
       const largoProd = document.getElementById('cfg-largo-prod').value.trim();
       const ot = document.getElementById('cfg-ot').value.trim();
       
-      const ancho = parseFloat(document.getElementById('cfg-ancho').value);
-      const tolAncho = parseFloat(document.getElementById('cfg-tol-ancho').value);
-      const minAncho = parseFloat(document.getElementById('cfg-min-ancho').value);
-      const maxAncho = parseFloat(document.getElementById('cfg-max-ancho').value);
-
-      const pesoIdeal = parseFloat(document.getElementById('cfg-peso-ideal').value);
-      const tolPeso = parseFloat(document.getElementById('cfg-tol-peso').value);
-      const minPeso = parseFloat(document.getElementById('cfg-min-peso').value);
-      const maxPeso = parseFloat(document.getElementById('cfg-max-peso').value);
-
-      if (!numExt || !anchoProd || !largoProd || !ot) {
-        return alert('Por favor completa los datos principales de la ficha');
-      }
+      if (!numExt || !anchoProd || !largoProd || !ot) return alert('Complete todos los datos principales de la ficha');
 
       const idFormatted = `EXT-${numExt.padStart(2, '0')}`;
-      const productoFormatted = `${anchoProd}x${largoProd} (OT: ${ot})`;
-
       const nuevaFicha = { 
-        id: idFormatted, producto: productoFormatted, 
-        ancho, tolAncho, minAncho, maxAncho, 
-        pesoIdeal, tolPeso, minPeso, maxPeso 
+        id: idFormatted, producto: `${anchoProd}x${largoProd} (OT: ${ot})`, 
+        ancho: parseFloat(document.getElementById('cfg-ancho').value),
+        tolAncho: parseFloat(document.getElementById('cfg-tol-ancho').value),
+        minAncho: parseFloat(document.getElementById('cfg-min-ancho').value),
+        maxAncho: parseFloat(document.getElementById('cfg-max-ancho').value),
+        pesoIdeal: parseFloat(document.getElementById('cfg-peso-ideal').value),
+        tolPeso: parseFloat(document.getElementById('cfg-tol-peso').value),
+        minPeso: parseFloat(document.getElementById('cfg-min-peso').value),
+        maxPeso: parseFloat(document.getElementById('cfg-max-peso').value)
       };
 
       try {
         if (window.fbMethods && window.db) {
-          const { doc, setDoc } = window.fbMethods;
-          await setDoc(doc(window.db, "fichas", idFormatted), nuevaFicha);
+          await window.fbMethods.setDoc(window.fbMethods.doc(window.db, "fichas", idFormatted), nuevaFicha);
         } else {
           const index = extrusoras.findIndex(e => e.id === idFormatted);
-          if (index >= 0) extrusoras[index] = nuevaFicha;
-          else extrusoras.push(nuevaFicha);
+          if (index >= 0) extrusoras[index] = nuevaFicha; else extrusoras.push(nuevaFicha);
           localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
-          actualizarSelect();
-          renderListaModal();
         }
-      } catch (e) {
-        const index = extrusoras.findIndex(e => e.id === idFormatted);
-        if (index >= 0) extrusoras[index] = nuevaFicha;
-        else extrusoras.push(nuevaFicha);
-        localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
         actualizarSelect();
         renderListaModal();
+        document.getElementById('mensaje-exito').style.display = 'block';
+        cancelarEdicionFicha();
+      } catch (e) {
+        alert('Error al guardar. Verifique la conexión.');
       }
-
-      document.getElementById('mensaje-exito').style.display = 'block';
-      cancelarEdicionFicha();
     }
 
     async function eliminarExtrusora(id) {
-      if (!confirm(`¿Eliminar la ficha técnica para la ${id}?`)) return;
+      if (!confirm(`¿Eliminar la ficha técnica ${id}?`)) return;
       try {
         if (window.fbMethods && window.db) {
-          const { doc, deleteDoc } = window.fbMethods;
-          await deleteDoc(doc(window.db, "fichas", id));
+          await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "fichas", id));
         } else {
           extrusoras = extrusoras.filter(e => e.id !== id);
           localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
-          actualizarSelect();
-          renderListaModal();
         }
-      } catch (e) {
-        extrusoras = extrusoras.filter(e => e.id !== id);
-        localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
         actualizarSelect();
         renderListaModal();
+      } catch (e) {
+        alert('Error al eliminar.');
       }
     }
 
@@ -1064,47 +1062,32 @@
       const operador = document.getElementById('input-operador').value.trim() || "Octagon";
       const turno = document.getElementById('input-turno').value;
 
+      if (tipoDesvio === 'Espesor Promedio' && !bobina) return alert('Ingrese el N° de Bobina');
+      if ((tipoDesvio === 'Geles en Muestra' || tipoDesvio === 'Piel de Naranja') && (!bobina || !porcentaje)) return alert('Ingrese Bobina y Porcentaje');
+
       let detalleExtra = ` | OT: ${ot}`;
-      if (tipoDesvio === 'Espesor Promedio') {
-        if (!bobina) return alert('Por favor ingresa el N° de Bobina');
-        detalleExtra += ` | Bobina #${bobina}`;
-        if (comentario) detalleExtra += ` | Obs: ${comentario}`;
-      } else if (tipoDesvio === 'Geles en Muestra' || tipoDesvio === 'Piel de Naranja') {
-        if (!bobina) return alert('Por favor ingresa el N° de Bobina');
-        if (!porcentaje) return alert('Por favor ingresa el porcentaje (%)');
-        detalleExtra += ` | Bobina #${bobina} | Porcentaje: ${porcentaje}%`;
-      } else if (tipoDesvio === 'Otro') {
-        if (comentario) detalleExtra += ` | Obs: ${comentario}`;
-      }
+      if (bobina) detalleExtra += ` | Bobina #${bobina}`;
+      if (porcentaje) detalleExtra += ` | %: ${porcentaje}`;
+      if (comentario) detalleExtra += ` | Obs: ${comentario}`;
 
       const registro = {
         timestamp: Date.now(),
         hora: new Date().toLocaleTimeString('es-CL'),
-        operador,
-        turno,
-        id: extId,
-        producto: detalleExtra,
-        valorMedido: 0,
-        pesoMedido: 0,
-        fueraDeRango: true,
-        corregido: false,
+        operador, turno, id: extId, producto: detalleExtra,
+        valorMedido: 0, pesoMedido: 0, fueraDeRango: true, corregido: false,
         alertaTipo: `⚠️ ${tipoDesvio}`
       };
 
       try {
         if (window.fbMethods && window.db) {
-          const { collection, addDoc } = window.fbMethods;
-          await addDoc(collection(window.db, "mediciones"), registro);
+          await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "mediciones"), registro);
         } else {
           historial.unshift(registro);
           guardarHistorialLocal();
           renderHistorial();
           lanzarAlerta(registro);
         }
-
-        document.getElementById('alerta-bobina').value = '';
-        document.getElementById('alerta-porcentaje').value = '';
-        document.getElementById('alerta-comentario').value = '';
+        ['alerta-bobina', 'alerta-porcentaje', 'alerta-comentario'].forEach(id => document.getElementById(id).value = '');
         cerrarModalDesvio();
         alert('⚠️ Alerta enviada con éxito');
       } catch (e) {
@@ -1113,7 +1096,6 @@
         renderHistorial();
         lanzarAlerta(registro);
         cerrarModalDesvio();
-        alert('⚠️ Alerta enviada con éxito');
       }
     }
 
@@ -1121,56 +1103,44 @@
       const operador = document.getElementById('input-operador').value.trim();
       const turno = document.getElementById('input-turno').value;
       const id = document.getElementById('select-extrusora').value;
+      const valMedStr = document.getElementById('val-medida').value.trim();
+      const valPesoStr = document.getElementById('val-peso').value.trim();
 
-      if (!operador) return alert('Por favor ingresa el nombre del Operador de Octagon');
-      if (!id) return alert('Selecciona una extrusora válida');
+      if (!operador) return alert('Ingrese el nombre del Operador');
+      if (!id) return alert('Seleccione una extrusora');
+      if (valMedStr === '' || valPesoStr === '') return alert('Ingrese ancho y peso medido');
 
-      const valorMedido = parseFloat(document.getElementById('val-medida').value);
-      const pesoMedido = parseFloat(document.getElementById('val-peso').value);
-
-      if (isNaN(valorMedido) || isNaN(pesoMedido)) return alert('Ingresa tanto el ancho como el peso medido');
+      const valorMedido = parseFloat(valMedStr);
+      const pesoMedido = parseFloat(valPesoStr);
+      if (isNaN(valorMedido) || isNaN(pesoMedido)) return alert('Los valores deben ser números válidos');
 
       const ext = extrusoras.find(e => e.id === id);
-      if (!ext) return alert('No se encontró la ficha técnica seleccionada');
+      if (!ext) return alert('Ficha técnica no encontrada');
 
-      const anchoFuera = valorMedido < ext.minAncho || valorMedido > ext.maxAncho;
-      const pesoFuera = pesoMedido < ext.minPeso || pesoMedido > ext.maxPeso;
-      const fueraDeRango = anchoFuera || pesoFuera;
-
+      const fueraDeRango = (valorMedido < ext.minAncho || valorMedido > ext.maxAncho) || (pesoMedido < ext.minPeso || pesoMedido > ext.maxPeso);
       let mensajeAlertaTipo = "";
-      if (anchoFuera && pesoFuera) {
-        mensajeAlertaTipo = "⚠️ Ancho y Peso Fuera de Rango";
-      } else if (anchoFuera) {
-        mensajeAlertaTipo = `🚨 Ancho Fuera de Rango (${valorMedido} cm)`;
-      } else if (pesoFuera) {
-        mensajeAlertaTipo = `🚨 Peso Fuera de Rango (${pesoMedido} gr)`;
+      if (fueraDeRango) {
+        if (valorMedido < ext.minAncho || valorMedido > ext.maxAncho) mensajeAlertaTipo += `🚨 Ancho Fuera (${valorMedido}cm) `;
+        if (pesoMedido < ext.minPeso || pesoMedido > ext.maxPeso) mensajeAlertaTipo += `🚨 Peso Fuera (${pesoMedido}gr)`;
       }
 
       const registro = {
         timestamp: Date.now(),
         hora: new Date().toLocaleTimeString('es-CL'),
-        operador,
-        turno,
-        id: ext.id,
-        producto: ext.producto,
-        valorMedido,
-        pesoMedido,
-        fueraDeRango,
-        corregido: false,
-        alertaTipo: mensajeAlertaTipo
+        operador, turno, id: ext.id, producto: ext.producto,
+        valorMedido, pesoMedido, fueraDeRango, corregido: false,
+        alertaTipo: mensajeAlertaTipo || "✅ OK"
       };
 
       try {
         if (window.fbMethods && window.db) {
-          const { collection, addDoc } = window.fbMethods;
-          await addDoc(collection(window.db, "mediciones"), registro);
+          await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "mediciones"), registro);
         } else {
           historial.unshift(registro);
           guardarHistorialLocal();
           renderHistorial();
           if (fueraDeRango) lanzarAlerta(registro);
         }
-        
         document.getElementById('val-medida').value = '';
         document.getElementById('val-peso').value = '';
       } catch (e) {
@@ -1178,19 +1148,15 @@
         guardarHistorialLocal();
         renderHistorial();
         if (fueraDeRango) lanzarAlerta(registro);
-        document.getElementById('val-medida').value = '';
-        document.getElementById('val-peso').value = '';
       }
     }
 
     async function limpiarHistorial() {
-      if (!confirm('¿Estás seguro de borrar todas las mediciones del historial?')) return;
+      if (!confirm('¿Borrar todo el historial de mediciones?')) return;
       try {
         if (window.fbMethods && window.db) {
-          const { collection, getDocs, deleteDoc, doc } = window.fbMethods;
-          const snapshot = await getDocs(collection(window.db, "mediciones"));
-          const promises = snapshot.docs.map(d => deleteDoc(doc(window.db, "mediciones", d.id)));
-          await Promise.all(promises);
+          const snapshot = await window.fbMethods.getDocs(window.fbMethods.collection(window.db, "mediciones"));
+          await Promise.all(snapshot.docs.map(d => window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "mediciones", d.id))));
         }
       } catch (e) {}
       historial = [];
@@ -1201,304 +1167,226 @@
     async function corregirError(docId) {
       try {
         if (window.fbMethods && window.db && typeof docId === 'string') {
-          const { doc, updateDoc } = window.fbMethods;
-          const refDoc = doc(window.db, "mediciones", docId);
-          await updateDoc(refDoc, {
-            corregido: true,
-            fueraDeRango: false
-          });
+          await window.fbMethods.updateDoc(window.fbMethods.doc(window.db, "mediciones", docId), { corregido: true, fueraDeRango: false });
         } else {
-          const reg = historial.find(r => r.timestamp === docId || r.docId === docId);
-          if (reg) {
-            reg.corregido = true;
-            reg.fueraDeRango = false;
-            guardarHistorialLocal();
-            renderHistorial();
-          }
+          const reg = historial.find(r => r.timestamp == docId || r.docId === docId);
+          if (reg) { reg.corregido = true; reg.fueraDeRango = false; guardarHistorialLocal(); renderHistorial(); }
         }
       } catch(e) {
-        const reg = historial.find(r => r.docId === docId || r.timestamp === docId);
-        if (reg) {
-          reg.corregido = true;
-          reg.fueraDeRango = false;
-          guardarHistorialLocal();
-          renderHistorial();
-        }
-      }
-    }
-
-    function actualizarBannerAlertasMedio() {
-      const alertasCount = historial.filter(r => r.fueraDeRango).length;
-      const banner = document.getElementById('banner-alertas-medio');
-      const countEl = document.getElementById('m-alertas-count');
-
-      if (countEl) countEl.innerText = alertasCount;
-
-      if (banner) {
-        if (alertasCount > 0) {
-          banner.style.display = 'block';
-        } else {
-          banner.style.display = 'none';
-        }
+        const reg = historial.find(r => r.docId === docId || r.timestamp == docId);
+        if (reg) { reg.corregido = true; reg.fueraDeRango = false; guardarHistorialLocal(); renderHistorial(); }
       }
     }
 
     function renderHistorial() {
-      actualizarBannerAlertasMedio();
+      const alertasCount = historial.filter(r => r.fueraDeRango).length;
+      const banner = document.getElementById('banner-alertas-medio');
+      if (banner) {
+        banner.style.display = alertasCount > 0 ? 'block' : 'none';
+        document.getElementById('m-alertas-count').innerText = alertasCount;
+      }
 
-      const fExt = (document.getElementById('filtro-extrusora') || {}).value || "TODAS";
-      const fEst = (document.getElementById('filtro-estado') || {}).value || "TODOS";
-      const fBus = ((document.getElementById('filtro-buscar') || {}).value || "").toLowerCase().trim();
+      const fExt = document.getElementById('filtro-extrusora')?.value || "TODAS";
+      const fEst = document.getElementById('filtro-estado')?.value || "TODOS";
+      const fBus = (document.getElementById('filtro-buscar')?.value || "").toLowerCase().trim();
+      const fExtExt = document.getElementById('filtro-extrusora-ext')?.value || "TODAS";
+      const fEstExt = document.getElementById('filtro-estado-ext')?.value || "TODOS";
 
-      const fExtExt = (document.getElementById('filtro-extrusora-ext') || {}).value || "TODAS";
-      const fEstExt = (document.getElementById('filtro-estado-ext') || {}).value || "TODOS";
-
-      const tbodyOctagon = document.getElementById('tabla-log-octagon');
-      const tbodyExtrusion = document.getElementById('tabla-log-extrusion');
-
-      if (tbodyOctagon) {
-        tbodyOctagon.innerHTML = '';
+      const renderTable = (tbodyId, fEx, fEs, fBu) => {
+        const tbody = document.getElementById(tbodyId);
+        if (!tbody) return;
+        tbody.innerHTML = '';
         historial.filter(r => {
-          if (fExt !== "TODAS" && r.id !== fExt) return false;
-          if (fEst === "ALERTAS" && !r.fueraDeRango) return false;
-          if (fEst === "CORREGIDOS" && !r.corregido) return false;
-          if (fEst === "OK" && (r.fueraDeRango || r.corregido)) return false;
-          if (fBus && !r.operador.toLowerCase().includes(fBus) && !r.producto.toLowerCase().includes(fBus)) return false;
+          if (fEx !== "TODAS" && r.id !== fEx) return false;
+          if (fEs === "ALERTAS" && !r.fueraDeRango) return false;
+          if (fEs === "CORREGIDOS" && !r.corregido) return false;
+          if (fEs === "OK" && (r.fueraDeRango || r.corregido)) return false;
+          if (fBu && !r.operador.toLowerCase().includes(fBu) && !r.producto.toLowerCase().includes(fBu)) return false;
           return true;
         }).forEach(reg => {
-          let clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
-          let estadoTexto = reg.fueraDeRango ? (reg.alertaTipo || '🚨 FUERA DE RANGO') : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
-          tbodyOctagon.innerHTML += `
+          const clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
+          const estadoTexto = reg.fueraDeRango ? (reg.alertaTipo || '🚨 FUERA') : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
+          const idKey = reg.docId || reg.timestamp;
+          const accion = (tbodyId === 'tabla-log-extrusion' && reg.fueraDeRango) 
+            ? `<button class="btn-corregir" onclick="corregirError('${idKey}')">Corregido</button>` 
+            : estadoTexto;
+
+          tbody.innerHTML += `
             <tr class="${clase}">
               <td>${reg.hora}</td>
-              <td>${reg.operador} (${reg.turno})</td>
+              <td>${reg.operador} <span style="color:var(--text-muted); font-size:0.75rem;">(${reg.turno})</span></td>
               <td><strong>${reg.id}</strong></td>
               <td>${reg.producto}</td>
-              <td><strong>${reg.valorMedido ? reg.valorMedido + ' cm' : '-'}</strong></td>
-              <td><strong>${reg.pesoMedido ? reg.pesoMedido + ' gr' : '-'}</strong></td>
-              <td>${estadoTexto}</td>
+              <td>${reg.valorMedido ? reg.valorMedido + ' cm' : '-'}</td>
+              <td>${reg.pesoMedido ? reg.pesoMedido + ' gr' : '-'}</td>
+              <td>${accion}</td>
             </tr>
           `;
         });
-      }
+      };
 
-      if (tbodyExtrusion) {
-        tbodyExtrusion.innerHTML = '';
-        historial.filter(r => {
-          if (fExtExt !== "TODAS" && r.id !== fExtExt) return false;
-          if (fEstExt === "ALERTAS" && !r.fueraDeRango) return false;
-          if (fEstExt === "CORREGIDOS" && !r.corregido) return false;
-          return true;
-        }).forEach(reg => {
-          let clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
-          let idKey = reg.docId || reg.timestamp;
-          let estadoAccion = reg.fueraDeRango 
-            ? `<button class="btn-corregir" onclick="corregirError('${idKey}')">Error Corregido</button>` 
-            : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
-          tbodyExtrusion.innerHTML += `
-            <tr class="${clase}">
-              <td>${reg.hora}</td>
-              <td>${reg.operador} (${reg.turno})</td>
-              <td><strong>${reg.id}</strong></td>
-              <td>${reg.producto}</td>
-              <td><strong>${reg.valorMedido ? reg.valorMedido + ' cm' : '-'}</strong></td>
-              <td><strong>${reg.pesoMedido ? reg.pesoMedido + ' gr' : '-'}</strong></td>
-              <td>${estadoAccion}</td>
-            </tr>
-          `;
-        });
-      }
+      renderTable('tabla-log-octagon', fExt, fEst, fBus);
+      renderTable('tabla-log-extrusion', fExtExt, fEstExt, "");
     }
 
     function lanzarAlerta(reg) {
-      if (vistaActual === 'extrusion') {
-        if (sonidoHabilitado) {
-          try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(750, ctx.currentTime);
-            gain.gain.setValueAtTime(0.5, ctx.currentTime);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.8);
-          } catch(e) {}
-        }
+      if (vistaActual === 'extrusion' && sonidoHabilitado) {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(750, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.8);
+        } catch(e) {}
+      }
 
-        const fsAlerta = document.getElementById('alerta-fullscreen');
-        if (fsAlerta) {
+      if (vistaActual === 'extrusion') {
+        const fs = document.getElementById('alerta-fullscreen');
+        if (fs) {
           document.getElementById('fs-extrusora-header').innerText = `CORREGIR EXTRUSORA ${reg.id}`;
           document.getElementById('fs-titulo').innerText = reg.alertaTipo;
-          document.getElementById('fs-detalle').innerText = `Extrusora: ${reg.id} | Detalle: ${reg.producto}\nOperador: ${reg.operador}`;
-          fsAlerta.style.display = 'flex';
-
+          document.getElementById('fs-detalle').innerText = `Detalle: ${reg.producto} | Operador: ${reg.operador}`;
+          fs.style.display = 'flex';
           if (timerAlertaFullscreen) clearTimeout(timerAlertaFullscreen);
-          timerAlertaFullscreen = setTimeout(() => {
-            cerrarAlertaFullscreen();
-          }, 30000);
+          timerAlertaFullscreen = setTimeout(cerrarAlertaFullscreen, 30000);
         }
       }
     }
 
     function cerrarAlertaFullscreen() {
-      if (timerAlertaFullscreen) {
-        clearTimeout(timerAlertaFullscreen);
-        timerAlertaFullscreen = null;
-      }
-      const fsAlerta = document.getElementById('alerta-fullscreen');
-      if (fsAlerta) fsAlerta.style.display = 'none';
+      if (timerAlertaFullscreen) { clearTimeout(timerAlertaFullscreen); timerAlertaFullscreen = null; }
+      const fs = document.getElementById('alerta-fullscreen');
+      if (fs) fs.style.display = 'none';
     }
 
     function exportarCSV() {
-      if (historial.length === 0) return alert('No hay mediciones para exportar');
-      let csv = "Hora,Operador,Turno,Extrusora,Producto,AnchoMedido_cm,PesoMedido_gr,Estado\n";
+      if (historial.length === 0) return alert('No hay datos para exportar');
+      let csv = "Hora,Operador,Turno,Extrusora,Producto,Ancho_cm,Peso_gr,Estado\n";
       historial.forEach(r => {
-        let est = r.fueraDeRango ? (r.alertaTipo || "FUERA DE RANGO") : (r.corregido ? "CORREGIDO" : "OK");
-        csv += `"${r.hora}","${r.operador}","${r.turno}","${r.id}","${r.producto}",${r.valorMedido},${r.pesoMedido},"${est}"\n`;
+        const est = r.fueraDeRango ? (r.alertaTipo || "FUERA") : (r.corregido ? "CORREGIDO" : "OK");
+        csv += `"${r.hora}","${r.operador}","${r.turno}","${r.id}","${r.producto}",${r.valorMedido||'-'},${r.pesoMedido||'-' },"${est}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
+      a.href = URL.createObjectURL(blob);
       a.download = `Reporte_Calidad_${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
-      URL.revokeObjectURL(url);
+    }
+
+    // Función que devuelve una Promesa para esperar la descarga antes de cambiar turno
+    function generarPDFPromise() {
+      return new Promise((resolve) => {
+        if (historial.length === 0) {
+          alert('No hay registros para exportar.');
+          resolve();
+          return;
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.src = 'https://iili.io/nw6Sq0v.png';
+
+        const finalizar = () => {
+          dibujarPDF(doc, img.complete && img.naturalHeight !== 0 ? img : null);
+          resolve();
+        };
+
+        img.onload = finalizar;
+        img.onerror = finalizar;
+        setTimeout(finalizar, 3000); // Timeout de seguridad
+      });
     }
 
     function generarPDF() {
-      if (historial.length === 0) return alert('No hay registros en el historial para exportar.');
-      
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-
-      const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      img.src = 'https://iili.io/nw6Sq0v.png';
-
-      img.onload = () => { dibujarPDF(doc, img); };
-      img.onerror = () => { dibujarPDF(doc, null); };
+      generarPDFPromise();
     }
 
     function dibujarPDF(doc, img) {
       const ultimoOperador = historial[0].operador || "No especificado";
       const ultimoTurno = historial[0].turno || "No especificado";
       const fechaActual = new Date().toLocaleDateString('es-CL');
-      const horaActual = new Date().toLocaleTimeString('es-CL');
-
+      
       const checks = document.querySelectorAll('.chk-op');
-      let activasG1 = [];
-      let activasG2 = [];
-
-      checks.forEach(chk => {
-        if (chk.checked) {
-          const val = parseInt(chk.value, 10);
-          if ([2, 7, 8, 9, 10].includes(val)) activasG1.push(val);
-          if ([11, 12, 13, 14, 15].includes(val)) activasG2.push(val);
-        }
-      });
-
+      const activasG1 = Array.from(checks).filter(c => c.checked && [2,7,8,9,10].includes(parseInt(c.value))).map(c => c.value);
+      const activasG2 = Array.from(checks).filter(c => c.checked && [11,12,13,14,15].includes(parseInt(c.value))).map(c => c.value);
       const encG1 = document.getElementById('encargado-g1').value.trim() || "No asignado";
       const encG2 = document.getElementById('encargado-g2').value.trim() || "No asignado";
 
       if (img) {
         const logoWidth = 30;
-        const logoHeight = (img.height * logoWidth) / img.width;
-        doc.addImage(img, 'PNG', 12, 10, logoWidth, logoHeight);
+        doc.addImage(img, 'PNG', 12, 10, logoWidth, (img.height * logoWidth) / img.width);
       }
 
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(15);
+      doc.setFontSize(16);
       doc.setTextColor(15, 23, 42);
-      doc.text("REPORTE CONTROL DE CALIDAD", 48, 18);
-
+      doc.text("REPORTE DE CONTROL DE CALIDAD", 48, 18);
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100, 116, 139);
-      doc.text(`Planta Extrusión — Fecha de emisión: ${fechaActual} ${horaActual}`, 48, 25);
-
+      doc.text(`Planta Extrusión — ${fechaActual}`, 48, 25);
       doc.setDrawColor(203, 213, 225);
-      doc.setLineWidth(0.4);
       doc.line(12, 32, 198, 32);
 
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(8.5);
+      doc.setFontSize(9);
       doc.setTextColor(15, 23, 42);
-      doc.text("OPERADOR OCTAGON:", 12, 39);
+      doc.text("OPERADOR:", 12, 40);
       doc.setFont("helvetica", "normal");
-      doc.text(String(ultimoOperador), 50, 39);
-
+      doc.text(ultimoOperador, 45, 40);
       doc.setFont("helvetica", "bold");
-      doc.text("TURNO:", 140, 39);
+      doc.text("TURNO:", 140, 40);
       doc.setFont("helvetica", "normal");
-      doc.text(String(ultimoTurno), 155, 39);
+      doc.text(ultimoTurno, 160, 40);
 
-      let y = 46;
-      doc.setFillColor(241, 245, 249);
-      doc.roundedRect(12, y, 186, 22, 2, 2, 'F');
-
+      let y = 48;
+      doc.setFillColor(248, 250, 252);
+      doc.roundedRect(12, y, 186, 20, 2, 2, 'F');
       doc.setFont("helvetica", "bold");
       doc.setFontSize(8);
-      doc.text("EXTRUSORAS OPERATIVAS Y ENCARGADOS:", 15, y + 5);
-
+      doc.text("EXTRUSORAS OPERATIVAS:", 15, y + 6);
       doc.setFont("helvetica", "normal");
       doc.setFontSize(7.5);
-      const txtG1 = `Grupo 1 (Encargado: ${encG1}): ${activasG1.length > 0 ? activasG1.join(', ') : 'Ninguna activa'}`;
-      const txtG2 = `Grupo 2 (Encargado: ${encG2}): ${activasG2.length > 0 ? activasG2.join(', ') : 'Ninguna activa'}`;
+      doc.text(`G1 (Enc: ${encG1}): ${activasG1.join(', ') || 'Ninguna'}`, 15, y + 12);
+      doc.text(`G2 (Enc: ${encG2}): ${activasG2.join(', ') || 'Ninguna'}`, 100, y + 12);
 
-      doc.text(txtG1, 15, y + 11);
-      doc.text(txtG2, 15, y + 17);
-
-      y += 28;
+      y += 26;
       doc.setDrawColor(15, 23, 42);
-      doc.setLineWidth(0.5);
       doc.line(12, y, 198, y);
-
-      doc.setTextColor(15, 23, 42);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(8.5);
-
+      doc.setFontSize(8);
       doc.text("HORA", 14, y + 5);
       doc.text("EXTR.", 36, y + 5);
       doc.text("PRODUCTO / OT", 60, y + 5);
       doc.text("ANCHO", 125, y + 5);
       doc.text("PESO", 152, y + 5);
       doc.text("ESTADO", 196, y + 5, { align: "right" });
-
       y += 7;
       doc.line(12, y, 198, y);
 
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(8.5);
-
-      historial.forEach((reg, index) => {
+      doc.setFontSize(8);
+      historial.forEach(reg => {
         if (y > 275) {
           doc.addPage();
           y = 20;
-
-          doc.setDrawColor(15, 23, 42);
-          doc.setLineWidth(0.5);
           doc.line(12, y, 198, y);
-
-          doc.setTextColor(15, 23, 42);
           doc.setFont("helvetica", "bold");
-          doc.text("HORA", 14, y + 5);
-          doc.text("EXTR.", 36, y + 5);
-          doc.text("PRODUCTO / OT", 60, y + 5);
-          doc.text("ANCHO", 125, y + 5);
-          doc.text("PESO", 152, y + 5);
-          doc.text("ESTADO", 196, y + 5, { align: "right" });
-
+          doc.text("HORA", 14, y + 5); doc.text("EXTR.", 36, y + 5); doc.text("PRODUCTO / OT", 60, y + 5);
+          doc.text("ANCHO", 125, y + 5); doc.text("PESO", 152, y + 5); doc.text("ESTADO", 196, y + 5, { align: "right" });
           y += 7;
           doc.line(12, y, 198, y);
           doc.setFont("helvetica", "normal");
         }
 
-        doc.setTextColor(15, 23, 42);
         doc.text(String(reg.hora), 14, y + 5);
         doc.text(String(reg.id), 36, y + 5);
-        doc.text(String(reg.producto), 60, y + 5);
+        doc.text(String(reg.producto).substring(0, 25), 60, y + 5);
         doc.text(reg.valorMedido ? `${reg.valorMedido} cm` : '-', 125, y + 5);
         doc.text(reg.pesoMedido ? `${reg.pesoMedido} gr` : '-', 152, y + 5);
 
@@ -1508,18 +1396,17 @@
           doc.text("FUERA", 196, y + 5, { align: "right" });
           doc.setFont("helvetica", "normal");
         } else if (reg.corregido) {
-          doc.setTextColor(22, 163, 74);
+          doc.setTextColor(5, 150, 105);
           doc.setFont("helvetica", "bold");
           doc.text("CORREGIDO", 196, y + 5, { align: "right" });
           doc.setFont("helvetica", "normal");
         } else {
-          doc.setTextColor(22, 163, 74);
+          doc.setTextColor(5, 150, 105);
           doc.text("OK", 196, y + 5, { align: "right" });
         }
-
+        doc.setTextColor(15, 23, 42);
         y += 7;
         doc.setDrawColor(241, 245, 249);
-        doc.setLineWidth(0.2);
         doc.line(12, y, 198, y);
       });
 
@@ -1534,23 +1421,24 @@
         const qMediciones = query(collection(window.db, "mediciones"), orderBy("timestamp", "desc"), limit(50));
         onSnapshot(qMediciones, (snapshot) => {
           const nuevosDatos = [];
-          snapshot.forEach((doc) => {
-            nuevosDatos.push({ docId: doc.id, ...doc.data() });
-          });
-
+          snapshot.forEach((docSnap) => nuevosDatos.push({ docId: docSnap.id, ...docSnap.data() }));
           historial = nuevosDatos;
           renderHistorial();
 
-          if (!primerCarga && historial.length > 0 && historial[0].fueraDeRango) {
-            lanzarAlerta(historial[0]);
+          if (historial.length > 0) {
+            const latestTimestamp = historial[0].timestamp;
+            if (latestTimestamp > lastKnownTimestamp && historial[0].fueraDeRango) {
+              lanzarAlerta(historial[0]);
+            }
+            lastKnownTimestamp = latestTimestamp;
           }
           primerCarga = false;
-        }, (error) => { usarHistorialLocal(); });
+        }, () => { usarHistorialLocal(); });
 
         const qFichas = collection(window.db, "fichas");
         onSnapshot(qFichas, (snapshot) => {
           const nuevasFichas = [];
-          snapshot.forEach((doc) => { nuevasFichas.push(doc.data()); });
+          snapshot.forEach((docSnap) => nuevasFichas.push(docSnap.data()));
           if (nuevasFichas.length > 0) {
             extrusoras = nuevasFichas;
             localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
@@ -1558,12 +1446,14 @@
             renderListaModal();
           }
         });
-      } catch (e) { usarHistorialLocal(); }
+      } catch (e) { 
+        console.warn("Fallback a modo local:", e);
+        usarHistorialLocal(); 
+      }
     }
 
     function usarHistorialLocal() {
-      const bannerOff = document.getElementById('banner-offline');
-      if (bannerOff) bannerOff.style.display = 'block';
+      document.getElementById('banner-offline').style.display = 'block';
       historial = JSON.parse(localStorage.getItem('mediciones_local')) || [];
       renderHistorial();
     }
@@ -1571,6 +1461,7 @@
     window.onload = () => {
       actualizarSelect();
       actualizarTurnoEnInterfaz();
+      cargarEstadoOperativas();
       setInterval(actualizarTurnoEnInterfaz, 60000);
       setTimeout(iniciarSincronizacionFirebase, 800);
     };
