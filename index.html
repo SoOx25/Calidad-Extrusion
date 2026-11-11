@@ -81,44 +81,14 @@ justify-content: center; align-items: center; text-align: center; padding: 24px;
 .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .header-title { font-size: 1.25rem; font-weight: 700; color: var(--primary); letter-spacing: -0.025em; }
 .logo-glow { max-height: 48px; width: auto; }
-/* Nuevo header compacto Octagon */
-.header-octagon-wrap {
-display: flex;
-flex-direction: column;
-gap: 4px;
-}
-.header-octagon-title {
-display: flex;
-align-items: center;
-gap: 10px;
-}
-.header-octagon-meta {
-display: flex;
-gap: 10px;
-font-size: 0.72rem;
-color: var(--text-muted);
-padding-left: 58px;
-flex-wrap: wrap;
-}
-.header-octagon-meta span {
-background: #f8fafc;
-padding: 2px 8px;
-border-radius: 4px;
-border: 1px solid var(--border-color);
-font-weight: 600;
-}
+.header-octagon-wrap { display: flex; flex-direction: column; gap: 4px; }
+.header-octagon-title { display: flex; align-items: center; gap: 10px; }
+.header-octagon-meta { display: flex; gap: 10px; font-size: 0.72rem; color: var(--text-muted); padding-left: 58px; flex-wrap: wrap; }
+.header-octagon-meta span { background: #f8fafc; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border-color); font-weight: 600; }
 .header-octagon-meta .op { color: var(--primary); }
 .header-octagon-meta .tu { color: var(--success); }
 .header-octagon-meta .eq { color: var(--text-secondary); }
-.sesion-info {
-display: flex; gap: 12px; align-items: center; font-size: 0.75rem; color: var(--text-muted);
-background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color);
-}
-.sesion-info .sep { color: var(--border-color); }
-.sesion-info .operador { color: var(--primary); font-weight: 700; }
-.sesion-info .turno { color: var(--success); font-weight: 600; }
-.sesion-info .equipos { color: var(--text-secondary); }
-.btn-action { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; font-family: var(--font-main); }
+.btn-action { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; font-family: var(--font-main); position: relative; }
 .btn-action:hover { background: #f8fafc; border-color: #cbd5e1; color: var(--text-primary); }
 .btn-primary { background: var(--primary); color: white; border: none; }
 .btn-primary:hover { background: var(--primary-hover); }
@@ -214,24 +184,6 @@ min-height: 70px; display: flex; flex-direction: column; justify-content: space-
 .scrap-calc { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); padding: 16px; border-radius: 8px; text-align: center; margin-top: 16px; }
 .scrap-calc .label { font-size: 0.85rem; font-weight: 600; color: var(--danger-hover); text-transform: uppercase; }
 .scrap-calc .value { font-size: 1.5rem; font-weight: 800; color: var(--danger); margin-top: 4px; }
-#banner-muestras-pendientes {
-display: none; background: linear-gradient(135deg, #fef3c7, #fde68a);
-border: 2px solid #f59e0b; color: #78350f; padding: 16px 20px; border-radius: 10px;
-margin-bottom: 16px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); animation: pulseBanner 2s infinite alternate;
-}
-@keyframes pulseBanner {
-from { box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
-to { box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4); }
-}
-#banner-muestras-pendientes h3 { margin: 0 0 12px 0; font-size: 1rem; font-weight: 700; color: #92400e; display: flex; align-items: center; gap: 8px; }
-.muestras-lista { display: flex; flex-direction: column; gap: 8px; }
-.muestra-item {
-display: flex; justify-content: space-between; align-items: center; background: white;
-padding: 10px 14px; border-radius: 8px; border: 1px solid #fbbf24; gap: 12px; flex-wrap: wrap;
-}
-.muestra-info { flex: 1; min-width: 200px; }
-.muestra-info .titulo { font-weight: 700; color: #92400e; font-size: 0.95rem; }
-.muestra-info .detalle { font-size: 0.8rem; color: #78350f; margin-top: 2px; }
 .equipo-badge {
 display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;
 font-weight: 700; background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd;
@@ -255,7 +207,6 @@ text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
 }
 .modal-operador-content h2 { color: var(--primary); margin-top: 0; border: none; font-size: 1.25rem; }
 .modal-captura-img { max-width: 100%; max-height: 75vh; border-radius: 8px; border: 2px solid var(--border-color); }
-/* NUEVO: Layout dividido Registrar Medida */
 .registrar-medida-grid {
 display: grid;
 grid-template-columns: 1fr 1fr;
@@ -265,66 +216,61 @@ gap: 20px;
 .registrar-medida-grid { grid-template-columns: 1fr; }
 .header-octagon-meta { padding-left: 0; }
 }
-.rm-col {
-display: flex;
-flex-direction: column;
-}
-.rm-col-left {
-border-right: 1px dashed var(--border-color);
-padding-right: 20px;
-}
+.rm-col { display: flex; flex-direction: column; }
+.rm-col-left { border-right: 1px dashed var(--border-color); padding-right: 20px; }
 @media (max-width: 768px) {
 .rm-col-left { border-right: none; padding-right: 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 16px; }
 }
-.rm-col h3 {
-margin: 0 0 8px 0;
-font-size: 0.95rem;
-color: var(--primary);
-}
+.rm-col h3 { margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary); }
 .rm-col label { margin-top: 10px; }
 .rm-col label:first-of-type { margin-top: 0; }
-/* Checkboxes Octagon 1 / 2 */
-.octagon-equipos-chk {
-display: flex;
-gap: 10px;
-margin-top: 6px;
-}
-.octagon-equipos-chk label {
-display: inline-flex;
-align-items: center;
-gap: 6px;
-background: #f8fafc;
-padding: 8px 14px;
-border-radius: 6px;
-border: 1px solid var(--border-color);
-cursor: pointer;
-font-weight: 600;
-font-size: 0.9rem;
-margin: 0;
-transition: all 0.2s;
-}
-.octagon-equipos-chk label:hover { background: #f1f5f9; }
-.octagon-equipos-chk input[type="checkbox"] {
-width: auto;
-margin: 0;
-accent-color: var(--primary);
-cursor: pointer;
-}
-.octagon-equipos-chk label.checked {
-background: var(--primary);
-color: white;
-border-color: var(--primary);
-}
 .bobina-ya-medida {
-background: #fef2f2;
-border: 1px solid #fecaca;
-color: var(--danger);
-padding: 8px 12px;
-border-radius: 6px;
-font-size: 0.8rem;
-font-weight: 600;
-margin-top: 6px;
+background: #fef2f2; border: 1px solid #fecaca; color: var(--danger);
+padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-top: 6px;
 }
+/* NOTIFICACIONES CAMPANA */
+.btn-notif-campana {
+background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary);
+padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer;
+display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; font-family: var(--font-main);
+position: relative;
+}
+.btn-notif-campana:hover { background: #f8fafc; border-color: #cbd5e1; }
+.notif-badge {
+position: absolute; top: -6px; right: -6px;
+background: var(--danger); color: white; font-size: 0.7rem; font-weight: 700;
+min-width: 18px; height: 18px; border-radius: 9px; padding: 0 5px;
+display: none; align-items: center; justify-content: center;
+border: 2px solid white;
+}
+.notif-badge.visible { display: flex; }
+.notif-dropdown {
+display: none; position: absolute; top: calc(100% + 8px); right: 0;
+width: 340px; max-height: 400px; overflow-y: auto;
+background: white; border: 1px solid var(--border-color); border-radius: 10px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 500;
+}
+.notif-dropdown.open { display: block; }
+.notif-dropdown-header {
+padding: 12px 16px; border-bottom: 1px solid var(--border-color);
+font-weight: 700; color: var(--primary); font-size: 0.9rem;
+display: flex; justify-content: space-between; align-items: center;
+}
+.notif-item {
+padding: 12px 16px; border-bottom: 1px solid var(--border-color);
+display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item-info { flex: 1; font-size: 0.85rem; color: var(--text-primary); }
+.notif-item-info .notif-titulo { font-weight: 700; color: var(--primary); }
+.notif-item-info .notif-detalle { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+.notif-empty { padding: 24px 16px; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+.btn-notif-retirar {
+background: var(--success); color: white; border: none; padding: 6px 10px;
+border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+white-space: nowrap;
+}
+.btn-notif-retirar:hover { background: var(--success-hover); }
 #print-area { display: none; }
 </style>
 </head>
@@ -397,6 +343,19 @@ margin-top: 6px;
 </div>
 </div>
 <div class="header-right">
+<div style="position: relative; display: inline-block;">
+<button class="btn-notif-campana" onclick="toggleNotifDropdown(event)" id="btn-notif-campana" title="Muestras disponibles para retiro">
+🔔
+<span class="notif-badge" id="notif-badge">0</span>
+</button>
+<div class="notif-dropdown" id="notif-dropdown">
+<div class="notif-dropdown-header">
+<span>📦 Muestras para Retiro</span>
+<button onclick="cerrarNotifDropdown(event)" style="background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text-muted);">✕</button>
+</div>
+<div id="notif-lista"></div>
+</div>
+</div>
 <button class="btn-action btn-danger" onclick="abrirModalDesvio()">🚨 Registrar Desvío</button>
 <button class="btn-action btn-primary" onclick="solicitarCambioTurnoOctagon()">🔄 Cambiar Turno</button>
 <button class="btn-action btn-warning" onclick="cerrarSesionOperador()" style="padding: 6px 10px; font-size: 0.8rem;">👤 Salir</button>
@@ -404,27 +363,19 @@ margin-top: 6px;
 </div>
 <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú Principal</button>
 <div id="banner-alertas-medio">🚨 ¡ATENCIÓN! HAY <span id="m-alertas-count">0</span> ALERTAS ACTIVAS PENDIENTES DE CORRECCIÓN</div>
-<div id="banner-muestras-pendientes">
-<h3>📦 MUESTRAS DISPONIBLES PARA RETIRO</h3>
-<div id="lista-muestras-pendientes" class="muestras-lista"></div>
-</div>
 <div class="card">
-<h2>📏 Registrar Medida de Calidad</h2>
+<h2>📏 Registrar Bobina</h2>
 <div class="registrar-medida-grid">
 <!-- COLUMNA IZQUIERDA -->
 <div class="rm-col rm-col-left">
 <h3>🔹 Datos Principales</h3>
 <label>Extrusora:</label>
 <select id="select-extrusora" onchange="autocompletarDatosMedicion(); mostrarObjetivosSeleccionados()"></select>
-<label>Octagon (Equipo):</label>
-<div class="octagon-equipos-chk" id="octagon-equipos-chk">
-<label id="chk-eq-1-label">
-<input type="checkbox" value="1" onchange="actualizarEquiposOctagon()"> Octagon 1
-</label>
-<label id="chk-eq-2-label">
-<input type="checkbox" value="2" onchange="actualizarEquiposOctagon()"> Octagon 2
-</label>
-</div>
+<label>Octagon:</label>
+<select id="select-octagon-equipo">
+<option value="A">Octagon A</option>
+<option value="B">Octagon B</option>
+</select>
 <input type="hidden" id="input-equipo">
 <label>N° de Bobina:</label>
 <input type="number" id="input-bobina-numero" placeholder="Ej: 14">
@@ -433,20 +384,22 @@ margin-top: 6px;
 <!-- COLUMNA DERECHA -->
 <div class="rm-col">
 <h3>🔹 Mediciones</h3>
-<label>Máximo (μm): <small id="sug-max" style="color:var(--text-muted); font-weight:400;"></small></label>
-<input type="number" step="0.1" id="val-micron-max" placeholder="Ej: 21.5">
-<label>Promedio (μm): <small id="sug-prom" style="color:var(--text-muted); font-weight:400;"></small></label>
-<input type="number" step="0.1" id="val-micron-prom" placeholder="Ej: 20.0">
-<label>Mínimo (μm): <small id="sug-min" style="color:var(--text-muted); font-weight:400;"></small></label>
-<input type="number" step="0.1" id="val-micron-min" placeholder="Ej: 18.5">
+<label>Máximo (μm): <small id="sug-max" style="color:var(--success); font-weight:600;"></small></label>
+<input type="number" step="0.1" id="val-micron-max" placeholder="Sugerido">
+<label>Promedio (μm): <small id="sug-prom" style="color:var(--success); font-weight:600;"></small></label>
+<input type="number" step="0.1" id="val-micron-prom" placeholder="Sugerido">
+<label>Mínimo (μm): <small id="sug-min" style="color:var(--success); font-weight:600;"></small></label>
+<input type="number" step="0.1" id="val-micron-min" placeholder="Sugerido">
 <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
 <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">📐 Mediciones Físicas</h3>
-<div class="grid-2">
-<div><label>Ancho Total (cm):</label><input type="number" step="0.1" id="val-ancho-total" placeholder="Sugerido"></div>
-<div><label>Ancho Fuelles (cm):</label><input type="number" step="0.1" id="val-ancho-fuelles" placeholder="Sugerido"></div>
-<div><label>Peso/metro Lineal (gr):</label><input type="number" step="0.1" id="val-peso-metro" placeholder="Sugerido"></div>
-<div><label>Tensión Sup. Dinaje:</label><input type="number" step="0.1" id="val-tension-sup" placeholder="Sugerido"></div>
-</div>
+<label>Ancho Total (cm): <small id="sug-ancho" style="color:var(--success); font-weight:600;"></small></label>
+<input type="number" step="0.1" id="val-ancho-total" placeholder="Sugerido">
+<label>Peso Metro Lineal (gr): <small id="sug-peso" style="color:var(--success); font-weight:600;"></small></label>
+<input type="number" step="0.1" id="val-peso-metro" placeholder="Sugerido">
+<label>Ancho Fuelles (cm): <small id="sug-fuelles" style="color:var(--success); font-weight:600;"></small></label>
+<input type="number" step="0.1" id="val-ancho-fuelles" placeholder="Sugerido">
+<label>Tensión Sup. (Dinaje): <small id="sug-tension" style="color:var(--success); font-weight:600;"></small></label>
+<input type="number" step="0.1" id="val-tension-sup" placeholder="Sugerido">
 </div>
 <div id="info-objetivos-actuales" style="margin-top: 16px; font-size: 0.85rem; color: var(--primary); background: #f0f9ff; padding: 12px; border-radius: 8px; border: 1px solid #bae6fd;"></div>
 <button class="btn-primary" style="width: 100%; margin-top: 16px; padding: 12px;" onclick="registrarMedida()">📤 Registrar Medida</button>
@@ -466,7 +419,7 @@ margin-top: 6px;
 <div><label style="margin-top:0;">Extrusora:</label><select id="filtro-extrusora" onchange="renderHistorial()"><option value="TODAS">Todas</option></select></div>
 <div><label style="margin-top:0;">Equipo:</label>
 <select id="filtro-equipo" onchange="renderHistorial()">
-<option value="TODOS">Todos</option><option value="1">Equipo 1</option><option value="2">Equipo 2</option>
+<option value="TODOS">Todos</option><option value="A">Equipo A</option><option value="B">Equipo B</option>
 </select>
 </div>
 <div><label style="margin-top:0;">Estado:</label>
@@ -482,6 +435,7 @@ margin-top: 6px;
 <tr>
 <th>Hora</th>
 <th>Equipo</th>
+<th>N° Bobina</th>
 <th>Extrusora</th>
 <th>Producto</th>
 <th>OT</th>
@@ -826,18 +780,15 @@ return { nombre: turnoGuardado, horario: horarios[turnoGuardado] || 'Manual', ma
 }
 return { ...obtenerTurnoAutomatico(), manual: false };
 }
-function guardarTurnoActivo() {
-const select = document.getElementById('select-turno-manual');
-if (!select) return;
-localStorage.setItem('turno_activo', select.value);
-actualizarInfoSesion();
-}
 function resetearTurnoAutomatico() {
 localStorage.removeItem('turno_activo');
 const turnoAuto = obtenerTurnoAutomatico();
 actualizarInfoSesion();
 alert(`🔄 Turno restablecido al automático: ${turnoAuto.nombre} [${turnoAuto.horario}]`);
 }
+// ============================================================
+// LOGIN SOLO AL INGRESAR A OCTAGON
+// ============================================================
 function solicitarLoginOctagon() {
 if (!AppState.operadorActual) {
 document.getElementById('modal-operador').style.display = 'flex';
@@ -853,14 +804,16 @@ AppState.operadorActual = nombre;
 sessionStorage.setItem('operador_actual', nombre);
 document.getElementById('modal-operador').style.display = 'none';
 actualizarInfoSesion();
+// Si venía pendiente de octagon, entrar directamente
 const vistaPendiente = sessionStorage.getItem('vista_pendiente');
-if (vistaPendiente) {
+if (vistaPendiente === 'octagon') {
 sessionStorage.removeItem('vista_pendiente');
-AppState.vistaActual = vistaPendiente;
+AppState.vistaActual = 'octagon';
 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-const target = document.getElementById('view-' + vistaPendiente);
-if (target) target.classList.add('active');
-if (vistaPendiente === 'octagon') { renderMuestrasPendientes(); autocompletarDatosMedicion(); }
+document.getElementById('view-octagon').classList.add('active');
+renderMuestrasPendientes();
+autocompletarDatosMedicion();
+renderNotificaciones();
 }
 }
 function cerrarSesionOperador() {
@@ -878,24 +831,14 @@ const elTu = document.getElementById('sesion-turno');
 const elEq = document.getElementById('sesion-equipos');
 if (elOp) elOp.textContent = `👤 ${AppState.operadorActual || '--'}`;
 if (elTu) elTu.textContent = `🕐 ${turnoActivo.nombre}${turnoActivo.manual ? ' ⚙' : ''}`;
-if (elEq) elEq.textContent = `🔬 Equipos: 1, 2`;
+if (elEq) elEq.textContent = `🔬 Equipos: A, B`;
 }
 // ============================================================
-// CHECKBOXES OCTAGON 1 / 2
+// SELECT OCTAGON A/B
 // ============================================================
 function actualizarEquiposOctagon() {
-const checks = document.querySelectorAll('#octagon-equipos-chk input[type="checkbox"]');
-const seleccionados = [];
-checks.forEach(chk => {
-const label = chk.closest('label');
-if (chk.checked) {
-seleccionados.push(chk.value);
-label.classList.add('checked');
-} else {
-label.classList.remove('checked');
-}
-});
-document.getElementById('input-equipo').value = seleccionados.join(',');
+const sel = document.getElementById('select-octagon-equipo');
+document.getElementById('input-equipo').value = sel ? sel.value : '';
 }
 // ============================================================
 // VERIFICAR SI BOBINA YA FUE MEDIDA
@@ -904,18 +847,12 @@ function verificarBobinaYaMedida() {
 const extId = document.getElementById('select-extrusora').value;
 const numBobina = document.getElementById('input-bobina-numero').value.trim();
 const msgDiv = document.getElementById('bobina-estado-msg');
-if (!extId || !numBobina) {
-msgDiv.innerHTML = '';
-return false;
-}
+if (!extId || !numBobina) { msgDiv.innerHTML = ''; return false; }
 const yaMedida = AppState.historial.some(r => r.id === extId && String(r.numeroBobina) === String(numBobina));
 if (yaMedida) {
 msgDiv.innerHTML = `<div class="bobina-ya-medida">⚠️ La bobina N° ${numBobina} ya fue medida en esta extrusora.</div>`;
 return true;
-} else {
-msgDiv.innerHTML = '';
-return false;
-}
+} else { msgDiv.innerHTML = ''; return false; }
 }
 function generarCheckboxesOperativas() {
 const g1 = document.getElementById('chk-grid-g1');
@@ -1037,9 +974,7 @@ const densidad = parseFloat(document.getElementById('bobina-densidad').value) ||
 const display = document.getElementById('bobina-metros');
 if (peso > 0 && ancho > 0 && espesor > 0) {
 display.textContent = ((peso * 100000) / (ancho * espesor * densidad)).toFixed(2) + ' m';
-} else {
-display.textContent = '--- m';
-}
+} else { display.textContent = '--- m'; }
 }
 async function registrarBobinaExtrusora() {
 if (!AppState.extrusoraActualPanel) return;
@@ -1085,11 +1020,8 @@ document.getElementById('bobina-metros').textContent = '--- m';
 alert(`✅ Bobina N° ${numero} registrada.`);
 renderBobinasExtrusora();
 imprimirEtiquetaBobinaById(registro.id);
-if (AppState.vistaActual === 'octagon') { renderMuestrasPendientes(); autocompletarDatosMedicion(); }
-} catch (e) {
-console.error(e);
-alert('Error al guardar');
-}
+if (AppState.vistaActual === 'octagon') { renderNotificaciones(); autocompletarDatosMedicion(); }
+} catch (e) { console.error(e); alert('Error al guardar'); }
 }
 function renderBobinasExtrusora() {
 const tbody = document.getElementById('tabla-bobinas-extrusora');
@@ -1158,10 +1090,7 @@ alert('✅ Scrap registrado');
 renderScrapExtrusora();
 actualizarTotalScrapTurno();
 imprimirEtiquetaScrapById(registro.id);
-} catch (e) {
-console.error(e);
-alert('Error al guardar');
-}
+} catch (e) { console.error(e); alert('Error al guardar'); }
 }
 function renderScrapExtrusora() {
 const tbody = document.getElementById('tabla-scrap-extrusora');
@@ -1207,25 +1136,64 @@ renderScrapExtrusora();
 actualizarTotalScrapTurno();
 }
 }
-function renderMuestrasPendientes() {
-const banner = document.getElementById('banner-muestras-pendientes');
-const lista = document.getElementById('lista-muestras-pendientes');
-if (!banner || !lista) return;
-if (AppState.muestrasPendientes.length === 0) {
-banner.style.display = 'none';
+// ============================================================
+// NOTIFICACIONES DE MUESTRAS (CAMPANA)
+// ============================================================
+function obtenerMuestrasVisibles() {
+// Filtrar muestras que NO hayan sido ya medidas en octagon
+return AppState.muestrasPendientes.filter(m => {
+const yaMedida = AppState.historial.some(r =>
+r.id === m.extrusoraId && String(r.numeroBobina) === String(m.numeroBobina)
+);
+return !yaMedida;
+});
+}
+function renderNotificaciones() {
+const muestras = obtenerMuestrasVisibles();
+const badge = document.getElementById('notif-badge');
+const lista = document.getElementById('notif-lista');
+if (!badge || !lista) return;
+if (muestras.length > 0) {
+badge.textContent = muestras.length;
+badge.classList.add('visible');
+} else {
+badge.classList.remove('visible');
+}
+if (muestras.length === 0) {
+lista.innerHTML = '<div class="notif-empty">📭 No hay muestras pendientes de retiro</div>';
 return;
 }
-banner.style.display = 'block';
-lista.innerHTML = AppState.muestrasPendientes.map(m => `
-<div class="muestra-item">
-<div class="muestra-info">
-<div class="titulo">📦 ${m.extrusoraId} - Bobina N° ${m.numeroBobina}</div>
-<div class="detalle">OT: ${m.ot} | ${m.pesoKg} kg | ${m.metros} m | Op: ${m.operador} | ${m.fecha} ${m.hora}</div>
+lista.innerHTML = muestras.map(m => {
+const extNum = String(m.extrusoraId).replace('EXT-', '');
+return `
+<div class="notif-item">
+<div class="notif-item-info">
+<div class="notif-titulo">Ext.${extNum} Bobina ${m.numeroBobina} Lista</div>
+<div class="notif-detalle">${m.pesoKg} kg · ${m.metros} m · ${m.fecha} ${m.hora}</div>
 </div>
-<button class="btn-retirar" onclick="marcarMuestraRetirada('${m.id}')">✅ Marcar Retirada</button>
+<button class="btn-notif-retirar" onclick="marcarMuestraRetirada('${m.id}')">✅ Retirada</button>
 </div>
-`).join('');
+`;
+}).join('');
 }
+function toggleNotifDropdown(e) {
+e.stopPropagation();
+const dd = document.getElementById('notif-dropdown');
+renderNotificaciones();
+dd.classList.toggle('open');
+}
+function cerrarNotifDropdown(e) {
+if (e) e.stopPropagation();
+document.getElementById('notif-dropdown').classList.remove('open');
+}
+// Cerrar dropdown al hacer click fuera
+document.addEventListener('click', (e) => {
+const dd = document.getElementById('notif-dropdown');
+const btn = document.getElementById('btn-notif-campana');
+if (dd && btn && !btn.contains(e.target) && !dd.contains(e.target)) {
+dd.classList.remove('open');
+}
+});
 async function marcarMuestraRetirada(muestraId) {
 try {
 if (window.fbMethods && window.db && !window.useLocalFallback) {
@@ -1233,11 +1201,11 @@ await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "muestras_pendi
 }
 AppState.muestrasPendientes = AppState.muestrasPendientes.filter(m => m.id !== muestraId);
 localStorage.setItem('muestras_pendientes', JSON.stringify(AppState.muestrasPendientes));
-renderMuestrasPendientes();
+renderNotificaciones();
 } catch (e) {
 AppState.muestrasPendientes = AppState.muestrasPendientes.filter(m => m.id !== muestraId);
 localStorage.setItem('muestras_pendientes', JSON.stringify(AppState.muestrasPendientes));
-renderMuestrasPendientes();
+renderNotificaciones();
 }
 }
 // ============================================================
@@ -1247,26 +1215,34 @@ function autocompletarDatosMedicion() {
 const extId = document.getElementById('select-extrusora').value;
 if (!extId) return;
 const ext = AppState.extrusoras.find(e => e.id === extId);
-// Sugerencias en los labels de Máximo / Promedio / Mínimo
-// No hay sugerencia de micrones en la ficha técnica, así que dejamos vacío
-document.getElementById('sug-max').textContent = '';
-document.getElementById('sug-prom').textContent = '';
-document.getElementById('sug-min').textContent = '';
-// Sugerencias físicas
+// Limpiar sugerencias
+['sug-max','sug-prom','sug-min','sug-ancho','sug-peso','sug-fuelles','sug-tension'].forEach(id => {
+const el = document.getElementById(id); if (el) el.textContent = '';
+});
 if (ext) {
+// Sugerencias de micrones (usando tolerancia de la ficha)
+const sugMax = (ext.ancho + (ext.tolAncho || 0)).toFixed(1);
+const sugMin = (ext.ancho - (ext.tolAncho || 0)).toFixed(1);
+const sugProm = ext.ancho.toFixed(1);
+document.getElementById('sug-max').textContent = `Sugerido: ${sugMax}`;
+document.getElementById('sug-prom').textContent = `Sugerido: ${sugProm}`;
+document.getElementById('sug-min').textContent = `Sugerido: ${sugMin}`;
+document.getElementById('sug-ancho').textContent = `Sugerido: ${ext.ancho}`;
+document.getElementById('sug-peso').textContent = `Sugerido: ${ext.pesoIdeal}`;
+document.getElementById('sug-fuelles').textContent = ext.anchoFuelles ? `Sugerido: ${ext.anchoFuelles}` : '';
+document.getElementById('sug-tension').textContent = ext.tensionSup ? `Sugerido: ${ext.tensionSup}` : '';
+// Placeholders
 document.getElementById('val-ancho-total').placeholder = `Sugerido: ${ext.ancho}`;
-document.getElementById('val-ancho-fuelles').placeholder = `Sugerido: ${ext.anchoFuelles || '--'}`;
+document.getElementById('val-ancho-fuelles').placeholder = ext.anchoFuelles ? `Sugerido: ${ext.anchoFuelles}` : 'Sugerido';
 document.getElementById('val-peso-metro').placeholder = `Sugerido: ${ext.pesoIdeal}`;
-document.getElementById('val-tension-sup').placeholder = `Sugerido: ${ext.tensionSup || '--'}`;
+document.getElementById('val-tension-sup').placeholder = ext.tensionSup ? `Sugerido: ${ext.tensionSup}` : 'Sugerido';
 }
 // Sugerir siguiente N° bobina
 const bobinasExt = AppState.bobinas.filter(b => b.extrusoraId === extId);
 const ultimaBobina = bobinasExt.length > 0 ? bobinasExt[0] : null;
 const inputBobina = document.getElementById('input-bobina-numero');
 if (inputBobina && !inputBobina.value) {
-if (ultimaBobina) {
-inputBobina.value = ultimaBobina.numeroBobina;
-}
+if (ultimaBobina) inputBobina.value = ultimaBobina.numeroBobina;
 }
 verificarBobinaYaMedida();
 }
@@ -1404,23 +1380,27 @@ cerrarModalDesvio();
 }
 async function registrarMedida() {
 if (!AppState.operadorActual) { alert('Por favor inicie sesión primero'); solicitarLoginOctagon(); return; }
+actualizarEquiposOctagon();
 const equiposStr = document.getElementById('input-equipo').value;
-if (!equiposStr) return alert('Seleccione al menos un Octagon (1 o 2)');
+if (!equiposStr) return alert('Seleccione un Octagon (A o B)');
 const id = document.getElementById('select-extrusora').value;
 const numeroBobina = document.getElementById('input-bobina-numero').value.trim();
 const micronMin = document.getElementById('val-micron-min').value.trim();
 const micronProm = document.getElementById('val-micron-prom').value.trim();
 const micronMax = document.getElementById('val-micron-max').value.trim();
 const anchoTotal = document.getElementById('val-ancho-total').value.trim();
-const anchoFuelles = document.getElementById('val-ancho-fuelles').value.trim();
-const pesoMetro = document.getElementById('val-peso-metro').value.trim();
-const tensionSup = document.getElementById('val-tension-sup').value.trim();
+let anchoFuelles = document.getElementById('val-ancho-fuelles').value.trim();
+let pesoMetro = document.getElementById('val-peso-metro').value.trim();
+let tensionSup = document.getElementById('val-tension-sup').value.trim();
 if (!id) return alert('Seleccione extrusora');
 if (!numeroBobina) return alert('Ingrese el N° de Bobina');
 if (micronMin === '' || micronProm === '' || micronMax === '') return alert('Ingrese los 3 valores de micrón (Mín, Prom, Máx)');
 if (anchoTotal === '' || pesoMetro === '') return alert('Ingrese Ancho Total y Peso por Metro Lineal');
 const ext = AppState.extrusoras.find(e => e.id === id);
 if (!ext) return alert('Ficha no encontrada');
+// Si fuelles o tension están vacíos, usar valores de la ficha
+if (!anchoFuelles && ext.anchoFuelles) anchoFuelles = String(ext.anchoFuelles);
+if (!tensionSup && ext.tensionSup) tensionSup = String(ext.tensionSup);
 const valAncho = parseFloat(anchoTotal);
 const valPeso = parseFloat(pesoMetro);
 const fueraDeRango = (valAncho < ext.minAncho || valAncho > ext.maxAncho) || (valPeso < ext.minPeso || valPeso > ext.maxPeso);
@@ -1448,17 +1428,18 @@ localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 renderHistorial();
 if (fueraDeRango) lanzarAlerta(registro);
 }
-// Limpiar solo los campos de medición, no el N° bobina ni extrusora
+// Limpiar campos de medición
 ['val-micron-min', 'val-micron-prom', 'val-micron-max', 'val-ancho-total', 'val-ancho-fuelles', 'val-peso-metro', 'val-tension-sup'].forEach(id => document.getElementById(id).value = '');
-// Incrementar bobina automáticamente
 const siguienteNum = parseInt(numeroBobina) + 1;
 document.getElementById('input-bobina-numero').value = siguienteNum;
 verificarBobinaYaMedida();
+renderNotificaciones();
 } catch (e) {
 AppState.historial.unshift(registro);
 localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 renderHistorial();
 if (fueraDeRango) lanzarAlerta(registro);
+renderNotificaciones();
 }
 }
 function renderHistorial() {
@@ -1489,7 +1470,7 @@ if (!equiposReg.includes(fEquipo)) return false;
 return true;
 });
 tbodyOct.innerHTML = datosFiltradosOct.length === 0
-? '<tr><td colspan="11" style="text-align:center; padding: 20px; color: var(--text-muted);">Sin registros</td></tr>'
+? '<tr><td colspan="12" style="text-align:center; padding: 20px; color: var(--text-muted);">Sin registros</td></tr>'
 : datosFiltradosOct.map(reg => {
 const clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
 const estadoTexto = reg.fueraDeRango ? (reg.alertaTipo || '🚨 FUERA') : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
@@ -1499,6 +1480,7 @@ return `
 <tr class="${clase}">
 <td>${reg.hora}</td>
 <td><span class="equipo-badge">Eq ${reg.equipo || '-'}</span></td>
+<td><strong>${reg.numeroBobina || '-'}</strong></td>
 <td><strong>${reg.id}</strong></td>
 <td>${producto}</td>
 <td>${ot}</td>
@@ -1555,6 +1537,7 @@ reg.fueraDeRango = false;
 localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 }
 renderHistorial();
+renderNotificaciones();
 } catch(e) {
 console.error("Error al corregir:", e);
 const reg = AppState.historial.find(r => (r.docId || r.timestamp) == id);
@@ -1563,6 +1546,7 @@ reg.corregido = true;
 reg.fueraDeRango = false;
 localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 renderHistorial();
+renderNotificaciones();
 }
 }
 }
@@ -1577,6 +1561,7 @@ await Promise.all(snapshot.docs.map(d => window.fbMethods.deleteDoc(window.fbMet
 AppState.historial = [];
 localStorage.removeItem('mediciones_local');
 renderHistorial();
+renderNotificaciones();
 }
 function imprimirEtiquetaBobinaById(id) {
 const b = AppState.bobinas.find(x => x.id === id);
@@ -1597,9 +1582,7 @@ printWindow.document.close();
 printWindow.onload = () => { printWindow.focus(); printWindow.print(); setTimeout(() => printWindow.close(), 1000); };
 }
 // ============================================================
-// PDF OCTAGON - TABLA ORDENADA (SIN RESUMEN EJECUTIVO)
-// Orden de columnas IGUAL a la tabla en pantalla:
-// Hora | Equipo | Extrusora | Producto | OT | Mín. | Prom. | Máx. | Ancho | Peso | Estado
+// PDF OCTAGON - CON N° BOBINA, SIN NÚMERO DE PÁGINA
 // ============================================================
 function imprimirRegistroOctagon() {
 if (!window.jspdf) return alert('Error: Librería de PDF no cargada. Recargue la página.');
@@ -1625,7 +1608,6 @@ else return alert('Selección inválida');
 
 const { jsPDF } = window.jspdf;
 const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'landscape' });
-const turnoActivo = obtenerTurnoActivo();
 const logoImg = new Image();
 logoImg.crossOrigin = 'Anonymous';
 logoImg.src = 'https://iili.io/nw6Sq0v.png';
@@ -1637,7 +1619,6 @@ if (isGenerating) return;
 isGenerating = true;
 if (timeoutId) clearTimeout(timeoutId);
 
-// ---- Paleta y medidas (A4 landscape 297 x 210 mm) ----
 const M = 10;
 const W = 277;
 const PAGE_BOTTOM = 196;
@@ -1649,9 +1630,9 @@ const VERDE = [5, 150, 105];
 const ROJO = [220, 38, 38];
 const NARANJA = [180, 83, 9];
 
-// ---- Columnas: MISMO ORDEN que la tabla en pantalla ----
-const HEADERS = ['Hora', 'Equipo', 'Extrusora', 'Producto', 'OT', 'Mín. (µm)', 'Prom. (µm)', 'Máx. (µm)', 'Ancho (cm)', 'Peso (gr)', 'Estado'];
-const COLW    = [20,      20,       26,          28,         24,     20,          20,            20,            24,           24,          51];
+// Columnas con N° Bobina entre Equipo y Extrusora
+const HEADERS = ['Hora', 'Equipo', 'N° Bobina', 'Extrusora', 'Producto', 'OT', 'Mín. (µm)', 'Prom. (µm)', 'Máx. (µm)', 'Ancho (cm)', 'Peso (gr)', 'Estado'];
+const COLW    = [18,      18,       18,           22,         24,         20,     18,           18,            18,            22,           22,          47];
 const HEAD_H = 9;
 const ROW_H = 8;
 
@@ -1690,17 +1671,16 @@ doc.setFont('helvetica', 'normal');
 doc.setFontSize(9.5);
 doc.text(`Extrusora N° ${String(extId).replace('EXT-', '')}${continuacion ? '  (continuación)' : ''}  |  Control de Calidad`, 66, 19);
 doc.setFontSize(8.5);
-doc.text(`Fecha: ${hoy}`, 287, 11, { align: 'right' });
-doc.text(`Turno: ${turnoActivo.nombre}`, 287, 16, { align: 'right' });
-doc.text(`Registros: ${count}`, 287, 21, { align: 'right' });
+doc.text(`Registros: ${count}`, 287, 16, { align: 'right' });
 };
 
+// INFO INTERMEDIA: solo Operador + Total (izq) / OT + Producto (der)
 const dibujarFichaInfo = (ot, producto, operador, count) => {
 const y0 = 30;
 doc.setFillColor(AZUL_SUAVE[0], AZUL_SUAVE[1], AZUL_SUAVE[2]);
 doc.setDrawColor(203, 213, 225);
 doc.setLineWidth(0.3);
-doc.roundedRect(M, y0, W, 20, 2, 2, 'FD');
+doc.roundedRect(M, y0, W, 14, 2, 2, 'FD');
 const linea = (label, valor, lx, vx, ly) => {
 doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5);
 doc.setTextColor(AZUL[0], AZUL[1], AZUL[2]);
@@ -1709,13 +1689,13 @@ doc.setFont('helvetica', 'normal');
 doc.setTextColor(GRIS[0], GRIS[1], GRIS[2]);
 doc.text(String(valor || '-'), vx, ly);
 };
-linea('Fecha:', hoy, M + 4, M + 30, y0 + 5.5);
-linea('Operador:', operador, M + 4, M + 30, y0 + 11.5);
-linea('Turno:', turnoActivo.nombre, M + 4, M + 30, y0 + 17.5);
-linea('O.T.:', ot, M + 105, M + 135, y0 + 5.5);
-linea('Producto:', producto, M + 105, M + 135, y0 + 11.5);
-linea('Total mediciones:', count, M + 105, M + 145, y0 + 17.5);
-return y0 + 20 + 6;
+// Lado izquierdo: Operador + Total
+linea('Operador:', operador, M + 4, M + 30, y0 + 5.5);
+linea('Total mediciones:', count, M + 4, M + 40, y0 + 11.5);
+// Lado derecho: OT + Producto
+linea('O.T.:', ot, M + 140, M + 165, y0 + 5.5);
+linea('Producto:', producto, M + 140, M + 165, y0 + 11.5);
+return y0 + 14 + 6;
 };
 
 const dibujarCabeceraTabla = (y) => {
@@ -1723,7 +1703,7 @@ doc.setFillColor(AZUL[0], AZUL[1], AZUL[2]);
 doc.rect(M, y, W, HEAD_H, 'F');
 doc.setTextColor(255, 255, 255);
 doc.setFont('helvetica', 'bold');
-doc.setFontSize(8);
+doc.setFontSize(7.5);
 let x = M;
 HEADERS.forEach((h, i) => {
 doc.text(h, x + COLW[i] / 2, y + 6, { align: 'center' });
@@ -1738,25 +1718,23 @@ return y + HEAD_H;
 const altoDeFila = (reg) => {
 const est = estadoDe(reg);
 doc.setFont('helvetica', 'bold');
-doc.setFontSize(7.5);
-const lines = doc.splitTextToSize(est.texto, COLW[10] - 4);
+doc.setFontSize(7);
+const lines = doc.splitTextToSize(est.texto, COLW[11] - 4);
 return Math.max(ROW_H, lines.length * 3.4 + 4);
 };
 
 const dibujarFila = (reg, y, idx) => {
 const est = estadoDe(reg);
 doc.setFont('helvetica', 'bold');
-doc.setFontSize(7.5);
-const estadoLines = doc.splitTextToSize(est.texto, COLW[10] - 4);
+doc.setFontSize(7);
+const estadoLines = doc.splitTextToSize(est.texto, COLW[11] - 4);
 const h = Math.max(ROW_H, estadoLines.length * 3.4 + 4);
 
-// Fondo de fila
 let bg = est.bg;
 if (!reg.fueraDeRango && !reg.corregido && idx % 2 === 1) bg = [248, 250, 252];
 doc.setFillColor(bg[0], bg[1], bg[2]);
 doc.rect(M, y, W, h, 'F');
 
-// Bordes
 doc.setDrawColor(203, 213, 225);
 doc.setLineWidth(0.2);
 doc.rect(M, y, W, h, 'S');
@@ -1766,13 +1744,14 @@ gx += COLW[i];
 doc.line(gx, y, gx, y + h);
 }
 
-// Valores en el MISMO ORDEN que la tabla en pantalla
 const ficha = AppState.extrusoras.find(e => e.id === reg.id);
 const producto = reg.dimensiones || extraerDimensionesDeProducto(reg.producto) || '-';
 const ot = reg.ot || extraerOTDeFicha(reg.producto) || '-';
+// Orden: Hora, Equipo, N° Bobina, Extrusora, Producto, OT, Min, Prom, Max, Ancho, Peso
 const valores = [
 reg.hora || '-',
 reg.equipo ? `Eq ${reg.equipo}` : '-',
+reg.numeroBobina || '-',
 reg.id || '-',
 producto,
 ot,
@@ -1786,39 +1765,28 @@ reg.micronMax != null ? String(reg.micronMax) : '-',
 let x = M;
 valores.forEach((v, i) => {
 let color = NEGRO;
-let bold = (i === 2 || i === 6);
-// Marcar en rojo el valor fuera de rango
+let bold = (i === 3 || i === 7);
 if (reg.fueraDeRango && ficha) {
-if (i === 8 && reg.anchoTotal != null && (reg.anchoTotal < ficha.minAncho || reg.anchoTotal > ficha.maxAncho)) { color = ROJO; bold = true; }
-if (i === 9 && reg.pesoMetro != null && (reg.pesoMetro < ficha.minPeso || reg.pesoMetro > ficha.maxPeso)) { color = ROJO; bold = true; }
+if (i === 9 && reg.anchoTotal != null && (reg.anchoTotal < ficha.minAncho || reg.anchoTotal > ficha.maxAncho)) { color = ROJO; bold = true; }
+if (i === 10 && reg.pesoMetro != null && (reg.pesoMetro < ficha.minPeso || reg.pesoMetro > ficha.maxPeso)) { color = ROJO; bold = true; }
 }
 doc.setFont('helvetica', bold ? 'bold' : 'normal');
-doc.setFontSize(8);
+doc.setFontSize(7.5);
 doc.setTextColor(color[0], color[1], color[2]);
-if (i === 0 && reg.numeroBobina) {
-doc.text(String(v), x + COLW[i] / 2, y + 3.6, { align: 'center' });
-doc.setFont('helvetica', 'normal');
-doc.setFontSize(6);
-doc.setTextColor(GRIS[0], GRIS[1], GRIS[2]);
-doc.text(`Bob. ${reg.numeroBobina}`, x + COLW[i] / 2, y + 6.6, { align: 'center' });
-} else {
 const txt = doc.splitTextToSize(String(v), COLW[i] - 3)[0] || '-';
 doc.text(txt, x + COLW[i] / 2, y + h / 2 + 1.2, { align: 'center' });
-}
 x += COLW[i];
 });
 
-// Estado
 doc.setFont('helvetica', 'bold');
-doc.setFontSize(7.5);
+doc.setFontSize(7);
 doc.setTextColor(est.color[0], est.color[1], est.color[2]);
 const ey = y + (h - (estadoLines.length - 1) * 3.4) / 2 + 1;
-doc.text(estadoLines, x + COLW[10] / 2, ey, { align: 'center' });
+doc.text(estadoLines, x + COLW[11] / 2, ey, { align: 'center' });
 
 return y + h;
 };
 
-// ---- Generación por extrusora ----
 extrusorasAImprimir.forEach((extId, indexExt) => {
 const mediciones = porExtrusora[extId].slice().sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
 const ext = AppState.extrusoras.find(e => e.id === extId);
@@ -1858,7 +1826,7 @@ doc.text('Firma Operador Octagon', M + 50, y + 4.5, { align: 'center' });
 doc.text('Firma Responsable de Calidad', M + 210, y + 4.5, { align: 'center' });
 });
 
-// ---- Pie de página en todas las hojas ----
+// Footer SIN número de página
 const totalPaginas = doc.internal.getNumberOfPages();
 for (let i = 1; i <= totalPaginas; i++) {
 doc.setPage(i);
@@ -1869,7 +1837,6 @@ doc.setFont('helvetica', 'italic');
 doc.setFontSize(7.5);
 doc.setTextColor(GRIS[0], GRIS[1], GRIS[2]);
 doc.text('Octagon - Control de Calidad | Documento generado automáticamente', M, 205.5);
-doc.text(`Página ${i} de ${totalPaginas}`, 287, 205.5, { align: 'right' });
 doc.setFillColor(AZUL[0], AZUL[1], AZUL[2]);
 doc.rect(0, 208, 297, 2, 'F');
 }
@@ -2011,7 +1978,16 @@ btn.className = AppState.sonidoHabilitado ? "btn-action btn-primary" : "btn-acti
 }
 }
 function cambiarVista(vista) {
-if (vista === 'octagon') { if (!solicitarLoginOctagon()) return; actualizarInfoSesion(); }
+// LOGIN SOLO AL INGRESAR A OCTAGON
+if (vista === 'octagon') {
+if (!solicitarLoginOctagon()) {
+// Guardar vista pendiente para entrar después del login
+sessionStorage.setItem('vista_pendiente', 'octagon');
+return;
+}
+actualizarInfoSesion();
+renderNotificaciones();
+}
 AppState.vistaActual = vista;
 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
 const target = document.getElementById('view-' + vista);
@@ -2019,25 +1995,28 @@ if (target) target.classList.add('active');
 window.scrollTo(0,0);
 guardarVistaActual(vista);
 if (vista === 'extrusion') renderBotonesExtrusoras();
-if (vista === 'octagon') { renderMuestrasPendientes(); autocompletarDatosMedicion(); }
+if (vista === 'octagon') { autocompletarDatosMedicion(); renderNotificaciones(); }
 }
 function restaurarVistaAlIniciar() {
 const vistaGuardada = localStorage.getItem('vista_actual');
 if (vistaGuardada && vistaGuardada !== 'home') {
-if (vistaGuardada === 'octagon' && !AppState.operadorActual) {
-document.getElementById('modal-operador').style.display = 'flex';
-sessionStorage.setItem('vista_pendiente', 'octagon');
-return;
-}
+// NO mostrar login al iniciar - solo al entrar a octagon
 AppState.vistaActual = vistaGuardada;
 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
 const target = document.getElementById('view-' + vistaGuardada);
 if (target) target.classList.add('active');
 if (vistaGuardada === 'extrusion') {
-setTimeout(() => { renderBotonesExtrusoras(); renderMuestrasPendientes(); }, 100);
+setTimeout(() => { renderBotonesExtrusoras(); }, 100);
 }
 if (vistaGuardada === 'octagon') {
-setTimeout(() => { actualizarInfoSesion(); renderMuestrasPendientes(); autocompletarDatosMedicion(); }, 100);
+// Si no hay operador, volver a home (el login aparecerá al hacer clic de nuevo)
+if (!AppState.operadorActual) {
+AppState.vistaActual = 'home';
+document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+document.getElementById('view-home').classList.add('active');
+return;
+}
+setTimeout(() => { actualizarInfoSesion(); autocompletarDatosMedicion(); renderNotificaciones(); }, 100);
 }
 }
 }
@@ -2168,12 +2147,12 @@ actualizarSelect(); renderListaModal(); renderBotonesExtrusoras();
 }
 function exportarCSV() {
 if (AppState.historial.length === 0) return alert('No hay datos');
-let csv = "Hora,Equipo,Extrusora,Producto,OT,MicronMin,MicronProm,MicronMax,AnchoTotal,PesoMetro,Estado\n";
+let csv = "Hora,Equipo,N°Bobina,Extrusora,Producto,OT,MicronMin,MicronProm,MicronMax,AnchoTotal,PesoMetro,Estado\n";
 AppState.historial.forEach(r => {
 const est = r.fueraDeRango ? (r.alertaTipo || "FUERA") : (r.corregido ? "CORREGIDO" : "OK");
 const producto = r.dimensiones || extraerDimensionesDeProducto(r.producto) || '';
 const ot = r.ot || extraerOTDeFicha(r.producto) || '';
-csv += `"${r.hora}","${r.equipo || '-'}","${r.id}","${producto}","${ot}",${r.micronMin||'-'},${r.micronProm||'-'},${r.micronMax||'-'},${r.anchoTotal||'-'},${r.pesoMetro||'-'},"${est}"\n`;
+csv += `"${r.hora}","${r.equipo || '-'}","${r.numeroBobina || '-'}","${r.id}","${producto}","${ot}",${r.micronMin||'-'},${r.micronProm||'-'},${r.micronMax||'-'},${r.anchoTotal||'-'},${r.pesoMetro||'-'},"${est}"\n`;
 });
 const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 const a = document.createElement('a');
@@ -2210,7 +2189,7 @@ AppState.bobinas = JSON.parse(localStorage.getItem('bobinas_local')) || [];
 AppState.scraps = JSON.parse(localStorage.getItem('scraps_local')) || [];
 AppState.muestrasPendientes = JSON.parse(localStorage.getItem('muestras_pendientes')) || [];
 renderHistorial();
-if (AppState.vistaActual === 'octagon') { renderMuestrasPendientes(); autocompletarDatosMedicion(); }
+if (AppState.vistaActual === 'octagon') { autocompletarDatosMedicion(); renderNotificaciones(); }
 }
 async function iniciarSincronizacionFirebase() {
 try {
@@ -2223,6 +2202,7 @@ const nuevosDatos = [];
 snapshot.forEach((docSnap) => nuevosDatos.push({ docId: docSnap.id, ...docSnap.data() }));
 AppState.historial = nuevosDatos;
 renderHistorial();
+renderNotificaciones();
 if (AppState.historial.length > 0) {
 const latestTimestamp = AppState.historial[0].timestamp;
 if (latestTimestamp > AppState.lastKnownTimestamp && AppState.historial[0].fueraDeRango) {
@@ -2253,6 +2233,7 @@ if (AppState.extrusoraActualPanel) renderBobinasExtrusora();
 if (AppState.vistaActual === 'octagon') {
 autocompletarDatosMedicion();
 verificarBobinaYaMedida();
+renderNotificaciones();
 }
 });
 const qScraps = query(collection(window.db, "scraps"), orderBy("timestamp", "desc"));
@@ -2269,7 +2250,7 @@ const nuevasMuestras = [];
 snapshot.forEach((docSnap) => nuevasMuestras.push({ id: docSnap.id, ...docSnap.data() }));
 AppState.muestrasPendientes = nuevasMuestras;
 localStorage.setItem('muestras_pendientes', JSON.stringify(AppState.muestrasPendientes));
-if (AppState.vistaActual === 'octagon') renderMuestrasPendientes();
+if (AppState.vistaActual === 'octagon') renderNotificaciones();
 });
 } catch (e) {
 console.warn("Fallback local:", e);
@@ -2282,10 +2263,14 @@ cargarEstadoOperativas();
 actualizarInfoSesion();
 renderBotonesExtrusoras();
 restaurarVistaAlIniciar();
-// Listener para verificar bobina ya medida al escribir
 const inputBobina = document.getElementById('input-bobina-numero');
 if (inputBobina) {
 inputBobina.addEventListener('input', verificarBobinaYaMedida);
+}
+const selectOctagon = document.getElementById('select-octagon-equipo');
+if (selectOctagon) {
+selectOctagon.addEventListener('change', actualizarEquiposOctagon);
+actualizarEquiposOctagon();
 }
 setTimeout(iniciarSincronizacionFirebase, 800);
 };
