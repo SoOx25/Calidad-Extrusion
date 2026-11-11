@@ -197,7 +197,6 @@ tr:last-child td { border-bottom: none; }
 .rm-col label:first-of-type { margin-top: 0; }
 .bobina-ya-medida { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-top: 6px; }
 .bobina-auto-sugerida { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-top: 6px; }
-/* NOTIFICACIONES CAMPANA */
 .btn-notif-campana { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; font-family: var(--font-main); position: relative; }
 .btn-notif-campana:hover { background: #f8fafc; border-color: #cbd5e1; }
 .notif-badge { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; font-size: 0.7rem; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; padding: 0 5px; display: none; align-items: center; justify-content: center; border: 2px solid white; }
@@ -213,7 +212,6 @@ tr:last-child td { border-bottom: none; }
 .notif-empty { padding: 24px 16px; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
 .btn-notif-retirar { background: var(--success); color: white; border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
 .btn-notif-retirar:hover { background: var(--success-hover); }
-/* PRODUCTO DIMENSIONES INLINE */
 .producto-dims-row { display: flex; align-items: flex-end; gap: 6px; }
 .producto-dims-row .dim-field { flex: 1; }
 .producto-dims-row .dim-sep { padding-bottom: 12px; font-weight: 700; color: var(--text-muted); }
@@ -222,7 +220,6 @@ tr:last-child td { border-bottom: none; }
 </style>
 </head>
 <body>
-<!-- MODAL OPERADOR -->
 <div class="modal-operador" id="modal-operador">
 <div class="modal-operador-content">
 <h2>👤 Bienvenido a Octagon</h2>
@@ -231,7 +228,6 @@ tr:last-child td { border-bottom: none; }
 <button class="btn-primary" style="width: 100%; padding: 12px;" onclick="confirmarOperador()">✅ Iniciar Sesión</button>
 </div>
 </div>
-<!-- MODAL CAPTURA -->
 <div class="modal-overlay" id="modal-captura">
 <div class="modal-content" style="max-width: 900px;">
 <div class="modal-header">
@@ -244,14 +240,12 @@ tr:last-child td { border-bottom: none; }
 </div>
 </div>
 </div>
-<!-- ALERTA PANTALLA COMPLETA -->
 <div id="alerta-fullscreen">
 <h1 id="fs-extrusora-header" style="font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: #ffffff; margin: 0 0 16px 0; text-transform: uppercase;">CORREGIR EXTRUSORA EXT-00</h1>
 <h1 id="fs-titulo" style="font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; margin: 0 0 24px 0; color: #fecaca;">🚨 ALERTA CRÍTICA DE CALIDAD</h1>
 <p id="fs-detalle" style="font-size: clamp(1rem, 1.5vw, 1.25rem); margin: 0 0 32px 0; max-width: 800px; background: rgba(0,0,0,0.2); padding: 20px 32px; border-radius: 12px;">---</p>
 <button onclick="cerrarAlertaFullscreen()" style="background: white; color: var(--danger); font-size: 1.1rem; padding: 16px 40px; border-radius: 8px; cursor: pointer; font-weight: 700; border: none;">Silenciar y Cerrar Alerta</button>
 </div>
-<!-- HOME -->
 <div id="view-home" class="view-section active">
 <div id="banner-offline">ℹ️ Sistema activo en Modo Respaldo / Sincronización Local.</div>
 <div class="home-container">
@@ -273,7 +267,6 @@ tr:last-child td { border-bottom: none; }
 </div>
 </div>
 </div>
-<!-- OCTAGON -->
 <div id="view-octagon" class="view-section">
 <div class="header">
 <div class="header-left">
@@ -313,7 +306,6 @@ tr:last-child td { border-bottom: none; }
 <div class="card">
 <h2>📏 Registrar Bobina</h2>
 <div class="registrar-medida-grid">
-<!-- COLUMNA IZQUIERDA -->
 <div class="rm-col rm-col-left">
 <h3>🔹 Datos Principales</h3>
 <label>Producto (Código):</label>
@@ -338,7 +330,6 @@ tr:last-child td { border-bottom: none; }
 <input type="number" id="input-bobina-numero" placeholder="Se sugiere automáticamente">
 <div id="bobina-estado-msg"></div>
 </div>
-<!-- COLUMNA DERECHA -->
 <div class="rm-col">
 <h3>🔹 Mediciones de Espesor (μm)</h3>
 <label>Máximo (μm): <small id="sug-max" style="color:var(--success); font-weight:600;"></small></label>
@@ -407,7 +398,6 @@ tr:last-child td { border-bottom: none; }
 </div>
 </div>
 </div>
-<!-- EXTRUSIÓN -->
 <div id="view-extrusion" class="view-section">
 <div class="header">
 <div class="header-left">
@@ -495,7 +485,6 @@ tr:last-child td { border-bottom: none; }
 </div>
 </div>
 </div>
-<!-- MODAL: PANEL DE EXTRUSORA -->
 <div class="modal-overlay" id="modal-extrusora">
 <div class="modal-content">
 <div class="modal-header">
@@ -580,7 +569,6 @@ tr:last-child td { border-bottom: none; }
 </div>
 </div>
 </div>
-<!-- MODAL: DESVÍOS -->
 <div class="modal-overlay" id="modal-desvios">
 <div class="modal-content" style="border-top: 4px solid var(--danger); max-width: 750px;">
 <div class="modal-header">
@@ -597,7 +585,7 @@ tr:last-child td { border-bottom: none; }
 <option value="Otro">Otro</option>
 </select>
 <div class="grid-2" style="margin-top: 12px;">
-<div><label>Extrusora:</label><select id="alerta-extrusora" onchange="sincronizarOTAlerta()"></select></div>
+<div><label>Extrusora:</label><select id="alerta-extrusora"></select></div>
 <div><label>OT Activa:</label><input type="text" id="alerta-ot" placeholder="Ej: 18489"></div>
 </div>
 <div id="grupo-bobina" style="margin-top: 12px;"><label>N° Bobina:</label><input type="number" id="alerta-bobina" placeholder="Ej: 14"></div>
@@ -623,7 +611,6 @@ tr:last-child td { border-bottom: none; }
 </div>
 </div>
 </div>
-<!-- MODAL: PRODUCTOS (REEMPLAZA FICHAS TÉCNICAS) -->
 <div class="modal-overlay" id="modal-productos">
 <div class="modal-content">
 <div class="modal-header">
@@ -795,9 +782,6 @@ msgDiv.innerHTML = `<div class="bobina-ya-medida">⚠️ La bobina N° ${numBobi
 return true;
 } else { msgDiv.innerHTML = ''; return false; }
 }
-// ============================================================
-// MODAL PRODUCTOS
-// ============================================================
 function abrirModalProductos() { document.getElementById('modal-productos').style.display = 'flex'; renderListaProductos(); }
 function cerrarModalProductos() { document.getElementById('modal-productos').style.display = 'none'; cancelarEdicionProducto(); }
 function cancelarEdicionProducto() {
@@ -921,11 +905,10 @@ el.appendChild(opt);
 });
 el.value = prevVal || (id === 'select-producto' ? '' : 'TODAS');
 });
-if (id === 'select-producto') autocompletarDatosMedicion();
+// ✅ CORRECCIÓN: verificar si hay producto seleccionado fuera del forEach
+const selectProd = document.getElementById('select-producto');
+if (selectProd && selectProd.value) autocompletarDatosMedicion();
 }
-// ============================================================
-// CONFIGURACIÓN DE TURNO (OPERATIVAS)
-// ============================================================
 function generarCheckboxesOperativas() {
 const g1 = document.getElementById('chk-grid-g1');
 const g2 = document.getElementById('chk-grid-g2');
@@ -1192,9 +1175,6 @@ renderScrapExtrusora();
 actualizarTotalScrapTurno();
 }
 }
-// ============================================================
-// NOTIFICACIONES CAMPANA
-// ============================================================
 function obtenerMuestrasVisibles() {
 return AppState.muestrasPendientes.filter(m => {
 const yaMedida = AppState.historial.some(r => String(r.numeroBobina) === String(m.numeroBobina) && r.extrusoraId === m.extrusoraId);
@@ -1260,11 +1240,7 @@ localStorage.setItem('muestras_pendientes', JSON.stringify(AppState.muestrasPend
 renderNotificaciones();
 }
 }
-// ============================================================
-// AUTOCOMPLETAR + SUGERIR N° BOBINA
-// ============================================================
 function sugerirBobinaDisponible(codigoProd) {
-// Buscar la primera muestra pendiente de ese producto que no haya sido medida
 const muestras = AppState.muestrasPendientes
 .filter(m => !AppState.historial.some(r => String(r.numeroBobina) === String(m.numeroBobina) && r.extrusoraId === m.extrusoraId))
 .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
@@ -1274,7 +1250,6 @@ return muestras[0];
 function autocompletarDatosMedicion() {
 const codigoProd = document.getElementById('select-producto').value;
 const preview = document.getElementById('producto-info-preview');
-// Limpiar sugerencias
 ['sug-max','sug-prom','sug-min','sug-ancho','sug-peso','sug-fuelles','sug-tension'].forEach(id => {
 const el = document.getElementById(id); if (el) el.textContent = '';
 });
@@ -1284,12 +1259,10 @@ return;
 }
 const prod = obtenerProductoPorCodigo(codigoProd);
 if (!prod) { if (preview) preview.style.display = 'none'; return; }
-// Mostrar preview del producto
 if (preview) {
 preview.style.display = 'block';
 preview.innerHTML = `<strong>${prod.codigo}</strong> · ${formatoProducto(prod)} · Ancho Ideal: ${prod.anchoIdeal || '-'} cm · Peso: ${prod.pesoIdeal || '-'} gr/m`;
 }
-// Sugerencias de micrones
 const sugMax = (prod.micron + (prod.tolerancia || 0)).toFixed(1);
 const sugMin = (prod.micron - (prod.tolerancia || 0)).toFixed(1);
 const sugProm = prod.micron.toFixed(1);
@@ -1300,12 +1273,10 @@ document.getElementById('sug-ancho').textContent = prod.anchoIdeal ? `Sugerido: 
 document.getElementById('sug-peso').textContent = prod.pesoIdeal ? `Sugerido: ${prod.pesoIdeal}` : '';
 document.getElementById('sug-fuelles').textContent = prod.anchoFuelles ? `Sugerido: ${prod.anchoFuelles}` : '';
 document.getElementById('sug-tension').textContent = prod.tensionSup ? `Sugerido: ${prod.tensionSup}` : '';
-// Placeholders
 document.getElementById('val-ancho-total').placeholder = prod.anchoIdeal ? `Sugerido: ${prod.anchoIdeal}` : 'Sugerido';
 document.getElementById('val-ancho-fuelles').placeholder = prod.anchoFuelles ? `Sugerido: ${prod.anchoFuelles}` : 'Sugerido';
 document.getElementById('val-peso-metro').placeholder = prod.pesoIdeal ? `Sugerido: ${prod.pesoIdeal}` : 'Sugerido';
 document.getElementById('val-tension-sup').placeholder = prod.tensionSup ? `Sugerido: ${prod.tensionSup}` : 'Sugerido';
-// Sugerir N° de Bobina de las muestras pendientes
 const muestraDisp = sugerirBobinaDisponible(codigoProd);
 const inputBobina = document.getElementById('input-bobina-numero');
 const msgDiv = document.getElementById('bobina-estado-msg');
@@ -1313,7 +1284,6 @@ if (muestraDisp && inputBobina) {
 inputBobina.value = muestraDisp.numeroBobina;
 msgDiv.innerHTML = `<div class="bobina-auto-sugerida">💡 Sugerida: Bobina N° ${muestraDisp.numeroBobina} (${muestraDisp.extrusoraId}) - Pendiente de retiro</div>`;
 } else {
-// Si no hay muestra pendiente, sugerir siguiente correlativo
 const extId = document.getElementById('select-extrusora').value;
 const siguiente = obtenerSiguienteNumeroBobina(extId, codigoProd);
 if (inputBobina && !inputBobina.value) inputBobina.value = siguiente;
@@ -1403,9 +1373,6 @@ document.getElementById('grupo-porcentaje').style.display = (tipo === 'Geles en 
 document.getElementById('grupo-comentario').style.display = (tipo === 'Espesor Promedio' || tipo === 'Otro') ? 'block' : 'none';
 document.getElementById('grupo-captura').style.display = esCirculoSucio ? 'block' : 'none';
 }
-function sincronizarOTAlerta() {
-// Ya no se sincroniza con ficha - la OT se escribe manualmente
-}
 async function registrarAlertaDesvio() {
 const extId = document.getElementById('alerta-extrusora').value;
 const ot = document.getElementById('alerta-ot').value.trim();
@@ -1471,12 +1438,10 @@ let tensionSup = document.getElementById('val-tension-sup').value.trim();
 if (!numeroBobina) return alert('Ingrese el N° de Bobina');
 if (micronMin === '' || micronProm === '' || micronMax === '') return alert('Ingrese los 3 valores de micrón (Mín, Prom, Máx)');
 if (anchoTotal === '' || pesoMetro === '') return alert('Ingrese Ancho Total y Peso por Metro Lineal');
-// Si fuelles o tension están vacíos, usar valores del producto
 if (!anchoFuelles && prod.anchoFuelles) anchoFuelles = String(prod.anchoFuelles);
 if (!tensionSup && prod.tensionSup) tensionSup = String(prod.tensionSup);
 const valAncho = parseFloat(anchoTotal);
 const valPeso = parseFloat(pesoMetro);
-// Validación contra producto
 const anchoIdeal = prod.anchoIdeal;
 const pesoIdeal = prod.pesoIdeal;
 const fueraDeRango = (anchoIdeal != null && (valAncho < anchoIdeal - 0.5 || valAncho > anchoIdeal + 0.5)) ||
@@ -1510,7 +1475,6 @@ if (fueraDeRango) lanzarAlerta(registro);
 actualizarContadorBobina(extrusoraId, codigoProd, parseInt(numeroBobina));
 ['val-micron-min', 'val-micron-prom', 'val-micron-max', 'val-ancho-total', 'val-ancho-fuelles', 'val-peso-metro', 'val-tension-sup'].forEach(id => document.getElementById(id).value = '');
 document.getElementById('input-ot').value = '';
-// Sugerir siguiente bobina
 autocompletarDatosMedicion();
 renderNotificaciones();
 } catch (e) {
@@ -1659,9 +1623,6 @@ printWindow.document.write(`<!DOCTYPE html><html><head><title>Etiqueta</title><s
 printWindow.document.close();
 printWindow.onload = () => { printWindow.focus(); printWindow.print(); setTimeout(() => printWindow.close(), 1000); };
 }
-// ============================================================
-// PDF OCTAGON
-// ============================================================
 function imprimirRegistroOctagon() {
 if (!window.jspdf) return alert('Error: Librería de PDF no cargada. Recargue la página.');
 const hoy = new Date().toLocaleDateString('es-CL');
@@ -1860,7 +1821,6 @@ return y + h;
 
 productosAImprimir.forEach((codigoProd, indexExt) => {
 const mediciones = porProducto[codigoProd].slice().sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-// Agrupar por OT dentro del producto
 const ots = [...new Set(mediciones.map(m => m.ot || 'Sin OT'))];
 const otPrincipal = ots[0] || 'Sin OT';
 
