@@ -91,6 +91,36 @@
     .header-title { font-size: 1.25rem; font-weight: 700; color: var(--primary); letter-spacing: -0.025em; }
     .logo-glow { max-height: 48px; width: auto; }
 
+    /* Nuevo header compacto Octagon */
+    .header-octagon-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .header-octagon-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-octagon-meta {
+      display: flex;
+      gap: 10px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      padding-left: 58px;
+      flex-wrap: wrap;
+    }
+    .header-octagon-meta span {
+      background: #f8fafc;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      font-weight: 600;
+    }
+    .header-octagon-meta .op { color: var(--primary); }
+    .header-octagon-meta .tu { color: var(--success); }
+    .header-octagon-meta .eq { color: var(--text-secondary); }
+
     .sesion-info {
       display: flex; gap: 12px; align-items: center; font-size: 0.75rem; color: var(--text-muted);
       background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color);
@@ -254,18 +284,78 @@
     .modal-operador-content h2 { color: var(--primary); margin-top: 0; border: none; font-size: 1.25rem; }
     .modal-captura-img { max-width: 100%; max-height: 75vh; border-radius: 8px; border: 2px solid var(--border-color); }
 
-    .turno-selector-card {
-      background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #93c5fd;
-      border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; display: flex;
-      align-items: center; gap: 12px; flex-wrap: wrap;
+    /* NUEVO: Layout dividido Registrar Medida */
+    .registrar-medida-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
-    .turno-selector-card .label { margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
-    .turno-selector-card select { flex: 1; min-width: 180px; margin: 0; padding: 8px 12px; font-weight: 700; background: white; border: 2px solid var(--primary); color: var(--primary); }
-    .turno-selector-card .btn-reset {
-      background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);
-      padding: 6px 10px; font-size: 0.75rem; border-radius: 6px; cursor: pointer; white-space: nowrap;
+    @media (max-width: 768px) {
+      .registrar-medida-grid { grid-template-columns: 1fr; }
+      .header-octagon-meta { padding-left: 0; }
     }
-    .turno-selector-card .btn-reset:hover { background: #f1f5f9; color: var(--text-primary); }
+    .rm-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .rm-col-left {
+      border-right: 1px dashed var(--border-color);
+      padding-right: 20px;
+    }
+    @media (max-width: 768px) {
+      .rm-col-left { border-right: none; padding-right: 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 16px; }
+    }
+    .rm-col h3 {
+      margin: 0 0 8px 0;
+      font-size: 0.95rem;
+      color: var(--primary);
+    }
+    .rm-col label { margin-top: 10px; }
+    .rm-col label:first-of-type { margin-top: 0; }
+
+    /* Checkboxes Octagon 1 / 2 */
+    .octagon-equipos-chk {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .octagon-equipos-chk label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f8fafc;
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin: 0;
+      transition: all 0.2s;
+    }
+    .octagon-equipos-chk label:hover { background: #f1f5f9; }
+    .octagon-equipos-chk input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .octagon-equipos-chk label.checked {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .bobina-ya-medida {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: var(--danger);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 6px;
+    }
 
     #print-area { display: none; }
   </style>
@@ -331,34 +421,25 @@
   <div id="view-octagon" class="view-section">
     <div class="header">
       <div class="header-left">
-        <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="logo-glow">
-        <span class="header-title">Estación Octagon</span>
+        <div class="header-octagon-wrap">
+          <div class="header-octagon-title">
+            <img src="https://iili.io/nwPYPvp.png" alt="Logo Octagon" class="logo-glow">
+            <span class="header-title">Estación Octagon</span>
+          </div>
+          <div class="header-octagon-meta">
+            <span class="op" id="sesion-operador">👤 --</span>
+            <span class="tu" id="sesion-turno">🕐 --</span>
+            <span class="eq" id="sesion-equipos">🔬 Equipos: --</span>
+          </div>
+        </div>
       </div>
       <div class="header-right">
-        <div class="sesion-info" id="sesion-info-octagon">
-          <span class="operador" id="sesion-operador">--</span>
-          <span class="sep">|</span>
-          <span class="turno" id="sesion-turno">--</span>
-          <span class="sep">|</span>
-          <span class="equipos" id="sesion-equipos">Equipos: --</span>
-        </div>
         <button class="btn-action btn-danger" onclick="abrirModalDesvio()">🚨 Registrar Desvío</button>
         <button class="btn-action btn-primary" onclick="solicitarCambioTurnoOctagon()">🔄 Cambiar Turno</button>
         <button class="btn-action btn-warning" onclick="cerrarSesionOperador()" style="padding: 6px 10px; font-size: 0.8rem;">👤 Salir</button>
       </div>
     </div>
     <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú Principal</button>
-
-    <div class="turno-selector-card">
-      <div class="label">🕐 Turno Activo:</div>
-      <select id="select-turno-manual" onchange="guardarTurnoActivo()">
-        <option value="Día">Día [07:00 a 14:30]</option>
-        <option value="Tarde">Tarde [14:30 a 22:00]</option>
-        <option value="Noche">Noche [22:00 a 07:00]</option>
-        <option value="Especial">Especial [Horario Especial]</option>
-      </select>
-      <button class="btn-reset" onclick="resetearTurnoAutomatico()">🔄 Auto (según hora)</button>
-    </div>
 
     <div id="banner-alertas-medio">🚨 ¡ATENCIÓN! HAY <span id="m-alertas-count">0</span> ALERTAS ACTIVAS PENDIENTES DE CORRECCIÓN</div>
 
@@ -370,46 +451,58 @@
     <div class="card">
       <h2>📏 Registrar Medida de Calidad</h2>
       
-      <div class="grid-3">
-        <div>
+      <div class="registrar-medida-grid">
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="rm-col rm-col-left">
+          <h3>🔹 Datos Principales</h3>
+          
           <label>Extrusora:</label>
           <select id="select-extrusora" onchange="autocompletarDatosMedicion(); mostrarObjetivosSeleccionados()"></select>
+
+          <label>Octagon (Equipo):</label>
+          <div class="octagon-equipos-chk" id="octagon-equipos-chk">
+            <label id="chk-eq-1-label">
+              <input type="checkbox" value="1" onchange="actualizarEquiposOctagon()"> Octagon 1
+            </label>
+            <label id="chk-eq-2-label">
+              <input type="checkbox" value="2" onchange="actualizarEquiposOctagon()"> Octagon 2
+            </label>
+          </div>
+          <input type="hidden" id="input-equipo">
+
+          <label>N° de Bobina:</label>
+          <input type="number" id="input-bobina-numero" placeholder="Ej: 14">
+          <div id="bobina-estado-msg"></div>
         </div>
-        <div>
-          <label>Equipo Octagon:</label>
-          <select id="input-equipo">
-            <option value="1">Equipo 1</option>
-            <option value="2">Equipo 2</option>
-          </select>
-        </div>
-        <div>
-          <label>N° Bobina (desde Extrusión):</label>
-          <input type="text" id="input-bobina" readonly style="background:#f1f5f9; font-weight: 700; color: var(--primary);">
+
+        <!-- COLUMNA DERECHA -->
+        <div class="rm-col">
+          <h3>🔹 Mediciones</h3>
+
+          <label>Máximo (μm): <small id="sug-max" style="color:var(--text-muted); font-weight:400;"></small></label>
+          <input type="number" step="0.1" id="val-micron-max" placeholder="Ej: 21.5">
+
+          <label>Promedio (μm): <small id="sug-prom" style="color:var(--text-muted); font-weight:400;"></small></label>
+          <input type="number" step="0.1" id="val-micron-prom" placeholder="Ej: 20.0">
+
+          <label>Mínimo (μm): <small id="sug-min" style="color:var(--text-muted); font-weight:400;"></small></label>
+          <input type="number" step="0.1" id="val-micron-min" placeholder="Ej: 18.5">
+
+          <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+            <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">📐 Mediciones Físicas</h3>
+            <div class="grid-2">
+              <div><label>Ancho Total (cm):</label><input type="number" step="0.1" id="val-ancho-total" placeholder="Sugerido"></div>
+              <div><label>Ancho Fuelles (cm):</label><input type="number" step="0.1" id="val-ancho-fuelles" placeholder="Sugerido"></div>
+              <div><label>Peso/metro Lineal (gr):</label><input type="number" step="0.1" id="val-peso-metro" placeholder="Sugerido"></div>
+              <div><label>Tensión Sup. Dinaje:</label><input type="number" step="0.1" id="val-tension-sup" placeholder="Sugerido"></div>
+            </div>
+          </div>
+
+          <div id="info-objetivos-actuales" style="margin-top: 16px; font-size: 0.85rem; color: var(--primary); background: #f0f9ff; padding: 12px; border-radius: 8px; border: 1px solid #bae6fd;"></div>
+
+          <button class="btn-primary" style="width: 100%; margin-top: 16px; padding: 12px;" onclick="registrarMedida()">📤 Registrar Medida</button>
         </div>
       </div>
-
-      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-        <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">🔬 Mediciones de Micrón (μm)</h3>
-        <div class="grid-3">
-          <div><label>Micrón Mínimo:</label><input type="number" step="0.1" id="val-micron-min" placeholder="Ej: 18.5"></div>
-          <div><label>Micrón Promedio:</label><input type="number" step="0.1" id="val-micron-prom" placeholder="Ej: 20.0"></div>
-          <div><label>Micrón Máximo:</label><input type="number" step="0.1" id="val-micron-max" placeholder="Ej: 21.5"></div>
-        </div>
-      </div>
-
-      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-        <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">📐 Mediciones Físicas</h3>
-        <div class="grid-4">
-          <div><label>Ancho Total (cm):</label><input type="number" step="0.1" id="val-ancho-total" placeholder="Sugerido"></div>
-          <div><label>Ancho Fuelles (cm):</label><input type="number" step="0.1" id="val-ancho-fuelles" placeholder="Sugerido"></div>
-          <div><label>Peso/metro Lineal (gr):</label><input type="number" step="0.1" id="val-peso-metro" placeholder="Sugerido"></div>
-          <div><label>Tensión Sup. Dinaje:</label><input type="number" step="0.1" id="val-tension-sup" placeholder="Sugerido"></div>
-        </div>
-      </div>
-
-      <div id="info-objetivos-actuales" style="margin-top: 16px; font-size: 0.85rem; color: var(--primary); background: #f0f9ff; padding: 12px; border-radius: 8px; border: 1px solid #bae6fd;"></div>
-
-      <button class="btn-primary" style="width: 100%; margin-top: 16px; padding: 12px;" onclick="registrarMedida()">📤 Registrar Medida</button>
     </div>
 
     <div class="card">
@@ -822,16 +915,8 @@
     function resetearTurnoAutomatico() {
       localStorage.removeItem('turno_activo');
       const turnoAuto = obtenerTurnoAutomatico();
-      const select = document.getElementById('select-turno-manual');
-      if (select) select.value = turnoAuto.nombre;
       actualizarInfoSesion();
       alert(`🔄 Turno restablecido al automático: ${turnoAuto.nombre} [${turnoAuto.horario}]`);
-    }
-
-    function inicializarSelectorTurno() {
-      const select = document.getElementById('select-turno-manual');
-      if (!select) return;
-      select.value = obtenerTurnoActivo().nombre;
     }
 
     function solicitarLoginOctagon() {
@@ -873,9 +958,51 @@
 
     function actualizarInfoSesion() {
       const turnoActivo = obtenerTurnoActivo();
-      document.getElementById('sesion-operador').textContent = `👤 ${AppState.operadorActual || '--'}`;
-      document.getElementById('sesion-turno').textContent = `🕐 ${turnoActivo.nombre}${turnoActivo.manual ? ' ⚙' : ''}`;
-      document.getElementById('sesion-equipos').textContent = `🔬 Equipos: 1, 2`;
+      const elOp = document.getElementById('sesion-operador');
+      const elTu = document.getElementById('sesion-turno');
+      const elEq = document.getElementById('sesion-equipos');
+      if (elOp) elOp.textContent = `👤 ${AppState.operadorActual || '--'}`;
+      if (elTu) elTu.textContent = `🕐 ${turnoActivo.nombre}${turnoActivo.manual ? ' ⚙' : ''}`;
+      if (elEq) elEq.textContent = `🔬 Equipos: 1, 2`;
+    }
+
+    // ============================================================
+    // CHECKBOXES OCTAGON 1 / 2
+    // ============================================================
+    function actualizarEquiposOctagon() {
+      const checks = document.querySelectorAll('#octagon-equipos-chk input[type="checkbox"]');
+      const seleccionados = [];
+      checks.forEach(chk => {
+        const label = chk.closest('label');
+        if (chk.checked) {
+          seleccionados.push(chk.value);
+          label.classList.add('checked');
+        } else {
+          label.classList.remove('checked');
+        }
+      });
+      document.getElementById('input-equipo').value = seleccionados.join(',');
+    }
+
+    // ============================================================
+    // VERIFICAR SI BOBINA YA FUE MEDIDA
+    // ============================================================
+    function verificarBobinaYaMedida() {
+      const extId = document.getElementById('select-extrusora').value;
+      const numBobina = document.getElementById('input-bobina-numero').value.trim();
+      const msgDiv = document.getElementById('bobina-estado-msg');
+      if (!extId || !numBobina) {
+        msgDiv.innerHTML = '';
+        return false;
+      }
+      const yaMedida = AppState.historial.some(r => r.id === extId && String(r.numeroBobina) === String(numBobina));
+      if (yaMedida) {
+        msgDiv.innerHTML = `<div class="bobina-ya-medida">⚠️ La bobina N° ${numBobina} ya fue medida en esta extrusora.</div>`;
+        return true;
+      } else {
+        msgDiv.innerHTML = '';
+        return false;
+      }
     }
 
     function generarCheckboxesOperativas() {
@@ -1237,21 +1364,38 @@
       }
     }
 
+    // ============================================================
+    // AUTOCOMPLETAR + SUGERENCIAS DE FICHA
+    // ============================================================
     function autocompletarDatosMedicion() {
       const extId = document.getElementById('select-extrusora').value;
       if (!extId) return;
       const ext = AppState.extrusoras.find(e => e.id === extId);
-      const bobinasExt = AppState.bobinas.filter(b => b.extrusoraId === extId);
-      const ultimaBobina = bobinasExt.length > 0 ? bobinasExt[0] : null;
       
-      document.getElementById('input-bobina').value = ultimaBobina ? `N° ${ultimaBobina.numeroBobina} (${ultimaBobina.pesoKg}kg / ${ultimaBobina.metrosCalculados}m)` : 'Sin bobinas registradas';
-      
+      // Sugerencias en los labels de Máximo / Promedio / Mínimo
+      // No hay sugerencia de micrones en la ficha técnica, así que dejamos vacío
+      document.getElementById('sug-max').textContent = '';
+      document.getElementById('sug-prom').textContent = '';
+      document.getElementById('sug-min').textContent = '';
+
+      // Sugerencias físicas
       if (ext) {
         document.getElementById('val-ancho-total').placeholder = `Sugerido: ${ext.ancho}`;
         document.getElementById('val-ancho-fuelles').placeholder = `Sugerido: ${ext.anchoFuelles || '--'}`;
         document.getElementById('val-peso-metro').placeholder = `Sugerido: ${ext.pesoIdeal}`;
         document.getElementById('val-tension-sup').placeholder = `Sugerido: ${ext.tensionSup || '--'}`;
       }
+
+      // Sugerir siguiente N° bobina
+      const bobinasExt = AppState.bobinas.filter(b => b.extrusoraId === extId);
+      const ultimaBobina = bobinasExt.length > 0 ? bobinasExt[0] : null;
+      const inputBobina = document.getElementById('input-bobina-numero');
+      if (inputBobina && !inputBobina.value) {
+        if (ultimaBobina) {
+          inputBobina.value = ultimaBobina.numeroBobina;
+        }
+      }
+      verificarBobinaYaMedida();
     }
 
     async function capturarPantalla() {
@@ -1402,8 +1546,10 @@
     async function registrarMedida() {
       if (!AppState.operadorActual) { alert('Por favor inicie sesión primero'); solicitarLoginOctagon(); return; }
       
-      const equipo = document.getElementById('input-equipo').value;
+      const equiposStr = document.getElementById('input-equipo').value;
+      if (!equiposStr) return alert('Seleccione al menos un Octagon (1 o 2)');
       const id = document.getElementById('select-extrusora').value;
+      const numeroBobina = document.getElementById('input-bobina-numero').value.trim();
       const micronMin = document.getElementById('val-micron-min').value.trim();
       const micronProm = document.getElementById('val-micron-prom').value.trim();
       const micronMax = document.getElementById('val-micron-max').value.trim();
@@ -1411,11 +1557,9 @@
       const anchoFuelles = document.getElementById('val-ancho-fuelles').value.trim();
       const pesoMetro = document.getElementById('val-peso-metro').value.trim();
       const tensionSup = document.getElementById('val-tension-sup').value.trim();
-      const bobinaStr = document.getElementById('input-bobina').value;
-      const bobinaMatch = bobinaStr.match(/N°\s*(\d+)/);
-      const numeroBobina = bobinaMatch ? bobinaMatch[1] : 'N/A';
 
       if (!id) return alert('Seleccione extrusora');
+      if (!numeroBobina) return alert('Ingrese el N° de Bobina');
       if (micronMin === '' || micronProm === '' || micronMax === '') return alert('Ingrese los 3 valores de micrón (Mín, Prom, Máx)');
       if (anchoTotal === '' || pesoMetro === '') return alert('Ingrese Ancho Total y Peso por Metro Lineal');
 
@@ -1435,7 +1579,7 @@
       const registro = {
         timestamp: Date.now(), 
         hora: new Date().toLocaleTimeString('es-CL', {hour: '2-digit', minute:'2-digit', hour12: false}), 
-        operador: AppState.operadorActual, equipo, turno: obtenerTurnoActivo().nombre, id: ext.id, producto: ext.producto,
+        operador: AppState.operadorActual, equipo: equiposStr, turno: obtenerTurnoActivo().nombre, id: ext.id, producto: ext.producto,
         ot: extraerOTDeFicha(ext.producto), dimensiones: extraerDimensionesDeProducto(ext.producto), numeroBobina,
         micronMin: parseFloat(micronMin), micronProm: parseFloat(micronProm), micronMax: parseFloat(micronMax),
         anchoTotal: valAncho, anchoFuelles: anchoFuelles ? parseFloat(anchoFuelles) : null,
@@ -1452,7 +1596,13 @@
           renderHistorial(); 
           if (fueraDeRango) lanzarAlerta(registro); 
         }
+        // Limpiar solo los campos de medición, no el N° bobina ni extrusora
         ['val-micron-min', 'val-micron-prom', 'val-micron-max', 'val-ancho-total', 'val-ancho-fuelles', 'val-peso-metro', 'val-tension-sup'].forEach(id => document.getElementById(id).value = '');
+        
+        // Incrementar bobina automáticamente
+        const siguienteNum = parseInt(numeroBobina) + 1;
+        document.getElementById('input-bobina-numero').value = siguienteNum;
+        verificarBobinaYaMedida();
       } catch (e) {
         AppState.historial.unshift(registro); 
         localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial)); 
@@ -1484,7 +1634,10 @@
           if (fEst === "CORREGIDOS" && !r.corregido) return false;
           if (fEst === "OK" && (r.fueraDeRango || r.corregido)) return false;
           if (fBus && !r.operador?.toLowerCase().includes(fBus) && !r.producto?.toLowerCase().includes(fBus)) return false;
-          if (fEquipo !== "TODOS" && String(r.equipo) !== fEquipo) return false;
+          if (fEquipo !== "TODOS") {
+            const equiposReg = (r.equipo || '').split(',').map(s => s.trim());
+            if (!equiposReg.includes(fEquipo)) return false;
+          }
           return true;
         });
 
@@ -1606,6 +1759,9 @@
       printWindow.onload = () => { printWindow.focus(); printWindow.print(); setTimeout(() => printWindow.close(), 1000); };
     }
 
+    // ============================================================
+    // PDF OCTAGON - FORMATO EXCEL CON BORDES (VERTICAL)
+    // ============================================================
     function imprimirRegistroOctagon() {
       if (!window.jspdf) return alert('Error: Librería de PDF no cargada. Recargue la página.');
       
@@ -1659,24 +1815,24 @@
           if (!primeraPagina) doc.addPage('a4', 'landscape');
           primeraPagina = false;
 
+          // Logo reducido
           if (logoImg.complete && logoImg.naturalHeight > 0) {
             const logoW = 76;
             const logoH = (logoImg.height * logoW) / logoImg.width;
             doc.addImage(logoImg, 'PNG', 15, 10, logoW, logoH);
           }
 
+          // Títulos juntos
           doc.setFont("helvetica", "bold");
           doc.setTextColor(15, 23, 42);
-          
           doc.setFontSize(15);
           doc.text("Registro de Mediciones", 120, 18);
-          
           doc.setFontSize(20);
           doc.text(`Extrusora N° ${extId.replace('EXT-', '')}`, 120, 28);
-          
           doc.setFontSize(9);
           doc.text(`Total de Mediciones: ${mediciones.length}`, 120, 36);
 
+          // Datos cabecera compactos
           let infoY = 48;
           doc.setFontSize(8);
           doc.setFont("helvetica", "normal");
@@ -1684,49 +1840,99 @@
           doc.text(`Operador: ${AppState.operadorActual || 'N/A'}`, 15, infoY); infoY += 5;
           doc.text(`Turno: ${turnoActivo.nombre}`, 15, infoY); infoY += 5;
           doc.text(`O.T.: ${ot}`, 15, infoY); infoY += 5;
-          doc.text(`Producto: ${producto}`, 15, infoY); 
+          doc.text(`Producto: ${producto}`, 15, infoY);
 
           const lineaY = infoY + 6;
           doc.setDrawColor(15, 76, 129);
           doc.setLineWidth(0.5);
           doc.line(15, lineaY, 282, lineaY);
 
+          // ============================================================
+          // TARJETAS TIPO EXCEL CON BORDES
+          // ============================================================
           let y = lineaY + 8;
-          
-          mediciones.forEach(reg => {
-            if (y > 195) {
+          const cardW = 267; // ancho útil A4 landscape
+          const cardHalfW = cardW / 2;
+          const rowH = 6;
+          const rowsPerCard = 6;
+          const cardH = rowH * rowsPerCard;
+          const labelW = 30; // ancho de la columna de etiquetas
+
+          mediciones.forEach((reg, idx) => {
+            if (y + cardH > 200) {
               doc.addPage('a4', 'landscape');
-              y = 20;
+              y = 15;
             }
-            
-            doc.setFontSize(8);
-            doc.setFont("helvetica", "normal");
-            doc.setTextColor(15, 23, 42);
-            
-            let x = 15;
-            doc.text(`${reg.hora}`, x, y); x += 22;
-            doc.text(`Eq: ${reg.equipo || '-'}`, x, y); x += 28;
-            doc.text(`Mín: ${reg.micronMin ?? '-'}`, x, y); x += 32;
-            doc.text(`Prom: ${reg.micronProm ?? '-'}`, x, y); x += 32;
-            doc.text(`Máx: ${reg.micronMax ?? '-'}`, x, y); x += 32;
-            doc.text(`Ancho: ${reg.anchoTotal ? reg.anchoTotal + 'cm' : '-'}`, x, y); x += 42;
-            doc.text(`Peso: ${reg.pesoMetro ? reg.pesoMetro + 'gr' : '-'}`, x, y);
-            
+
+            // Color de fondo según estado
+            let bgColor = [240, 253, 244]; // verde claro (OK)
+            let estadoColor = [5, 150, 105];
+            let estadoTexto = "OK";
             if (reg.fueraDeRango) {
-              doc.setTextColor(220, 38, 38);
-              doc.setFont("helvetica", "bold");
-              doc.text("FUERA", 282, y, { align: "right" });
+              bgColor = [254, 242, 242]; // rojo claro
+              estadoColor = [220, 38, 38];
+              estadoTexto = "FUERA DE RANGO";
             } else if (reg.corregido) {
-              doc.setTextColor(5, 150, 105);
-              doc.setFont("helvetica", "bold");
-              doc.text("CORREGIDO", 282, y, { align: "right" });
-            } else {
-              doc.setTextColor(5, 150, 105);
-              doc.setFont("helvetica", "bold");
-              doc.text("OK", 282, y, { align: "right" });
+              bgColor = [240, 253, 244];
+              estadoColor = [5, 150, 105];
+              estadoTexto = "CORREGIDO";
             }
-            
-            y += 6;
+
+            // Fondo de la tarjeta
+            doc.setFillColor(bgColor[0], bgColor[1], bgColor[2]);
+            doc.rect(15, y, cardW, cardH, 'F');
+
+            // Borde exterior de la tarjeta
+            doc.setDrawColor(15, 23, 42);
+            doc.setLineWidth(0.4);
+            doc.rect(15, y, cardW, cardH, 'S');
+
+            // Línea divisoria vertical central
+            doc.setDrawColor(15, 23, 42);
+            doc.setLineWidth(0.3);
+            doc.line(15 + cardHalfW, y, 15 + cardHalfW, y + cardH);
+
+            // Líneas horizontales internas (6 filas)
+            doc.setDrawColor(180, 180, 180);
+            doc.setLineWidth(0.2);
+            for (let i = 1; i < rowsPerCard; i++) {
+              doc.line(15, y + i * rowH, 15 + cardW, y + i * rowH);
+            }
+
+            // Línea vertical separadora etiqueta/valor
+            doc.setDrawColor(180, 180, 180);
+            doc.line(15 + labelW, y, 15 + labelW, y + cardH);
+            doc.line(15 + cardHalfW + labelW, y, 15 + cardHalfW + labelW, y + cardH);
+
+            // Función auxiliar para escribir fila
+            const writeRow = (rowIndex, label, value, colOffset, valueColor = [15, 23, 42], valueBold = false) => {
+              const rowY = y + rowIndex * rowH + rowH - 1.8;
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(8);
+              doc.setTextColor(71, 85, 105);
+              doc.text(label, colOffset + 2, rowY);
+              doc.setFont("helvetica", valueBold ? "bold" : "normal");
+              doc.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
+              doc.text(String(value), colOffset + labelW + 2, rowY);
+            };
+
+            // COLUMNA IZQUIERDA
+            writeRow(0, "N° Bobina:", reg.numeroBobina || 'N/A', 15, [15, 76, 129], true);
+            writeRow(1, "Hora:", reg.hora || '-', 15);
+            writeRow(2, "Equipo:", `Octagon ${reg.equipo || '-'}`, 15);
+            writeRow(3, "Máximo:", reg.micronMax != null ? `${reg.micronMax} μm` : '-', 15);
+            writeRow(4, "Promedio:", reg.micronProm != null ? `${reg.micronProm} μm` : '-', 15);
+            writeRow(5, "Mínimo:", reg.micronMin != null ? `${reg.micronMin} μm` : '-', 15);
+
+            // COLUMNA DERECHA
+            writeRow(0, "Estado:", estadoTexto, 15 + cardHalfW, estadoColor, true);
+            writeRow(1, "Ancho:", reg.anchoTotal ? `${reg.anchoTotal} cm` : '-', 15 + cardHalfW);
+            writeRow(2, "Peso/m:", reg.pesoMetro ? `${reg.pesoMetro} gr` : '-', 15 + cardHalfW);
+            writeRow(3, "Fuelles:", reg.anchoFuelles ? `${reg.anchoFuelles} cm` : '-', 15 + cardHalfW);
+            writeRow(4, "Tensión Sup:", reg.tensionSup ? `${reg.tensionSup} dinas` : '-', 15 + cardHalfW);
+            writeRow(5, "OT:", reg.ot || extraerOTDeFicha(reg.producto) || '-', 15 + cardHalfW);
+
+            y += cardH + 3;
           });
         });
 
@@ -2142,7 +2348,10 @@
           AppState.bobinas = nuevasBobinas; 
           localStorage.setItem('bobinas_local', JSON.stringify(AppState.bobinas));
           if (AppState.extrusoraActualPanel) renderBobinasExtrusora();
-          if (AppState.vistaActual === 'octagon') autocompletarDatosMedicion();
+          if (AppState.vistaActual === 'octagon') {
+            autocompletarDatosMedicion();
+            verificarBobinaYaMedida();
+          }
         });
 
         const qScraps = query(collection(window.db, "scraps"), orderBy("timestamp", "desc"));
@@ -2172,10 +2381,14 @@
     window.onload = () => {
       actualizarSelect();
       cargarEstadoOperativas();
-      inicializarSelectorTurno();
       actualizarInfoSesion();
       renderBotonesExtrusoras();
       restaurarVistaAlIniciar();
+      // Listener para verificar bobina ya medida al escribir
+      const inputBobina = document.getElementById('input-bobina-numero');
+      if (inputBobina) {
+        inputBobina.addEventListener('input', verificarBobinaYaMedida);
+      }
       setTimeout(iniciarSincronizacionFirebase, 800);
     };
   </script>
