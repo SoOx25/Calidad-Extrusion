@@ -26,7 +26,6 @@
       measurementId: "G-GHFYQBLLJ9"
     };
 
-    // Promesa para garantizar que Firebase esté listo antes de usarlo
     window.firebaseReady = new Promise((resolve, reject) => {
       try {
         const app = initializeApp(firebaseConfig);
@@ -737,9 +736,6 @@
   <div id="print-area"></div>
 
   <script>
-    // ============================================================
-    // 1. CONFIGURACIÓN Y ESTADO GLOBAL
-    // ============================================================
     const AppState = {
       vistaActual: 'home',
       extrusoras: JSON.parse(localStorage.getItem('extrusoras')) || [
@@ -762,9 +758,6 @@
     const GRUPO1 = [2, 7, 8, 9, 10];
     const GRUPO2 = [11, 12, 13, 14, 15];
 
-    // ============================================================
-    // 2. HELPERS Y UTILIDADES
-    // ============================================================
     function extraerOTDeFicha(producto) {
       if (!producto) return 'Sin OT';
       const match = producto.match(/OT:\s*(\d+)/);
@@ -794,9 +787,6 @@
       localStorage.setItem('vista_actual', vista);
     }
 
-    // ============================================================
-    // 3. GESTIÓN DE TURNOS Y SESIÓN
-    // ============================================================
     function obtenerTurnoAutomatico() {
       const ahora = new Date();
       const diaSemana = ahora.getDay(); 
@@ -888,9 +878,6 @@
       document.getElementById('sesion-equipos').textContent = `🔬 Equipos: 1, 2`;
     }
 
-    // ============================================================
-    // 4. GESTIÓN DE EXTRUSORAS OPERATIVAS
-    // ============================================================
     function generarCheckboxesOperativas() {
       const g1 = document.getElementById('chk-grid-g1');
       const g2 = document.getElementById('chk-grid-g2');
@@ -982,9 +969,6 @@
       });
     }
 
-    // ============================================================
-    // 5. PANEL DE EXTRUSORA (BOBINAS Y SCRAP)
-    // ============================================================
     function abrirPanelExtrusora(extId) {
       AppState.extrusoraActualPanel = extId;
       const ext = AppState.extrusoras.find(e => e.id === extId);
@@ -1253,9 +1237,6 @@
       }
     }
 
-    // ============================================================
-    // 6. CAPTURA DE PANTALLA Y DESVÍOS
-    // ============================================================
     function autocompletarDatosMedicion() {
       const extId = document.getElementById('select-extrusora').value;
       if (!extId) return;
@@ -1418,9 +1399,6 @@
       }
     }
 
-    // ============================================================
-    // 7. REGISTRO DE MEDIDAS Y HISTORIAL
-    // ============================================================
     async function registrarMedida() {
       if (!AppState.operadorActual) { alert('Por favor inicie sesión primero'); solicitarLoginOctagon(); return; }
       
@@ -1498,7 +1476,6 @@
       const fExtExt = document.getElementById('filtro-extrusora-ext')?.value || "TODAS";
       const fEstExt = document.getElementById('filtro-estado-ext')?.value || "TODOS";
 
-      // Render Octagon
       const tbodyOct = document.getElementById('tabla-log-octagon');
       if (tbodyOct) {
         const datosFiltradosOct = AppState.historial.filter(r => {
@@ -1536,7 +1513,6 @@
             }).join('');
       }
 
-      // Render Extrusión
       const tbodyExt = document.getElementById('tabla-log-extrusion');
       if (tbodyExt) {
         const datosFiltradosExt = AppState.historial.filter(r => {
@@ -1609,9 +1585,6 @@
       renderHistorial();
     }
 
-    // ============================================================
-    // 8. IMPRESIÓN Y EXPORTACIÓN
-    // ============================================================
     function imprimirEtiquetaBobinaById(id) {
       const b = AppState.bobinas.find(x => x.id === id);
       if (!b) return alert('Bobina no encontrada');
@@ -1682,104 +1655,77 @@
           const ext = AppState.extrusoras.find(e => e.id === extId);
           const producto = ext ? extraerDimensionesDeProducto(ext.producto) : '';
           const ot = ext ? extraerOTDeFicha(ext.producto) : '';
-          const bobinasUnicas = [...new Set(mediciones.map(m => m.numeroBobina).filter(Boolean))].join(', ') || 'N/A';
 
           if (!primeraPagina) doc.addPage('a4', 'landscape');
           primeraPagina = false;
 
           if (logoImg.complete && logoImg.naturalHeight > 0) {
-            const logoW = 95;
+            const logoW = 76;
             const logoH = (logoImg.height * logoW) / logoImg.width;
             doc.addImage(logoImg, 'PNG', 15, 10, logoW, logoH);
           }
 
           doc.setFont("helvetica", "bold");
           doc.setTextColor(15, 23, 42);
+          
           doc.setFontSize(15);
-          doc.text("Registro de Mediciones", 120, 20);
-          doc.setFontSize(22);
-          doc.text(`Extrusora N° ${extId.replace('EXT-', '')}`, 120, 35);
+          doc.text("Registro de Mediciones", 120, 18);
+          
+          doc.setFontSize(20);
+          doc.text(`Extrusora N° ${extId.replace('EXT-', '')}`, 120, 28);
+          
           doc.setFontSize(9);
-          doc.text(`Total de Mediciones: ${mediciones.length}`, 120, 45);
+          doc.text(`Total de Mediciones: ${mediciones.length}`, 120, 36);
 
-          let infoY = 70;
-          doc.setFontSize(10);
+          let infoY = 48;
+          doc.setFontSize(8);
           doc.setFont("helvetica", "normal");
-          doc.text(`Fecha: ${hoy}`, 15, infoY); infoY += 6;
-          doc.text(`Operador: ${AppState.operadorActual || 'N/A'}`, 15, infoY); infoY += 6;
-          doc.text(`Turno: ${turnoActivo.nombre}`, 15, infoY); infoY += 6;
-          doc.text(`O.T.: ${ot}`, 15, infoY); infoY += 6;
-          doc.text(`Producto: ${producto}`, 15, infoY); infoY += 6;
-          doc.text(`N° Bobina: ${bobinasUnicas}`, 15, infoY); 
+          doc.text(`Fecha: ${hoy}`, 15, infoY); infoY += 5;
+          doc.text(`Operador: ${AppState.operadorActual || 'N/A'}`, 15, infoY); infoY += 5;
+          doc.text(`Turno: ${turnoActivo.nombre}`, 15, infoY); infoY += 5;
+          doc.text(`O.T.: ${ot}`, 15, infoY); infoY += 5;
+          doc.text(`Producto: ${producto}`, 15, infoY); 
 
-          const lineaY = infoY + 8;
+          const lineaY = infoY + 6;
           doc.setDrawColor(15, 76, 129);
           doc.setLineWidth(0.5);
           doc.line(15, lineaY, 282, lineaY);
 
-          let y = lineaY + 10;
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(8);
-          doc.setFillColor(248, 250, 252);
-          doc.rect(15, y - 4, 267, 7, 'F');
-          doc.text("HORA", 15, y);
-          doc.text("EQUIPO", 40, y);
-          doc.text("MÍN.", 70, y);
-          doc.text("PROM.", 100, y);
-          doc.text("MÁX.", 130, y);
-          doc.text("ANCHO", 160, y);
-          doc.text("PESO", 190, y);
-          doc.text("ESTADO", 270, y, { align: "right" });
-          y += 6;
-
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(8);
+          let y = lineaY + 8;
           
           mediciones.forEach(reg => {
-            if (y > 190) {
+            if (y > 195) {
               doc.addPage('a4', 'landscape');
               y = 20;
-              doc.setDrawColor(15, 76, 129);
-              doc.line(15, y, 282, y);
-              doc.setFont("helvetica", "bold");
-              doc.setFillColor(248, 250, 252);
-              doc.rect(15, y + 2, 267, 7, 'F');
-              doc.text("HORA", 15, y + 6);
-              doc.text("EQUIPO", 40, y + 6);
-              doc.text("MÍN.", 70, y + 6);
-              doc.text("PROM.", 100, y + 6);
-              doc.text("MÁX.", 130, y + 6);
-              doc.text("ANCHO", 160, y + 6);
-              doc.text("PESO", 190, y + 6);
-              doc.text("ESTADO", 270, y + 6, { align: "right" });
-              y += 12;
-              doc.setFont("helvetica", "normal");
             }
             
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "normal");
             doc.setTextColor(15, 23, 42);
-            doc.text(String(reg.hora), 15, y);
-            doc.text(String(reg.equipo || '-'), 40, y);
-            doc.text(reg.micronMin ? String(reg.micronMin) : '-', 70, y);
-            doc.text(reg.micronProm ? String(reg.micronProm) : '-', 100, y);
-            doc.text(reg.micronMax ? String(reg.micronMax) : '-', 130, y);
-            doc.text(reg.anchoTotal ? `${reg.anchoTotal} cm` : '-', 160, y);
-            doc.text(reg.pesoMetro ? `${reg.pesoMetro} gr` : '-', 190, y);
-
+            
+            let x = 15;
+            doc.text(`${reg.hora}`, x, y); x += 22;
+            doc.text(`Eq: ${reg.equipo || '-'}`, x, y); x += 28;
+            doc.text(`Mín: ${reg.micronMin ?? '-'}`, x, y); x += 32;
+            doc.text(`Prom: ${reg.micronProm ?? '-'}`, x, y); x += 32;
+            doc.text(`Máx: ${reg.micronMax ?? '-'}`, x, y); x += 32;
+            doc.text(`Ancho: ${reg.anchoTotal ? reg.anchoTotal + 'cm' : '-'}`, x, y); x += 42;
+            doc.text(`Peso: ${reg.pesoMetro ? reg.pesoMetro + 'gr' : '-'}`, x, y);
+            
             if (reg.fueraDeRango) {
               doc.setTextColor(220, 38, 38);
               doc.setFont("helvetica", "bold");
-              doc.text("FUERA", 270, y, { align: "right" });
-              doc.setFont("helvetica", "normal");
+              doc.text("FUERA", 282, y, { align: "right" });
             } else if (reg.corregido) {
               doc.setTextColor(5, 150, 105);
               doc.setFont("helvetica", "bold");
-              doc.text("CORREGIDO", 270, y, { align: "right" });
-              doc.setFont("helvetica", "normal");
+              doc.text("CORREGIDO", 282, y, { align: "right" });
             } else {
               doc.setTextColor(5, 150, 105);
-              doc.text("OK", 270, y, { align: "right" });
+              doc.setFont("helvetica", "bold");
+              doc.text("OK", 282, y, { align: "right" });
             }
-            doc.setTextColor(15, 23, 42);
+            
             y += 6;
           });
         });
@@ -1871,25 +1817,6 @@
       doc.save(`Produccion_Extrusion_${hoy.replace(/\//g, '-')}.pdf`);
     }
 
-    function exportarCSV() {
-      if (AppState.historial.length === 0) return alert('No hay datos');
-      let csv = "Hora,Equipo,Extrusora,Producto,OT,MicronMin,MicronProm,MicronMax,AnchoTotal,PesoMetro,Estado\n";
-      AppState.historial.forEach(r => {
-        const est = r.fueraDeRango ? (r.alertaTipo || "FUERA") : (r.corregido ? "CORREGIDO" : "OK");
-        const producto = r.dimensiones || extraerDimensionesDeProducto(r.producto) || '';
-        const ot = r.ot || extraerOTDeFicha(r.producto) || '';
-        csv += `"${r.hora}","${r.equipo || '-'}","${r.id}","${producto}","${ot}",${r.micronMin||'-'},${r.micronProm||'-'},${r.micronMax||'-'},${r.anchoTotal||'-'},${r.pesoMetro||'-'},"${est}"\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `Reporte_Octagon_${new Date().toISOString().slice(0,10)}.csv`;
-      a.click();
-    }
-
-    // ============================================================
-    // 9. CAMBIO DE TURNO Y UTILIDADES DE UI
-    // ============================================================
     async function solicitarCambioTurnoOctagon() {
       const medicionesHoy = AppState.historial.filter(r => new Date(r.timestamp).toLocaleDateString('es-CL') === new Date().toLocaleDateString('es-CL'));
       if (medicionesHoy.length > 0) {
@@ -2007,9 +1934,6 @@
       if (fs) fs.style.display = 'none';
     }
 
-    // ============================================================
-    // 10. FICHAS TÉCNICAS
-    // ============================================================
     function actualizarRangos() {
       const anchoInput = document.getElementById('cfg-ancho-prod').value;
       if (anchoInput && document.activeElement.id === 'cfg-ancho-prod') document.getElementById('cfg-ancho').value = parseFloat(anchoInput).toFixed(1);
@@ -2127,9 +2051,22 @@
       } catch (e) { alert('Error'); }
     }
 
-    // ============================================================
-    // 11. SINCRONIZACIÓN FIREBASE
-    // ============================================================
+    function exportarCSV() {
+      if (AppState.historial.length === 0) return alert('No hay datos');
+      let csv = "Hora,Equipo,Extrusora,Producto,OT,MicronMin,MicronProm,MicronMax,AnchoTotal,PesoMetro,Estado\n";
+      AppState.historial.forEach(r => {
+        const est = r.fueraDeRango ? (r.alertaTipo || "FUERA") : (r.corregido ? "CORREGIDO" : "OK");
+        const producto = r.dimensiones || extraerDimensionesDeProducto(r.producto) || '';
+        const ot = r.ot || extraerOTDeFicha(r.producto) || '';
+        csv += `"${r.hora}","${r.equipo || '-'}","${r.id}","${producto}","${ot}",${r.micronMin||'-'},${r.micronProm||'-'},${r.micronMax||'-'},${r.anchoTotal||'-'},${r.pesoMetro||'-'},"${est}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Reporte_Octagon_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
     function lanzarAlerta(reg) {
       if (AppState.vistaActual === 'extrusion' && AppState.sonidoHabilitado) {
         try {
@@ -2232,9 +2169,6 @@
       }
     }
 
-    // ============================================================
-    // 12. INICIALIZACIÓN
-    // ============================================================
     window.onload = () => {
       actualizarSelect();
       cargarEstadoOperativas();
