@@ -87,7 +87,6 @@
     .header-title { font-size: 1.25rem; font-weight: 700; color: var(--primary); letter-spacing: -0.025em; }
     .logo-glow { max-height: 48px; width: auto; }
 
-    /* INFO SESIÓN COMPACTA */
     .sesion-info {
       display: flex;
       gap: 12px;
@@ -161,10 +160,8 @@
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; }
-    .grid-5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
 
     .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border-color); }
-    .horario-tag { color: var(--text-muted); font-weight: 500; font-size: 0.8rem; }
 
     .operativas-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
     .operativas-header h2 { margin: 0; border: none; padding: 0; font-size: 1rem; }
@@ -181,7 +178,6 @@
     .checkbox-label:hover { background: #f1f5f9; }
     .checkbox-label input { width: auto; margin: 0; cursor: pointer; accent-color: var(--primary); }
 
-    /* EXTRUSORAS */
     .produccion-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
     .grupos-extrusoras { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 12px; }
     .grupo-extrusoras-box { background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); }
@@ -200,7 +196,6 @@
     .extrusora-btn.activa .ext-ot { color: var(--success-hover); }
     .extrusora-btn.inoperativa .ext-ot { color: var(--danger-hover); }
 
-    /* TABS */
     .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
     .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text-secondary); font-weight: 600; font-size: 0.9rem; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; font-family: var(--font-main); }
     .tab-btn:hover { color: var(--text-primary); background: #f8fafc; }
@@ -217,7 +212,6 @@
     .scrap-calc .label { font-size: 0.85rem; font-weight: 600; color: var(--danger-hover); text-transform: uppercase; }
     .scrap-calc .value { font-size: 1.5rem; font-weight: 800; color: var(--danger); margin-top: 4px; }
 
-    /* BANNER MUESTRAS */
     #banner-muestras-pendientes {
       display: none;
       background: linear-gradient(135deg, #fef3c7, #fde68a);
@@ -253,13 +247,7 @@
       color: #1e40af;
       border: 1px solid #93c5fd;
     }
-    .equipo-badge.inactivo {
-      background: #fee2e2;
-      color: #991b1b;
-      border-color: #fca5a5;
-    }
 
-    /* CAPTURAS DE PANTALLA */
     .captura-area {
       background: #f8fafc;
       border: 2px dashed var(--border-color);
@@ -294,7 +282,6 @@
       font-style: italic;
     }
 
-    /* MODAL OPERADOR */
     .modal-operador {
       display: none;
       position: fixed;
@@ -321,7 +308,6 @@
       font-size: 1.25rem;
     }
 
-    /* MODAL CAPTURA GRANDE */
     .modal-captura-img {
       max-width: 100%;
       max-height: 75vh;
@@ -329,12 +315,57 @@
       border: 2px solid var(--border-color);
     }
 
+    .turno-selector-card {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border: 1px solid #93c5fd;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .turno-selector-card .label {
+      margin: 0;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .turno-selector-card select {
+      flex: 1;
+      min-width: 180px;
+      margin: 0;
+      padding: 8px 12px;
+      font-weight: 700;
+      background: white;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .turno-selector-card .btn-reset {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .turno-selector-card .btn-reset:hover {
+      background: #f1f5f9;
+      color: var(--text-primary);
+    }
+
     #print-area { display: none; }
   </style>
 </head>
 <body>
 
-  <!-- MODAL OPERADOR (solo al entrar a Octagon) -->
+  <!-- MODAL OPERADOR -->
   <div class="modal-operador" id="modal-operador">
     <div class="modal-operador-content">
       <h2>👤 Bienvenido a Octagon</h2>
@@ -344,7 +375,7 @@
     </div>
   </div>
 
-  <!-- MODAL CAPTURA GRANDE -->
+  <!-- MODAL CAPTURA -->
   <div class="modal-overlay" id="modal-captura">
     <div class="modal-content" style="max-width: 900px;">
       <div class="modal-header">
@@ -410,15 +441,25 @@
       </div>
     </div>
     <button class="btn-volver" onclick="cambiarVista('home')">⬅ Volver al Menú Principal</button>
+
+    <div class="turno-selector-card">
+      <div class="label">🕐 Turno Activo:</div>
+      <select id="select-turno-manual" onchange="guardarTurnoActivo()">
+        <option value="Día">Día [07:00 a 14:30]</option>
+        <option value="Tarde">Tarde [14:30 a 22:00]</option>
+        <option value="Noche">Noche [22:00 a 07:00]</option>
+        <option value="Especial">Especial [Horario Especial]</option>
+      </select>
+      <button class="btn-reset" onclick="resetearTurnoAutomatico()">🔄 Auto (según hora)</button>
+    </div>
+
     <div id="banner-alertas-medio">🚨 ¡ATENCIÓN! HAY <span id="m-alertas-count">0</span> ALERTAS ACTIVAS PENDIENTES DE CORRECCIÓN</div>
 
-    <!-- BANNER MUESTRAS PENDIENTES -->
     <div id="banner-muestras-pendientes">
       <h3>📦 MUESTRAS DISPONIBLES PARA RETIRO</h3>
       <div id="lista-muestras-pendientes" class="muestras-lista"></div>
     </div>
 
-    <!-- REGISTRO DE MEDICIÓN (NUEVO FORMULARIO) -->
     <div class="card">
       <h2>📏 Registrar Medida de Calidad</h2>
       
@@ -452,22 +493,10 @@
       <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
         <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">📐 Mediciones Físicas</h3>
         <div class="grid-4">
-          <div>
-            <label>Ancho Total (cm):</label>
-            <input type="number" step="0.1" id="val-ancho-total" placeholder="Sugerido">
-          </div>
-          <div>
-            <label>Ancho Fuelles (cm):</label>
-            <input type="number" step="0.1" id="val-ancho-fuelles" placeholder="Sugerido">
-          </div>
-          <div>
-            <label>Peso/metro Lineal (gr):</label>
-            <input type="number" step="0.1" id="val-peso-metro" placeholder="Sugerido">
-          </div>
-          <div>
-            <label>Tensión Sup. Dinaje:</label>
-            <input type="number" step="0.1" id="val-tension-sup" placeholder="Sugerido">
-          </div>
+          <div><label>Ancho Total (cm):</label><input type="number" step="0.1" id="val-ancho-total" placeholder="Sugerido"></div>
+          <div><label>Ancho Fuelles (cm):</label><input type="number" step="0.1" id="val-ancho-fuelles" placeholder="Sugerido"></div>
+          <div><label>Peso/metro Lineal (gr):</label><input type="number" step="0.1" id="val-peso-metro" placeholder="Sugerido"></div>
+          <div><label>Tensión Sup. Dinaje:</label><input type="number" step="0.1" id="val-tension-sup" placeholder="Sugerido"></div>
         </div>
       </div>
 
@@ -707,7 +736,7 @@
     </div>
   </div>
 
-  <!-- MODAL: DESVÍOS CON CAPTURA DE PANTALLA -->
+  <!-- MODAL: DESVÍOS -->
   <div class="modal-overlay" id="modal-desvios">
     <div class="modal-content" style="border-top: 4px solid var(--danger); max-width: 750px;">
       <div class="modal-header">
@@ -744,9 +773,7 @@
             <div id="captura-preview-container" style="display:none;">
               <img id="captura-preview" class="captura-preview" alt="Captura">
             </div>
-            <div class="captura-hint" id="captura-hint">
-              💡 Haga clic en "Capturar Pantalla" para seleccionar una ventana/aplicación de su computador, o use Ctrl+V después de hacer una captura.
-            </div>
+            <div class="captura-hint" id="captura-hint">💡 Haga clic en "Capturar Pantalla" para seleccionar una ventana/aplicación, o use Ctrl+V.</div>
           </div>
         </div>
 
@@ -822,77 +849,37 @@
     const GRUPO1 = [2, 7, 8, 9, 10];
     const GRUPO2 = [11, 12, 13, 14, 15];
 
-    // --- OPERADOR: LOGIN SOLO AL ENTRAR A OCTAGON ---
-    function solicitarLoginOctagon() {
-      if (!operadorActual) {
-        document.getElementById('modal-operador').style.display = 'flex';
-        setTimeout(() => document.getElementById('input-nombre-operador').focus(), 100);
-        return false;
-      }
-      return true;
+    // ============================================================
+    // PERSISTENCIA DE VISTA ACTIVA
+    // ============================================================
+    function guardarVistaActual(vista) {
+      localStorage.setItem('vista_actual', vista);
     }
 
-    function confirmarOperador() {
-      const nombre = document.getElementById('input-nombre-operador').value.trim();
-      if (!nombre) {
-        alert('Por favor ingrese su nombre');
-        return;
-      }
-      operadorActual = nombre;
-      sessionStorage.setItem('operador_actual', nombre);
-      document.getElementById('modal-operador').style.display = 'none';
-      actualizarInfoSesion();
-    }
-
-    function cerrarSesionOperador() {
-      if (confirm('¿Desea cerrar la sesión del operador actual?')) {
-        sessionStorage.removeItem('operador_actual');
-        operadorActual = '';
-        document.getElementById('input-nombre-operador').value = '';
-        cambiarVista('home');
+    function restaurarVistaAlIniciar() {
+      const vistaGuardada = localStorage.getItem('vista_actual');
+      if (vistaGuardada && vistaGuardada !== 'home') {
+        if (vistaGuardada === 'octagon' && !operadorActual) {
+          document.getElementById('modal-operador').style.display = 'flex';
+          sessionStorage.setItem('vista_pendiente', 'octagon');
+          return;
+        }
+        vistaActual = vistaGuardada;
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById('view-' + vistaGuardada);
+        if (target) target.classList.add('active');
+        if (vistaGuardada === 'extrusion') {
+          setTimeout(() => { renderBotonesExtrusoras(); renderMuestrasPendientes(); }, 100);
+        }
+        if (vistaGuardada === 'octagon') {
+          setTimeout(() => { actualizarInfoSesion(); renderMuestrasPendientes(); autocompletarDatosMedicion(); }, 100);
+        }
       }
     }
 
-    function actualizarInfoSesion() {
-      const turnoAuto = obtenerTurnoAutomatico();
-      const estadoEquipos = JSON.parse(localStorage.getItem('estado_equipos_medicion')) || {};
-      const eq1Op = estadoEquipos.eq1Operativo ? '1' : '';
-      const eq2Op = estadoEquipos.eq2Operativo ? '2' : '';
-      const equiposActivos = [eq1Op, eq2Op].filter(e => e).join(', ') || 'Ninguno';
-
-      document.getElementById('sesion-operador').textContent = `👤 ${operadorActual || '--'}`;
-      document.getElementById('sesion-turno').textContent = `🕐 ${turnoAuto.nombre}`;
-      document.getElementById('sesion-equipos').textContent = `🔬 Equipos: ${equiposActivos}`;
-    }
-
-    // --- HELPER: EXTRAER OT DE FICHA ---
-    function extraerOTDeFicha(producto) {
-      if (!producto) return 'Sin OT';
-      const match = producto.match(/OT:\s*(\d+)/);
-      return match ? match[1] : 'Sin OT';
-    }
-
-    function extraerDimensionesDeProducto(producto) {
-      if (!producto) return '';
-      const match = producto.match(/^(\d+(?:\.\d+)?x\d+(?:\.\d+)?)/);
-      return match ? match[1] : '';
-    }
-
-    // --- CONTADOR CORRELATIVO ---
-    function obtenerSiguienteNumeroBobina(extId, ot) {
-      const contadores = JSON.parse(localStorage.getItem('contador_bobinas_ot')) || {};
-      const actual = contadores[extId];
-      if (!actual || actual.ot !== ot) return 1;
-      return actual.ultimo + 1;
-    }
-
-    function actualizarContadorBobina(extId, ot, numero) {
-      const contadores = JSON.parse(localStorage.getItem('contador_bobinas_ot')) || {};
-      contadores[extId] = { ot, ultimo: parseInt(numero) };
-      localStorage.setItem('contador_bobinas_ot', JSON.stringify(contadores));
-    }
-
-    // --- TURNOS ---
+    // ============================================================
+    // PERSISTENCIA DE TURNO ACTIVO
+    // ============================================================
     function obtenerTurnoAutomatico() {
       const ahora = new Date();
       const diaSemana = ahora.getDay(); 
@@ -909,33 +896,124 @@
       return { nombre: 'Especial', horario: 'Horario Especial' };
     }
 
-    // --- EQUIPOS DE MEDICIÓN (SOLO OPERATIVIDAD) ---
-    function toggleEditarEquipos(editing) {
-      // Ya no se usa directamente, se mantiene por compatibilidad
+    function obtenerTurnoActivo() {
+      const turnoGuardado = localStorage.getItem('turno_activo');
+      if (turnoGuardado) {
+        const horarios = { 'Día': '07:00 a 14:30', 'Tarde': '14:30 a 22:00', 'Noche': '22:00 a 07:00', 'Especial': 'Horario Especial' };
+        return { nombre: turnoGuardado, horario: horarios[turnoGuardado] || 'Manual', manual: true };
+      }
+      return { ...obtenerTurnoAutomatico(), manual: false };
     }
 
-    function guardarEstadoEquipos() {
-      // Simplificado: solo operatividad
-    }
-
-    function cargarEstadoEquipos() {
+    function guardarTurnoActivo() {
+      const select = document.getElementById('select-turno-manual');
+      if (!select) return;
+      localStorage.setItem('turno_activo', select.value);
       actualizarInfoSesion();
     }
 
-    // --- EXTRUSORAS OPERATIVAS ---
+    function resetearTurnoAutomatico() {
+      localStorage.removeItem('turno_activo');
+      const turnoAuto = obtenerTurnoAutomatico();
+      const select = document.getElementById('select-turno-manual');
+      if (select) select.value = turnoAuto.nombre;
+      actualizarInfoSesion();
+      alert(`🔄 Turno restablecido al automático: ${turnoAuto.nombre} [${turnoAuto.horario}]`);
+    }
+
+    function inicializarSelectorTurno() {
+      const select = document.getElementById('select-turno-manual');
+      if (!select) return;
+      select.value = obtenerTurnoActivo().nombre;
+    }
+
+    // ============================================================
+    // OPERADOR
+    // ============================================================
+    function solicitarLoginOctagon() {
+      if (!operadorActual) {
+        document.getElementById('modal-operador').style.display = 'flex';
+        setTimeout(() => document.getElementById('input-nombre-operador').focus(), 100);
+        return false;
+      }
+      return true;
+    }
+
+    function confirmarOperador() {
+      const nombre = document.getElementById('input-nombre-operador').value.trim();
+      if (!nombre) { alert('Por favor ingrese su nombre'); return; }
+      operadorActual = nombre;
+      sessionStorage.setItem('operador_actual', nombre);
+      document.getElementById('modal-operador').style.display = 'none';
+      actualizarInfoSesion();
+
+      const vistaPendiente = sessionStorage.getItem('vista_pendiente');
+      if (vistaPendiente) {
+        sessionStorage.removeItem('vista_pendiente');
+        vistaActual = vistaPendiente;
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById('view-' + vistaPendiente);
+        if (target) target.classList.add('active');
+        if (vistaPendiente === 'octagon') { renderMuestrasPendientes(); autocompletarDatosMedicion(); }
+      }
+    }
+
+    function cerrarSesionOperador() {
+      if (confirm('¿Desea cerrar la sesión del operador actual?')) {
+        sessionStorage.removeItem('operador_actual');
+        operadorActual = '';
+        document.getElementById('input-nombre-operador').value = '';
+        cambiarVista('home');
+      }
+    }
+
+    function actualizarInfoSesion() {
+      const turnoActivo = obtenerTurnoActivo();
+      document.getElementById('sesion-operador').textContent = `👤 ${operadorActual || '--'}`;
+      document.getElementById('sesion-turno').textContent = `🕐 ${turnoActivo.nombre}${turnoActivo.manual ? ' ⚙' : ''}`;
+      document.getElementById('sesion-equipos').textContent = `🔬 Equipos: 1, 2`;
+    }
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function extraerOTDeFicha(producto) {
+      if (!producto) return 'Sin OT';
+      const match = producto.match(/OT:\s*(\d+)/);
+      return match ? match[1] : 'Sin OT';
+    }
+
+    function extraerDimensionesDeProducto(producto) {
+      if (!producto) return '';
+      const match = producto.match(/^(\d+(?:\.\d+)?x\d+(?:\.\d+)?)/);
+      return match ? match[1] : '';
+    }
+
+    function obtenerSiguienteNumeroBobina(extId, ot) {
+      const contadores = JSON.parse(localStorage.getItem('contador_bobinas_ot')) || {};
+      const actual = contadores[extId];
+      if (!actual || actual.ot !== ot) return 1;
+      return actual.ultimo + 1;
+    }
+
+    function actualizarContadorBobina(extId, ot, numero) {
+      const contadores = JSON.parse(localStorage.getItem('contador_bobinas_ot')) || {};
+      contadores[extId] = { ot, ultimo: parseInt(numero) };
+      localStorage.setItem('contador_bobinas_ot', JSON.stringify(contadores));
+    }
+
+    // ============================================================
+    // EXTRUSORAS OPERATIVAS
+    // ============================================================
     function generarCheckboxesOperativas() {
       const g1 = document.getElementById('chk-grid-g1');
       const g2 = document.getElementById('chk-grid-g2');
-      g1.innerHTML = '';
-      g2.innerHTML = '';
-      const estado = JSON.parse(localStorage.getItem('estado_operativas')) || {};
-
+      g1.innerHTML = ''; g2.innerHTML = '';
       NUMS_EXTRUSORAS.forEach(num => {
         const label = document.createElement('label');
         label.className = 'checkbox-label';
         label.innerHTML = `<input type="checkbox" class="chk-op" value="${num}" onchange="actualizarDisplayOperativas()"> EXT-${String(num).padStart(2,'0')}`;
-        if (GRUPO1.includes(num)) g1.appendChild(label);
-        else g2.appendChild(label);
+        if (GRUPO1.includes(num)) g1.appendChild(label); else g2.appendChild(label);
       });
     }
 
@@ -952,75 +1030,56 @@
         document.getElementById('encargado-g2').value = estado.encG2 || '';
         if (estado.g1) document.querySelectorAll('#chk-grid-g1 .chk-op').forEach(cb => { cb.checked = estado.g1.includes(cb.value); });
         if (estado.g2) document.querySelectorAll('#chk-grid-g2 .chk-op').forEach(cb => { cb.checked = estado.g2.includes(cb.value); });
-        displayDiv.style.display = 'none';
-        formDiv.style.display = 'block';
-        btnEditar.style.display = 'none';
-        btnConservar.style.display = 'inline-flex';
+        displayDiv.style.display = 'none'; formDiv.style.display = 'block';
+        btnEditar.style.display = 'none'; btnConservar.style.display = 'inline-flex';
       } else {
         const g1 = Array.from(document.querySelectorAll('#chk-grid-g1 .chk-op')).filter(cb => cb.checked);
         const g2 = Array.from(document.querySelectorAll('#chk-grid-g2 .chk-op')).filter(cb => cb.checked);
-        if (g1.length === 0 && g2.length === 0) {
-          alert('⚠️ Seleccione al menos una extrusora operativa.');
-          return;
-        }
+        if (g1.length === 0 && g2.length === 0) { alert('⚠️ Seleccione al menos una extrusora operativa.'); return; }
         guardarEstadoOperativas();
-        formDiv.style.display = 'none';
-        displayDiv.style.display = 'grid';
-        btnEditar.style.display = 'inline-flex';
-        btnConservar.style.display = 'none';
-        actualizarDisplayOperativas();
-        renderBotonesExtrusoras();
+        formDiv.style.display = 'none'; displayDiv.style.display = 'grid';
+        btnEditar.style.display = 'inline-flex'; btnConservar.style.display = 'none';
+        actualizarDisplayOperativas(); renderBotonesExtrusoras();
       }
     }
 
     function actualizarDisplayOperativas() {
       const g1 = Array.from(document.querySelectorAll('#chk-grid-g1 .chk-op')).filter(cb => cb.checked).map(cb => {
-        const extId = `EXT-${String(cb.value).padStart(2,'0')}`;
-        const ext = extrusoras.find(e => e.id === extId);
+        const ext = extrusoras.find(e => e.id === `EXT-${String(cb.value).padStart(2,'0')}`);
         const ot = ext ? extraerOTDeFicha(ext.producto) : '';
-        return `${extId}${ot && ot !== 'Sin OT' ? ' (OT:'+ot+')' : ''}`;
+        return `EXT-${String(cb.value).padStart(2,'0')}${ot && ot !== 'Sin OT' ? ' (OT:'+ot+')' : ''}`;
       });
       const g2 = Array.from(document.querySelectorAll('#chk-grid-g2 .chk-op')).filter(cb => cb.checked).map(cb => {
-        const extId = `EXT-${String(cb.value).padStart(2,'0')}`;
-        const ext = extrusoras.find(e => e.id === extId);
+        const ext = extrusoras.find(e => e.id === `EXT-${String(cb.value).padStart(2,'0')}`);
         const ot = ext ? extraerOTDeFicha(ext.producto) : '';
-        return `${extId}${ot && ot !== 'Sin OT' ? ' (OT:'+ot+')' : ''}`;
+        return `EXT-${String(cb.value).padStart(2,'0')}${ot && ot !== 'Sin OT' ? ' (OT:'+ot+')' : ''}`;
       });
-      const enc1 = document.getElementById('encargado-g1').value.trim() || 'No asignado';
-      const enc2 = document.getElementById('encargado-g2').value.trim() || 'No asignado';
-
-      document.getElementById('display-enc-g1').textContent = `Encargado: ${enc1}`;
+      document.getElementById('display-enc-g1').textContent = `Encargado: ${document.getElementById('encargado-g1').value.trim() || 'No asignado'}`;
       document.getElementById('display-ext-g1').textContent = `Extrusoras: ${g1.length > 0 ? g1.join(', ') : 'Ninguna'}`;
-      document.getElementById('display-enc-g2').textContent = `Encargado: ${enc2}`;
+      document.getElementById('display-enc-g2').textContent = `Encargado: ${document.getElementById('encargado-g2').value.trim() || 'No asignado'}`;
       document.getElementById('display-ext-g2').textContent = `Extrusoras: ${g2.length > 0 ? g2.join(', ') : 'Ninguna'}`;
     }
 
     function guardarEstadoOperativas() {
-      const estado = {
+      localStorage.setItem('estado_operativas', JSON.stringify({
         g1: Array.from(document.querySelectorAll('#chk-grid-g1 .chk-op')).filter(cb => cb.checked).map(cb => cb.value),
         g2: Array.from(document.querySelectorAll('#chk-grid-g2 .chk-op')).filter(cb => cb.checked).map(cb => cb.value),
         encG1: document.getElementById('encargado-g1').value.trim(),
         encG2: document.getElementById('encargado-g2').value.trim()
-      };
-      localStorage.setItem('estado_operativas', JSON.stringify(estado));
+      }));
     }
 
     function cargarEstadoOperativas() {
       const estado = JSON.parse(localStorage.getItem('estado_operativas'));
-      if (estado && (estado.g1?.length > 0 || estado.g2?.length > 0)) {
-        toggleEditarOperativas(false);
-      } else {
-        toggleEditarOperativas(true);
-      }
+      if (estado && (estado.g1?.length > 0 || estado.g2?.length > 0)) toggleEditarOperativas(false);
+      else toggleEditarOperativas(true);
     }
 
-    // --- BOTONES EXTRUSORAS ---
     function renderBotonesExtrusoras() {
       const gridG1 = document.getElementById('extrusoras-grid-g1');
       const gridG2 = document.getElementById('extrusoras-grid-g2');
       if (!gridG1 || !gridG2) return;
-      gridG1.innerHTML = '';
-      gridG2.innerHTML = '';
+      gridG1.innerHTML = ''; gridG2.innerHTML = '';
       const estado = JSON.parse(localStorage.getItem('estado_operativas')) || {};
       const activas = [...(estado.g1 || []), ...(estado.g2 || [])];
 
@@ -1029,20 +1088,17 @@
         const ext = extrusoras.find(e => e.id === extId);
         const esActiva = activas.includes(String(num));
         const ot = ext ? extraerOTDeFicha(ext.producto) : 'Sin Ficha';
-        
         const btn = document.createElement('button');
         btn.className = `extrusora-btn ${esActiva ? 'activa' : 'inoperativa'}`;
         btn.onclick = () => abrirPanelExtrusora(extId);
-        btn.innerHTML = `
-          <div class="ext-numero">EXT-${String(num).padStart(2,'0')}</div>
-          <div class="ext-ot">OT: ${ot}</div>
-        `;
-        if (GRUPO1.includes(num)) gridG1.appendChild(btn);
-        else gridG2.appendChild(btn);
+        btn.innerHTML = `<div class="ext-numero">EXT-${String(num).padStart(2,'0')}</div><div class="ext-ot">OT: ${ot}</div>`;
+        if (GRUPO1.includes(num)) gridG1.appendChild(btn); else gridG2.appendChild(btn);
       });
     }
 
-    // --- PANEL EXTRUSORA ---
+    // ============================================================
+    // PANEL EXTRUSORA
+    // ============================================================
     function abrirPanelExtrusora(extId) {
       extrusoraActualPanel = extId;
       const ext = extrusoras.find(e => e.id === extId);
@@ -1050,10 +1106,8 @@
 
       document.getElementById('modal-ext-titulo').textContent = extId;
       document.getElementById('modal-ext-subtitulo').textContent = `OT: ${ot}`;
-
       document.getElementById('bobina-ancho').value = ext ? ext.ancho : '';
-      const siguienteNum = obtenerSiguienteNumeroBobina(extId, ot);
-      document.getElementById('bobina-numero').value = siguienteNum;
+      document.getElementById('bobina-numero').value = obtenerSiguienteNumeroBobina(extId, ot);
       document.getElementById('bobina-peso').value = '';
       document.getElementById('bobina-espesor').value = '';
       document.getElementById('bobina-operador').value = '';
@@ -1063,22 +1117,15 @@
       document.getElementById('scrap-obs').value = '';
 
       cambiarTabExtrusora('bobinas', document.querySelector('.tab-btn'));
-      renderBobinasExtrusora();
-      renderScrapExtrusora();
-      actualizarTotalScrapTurno();
+      renderBobinasExtrusora(); renderScrapExtrusora(); actualizarTotalScrapTurno();
       document.getElementById('modal-extrusora').style.display = 'flex';
     }
 
-    function cerrarModalExtrusora() {
-      document.getElementById('modal-extrusora').style.display = 'none';
-      extrusoraActualPanel = null;
-    }
-
+    function cerrarModalExtrusora() { document.getElementById('modal-extrusora').style.display = 'none'; extrusoraActualPanel = null; }
     function cambiarTabExtrusora(tab, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(`tab-${tab}`).classList.add('active');
+      btn.classList.add('active'); document.getElementById(`tab-${tab}`).classList.add('active');
     }
 
     function calcularMetrosBobina() {
@@ -1087,95 +1134,47 @@
       const espesor = parseFloat(document.getElementById('bobina-espesor').value) || 0;
       const densidad = parseFloat(document.getElementById('bobina-densidad').value) || 0.92;
       const display = document.getElementById('bobina-metros');
-      
       if (peso > 0 && ancho > 0 && espesor > 0) {
-        const metros = (peso * 100000) / (ancho * espesor * densidad);
-        display.textContent = metros.toFixed(2) + ' m';
-      } else {
-        display.textContent = '--- m';
-      }
+        display.textContent = ((peso * 100000) / (ancho * espesor * densidad)).toFixed(2) + ' m';
+      } else { display.textContent = '--- m'; }
     }
 
     async function registrarBobinaExtrusora() {
       if (!extrusoraActualPanel) return;
       const ext = extrusoras.find(e => e.id === extrusoraActualPanel);
       const ot = ext ? extraerOTDeFicha(ext.producto) : 'Sin OT';
-      
-      const numeroIngresado = document.getElementById('bobina-numero').value.trim();
-      const numero = numeroIngresado || obtenerSiguienteNumeroBobina(extrusoraActualPanel, ot);
-      
+      const numero = document.getElementById('bobina-numero').value.trim() || obtenerSiguienteNumeroBobina(extrusoraActualPanel, ot);
       const peso = parseFloat(document.getElementById('bobina-peso').value);
       const ancho = parseFloat(document.getElementById('bobina-ancho').value);
       const espesor = parseFloat(document.getElementById('bobina-espesor').value);
       const densidad = parseFloat(document.getElementById('bobina-densidad').value) || 0.92;
       const operador = document.getElementById('bobina-operador').value.trim() || 'Sin operador';
 
-      if (isNaN(peso) || peso <= 0) return alert('Ingrese un peso válido');
-      if (isNaN(ancho) || ancho <= 0) return alert('Ancho no válido');
-      if (isNaN(espesor) || espesor <= 0) return alert('Ingrese un espesor válido');
+      if (isNaN(peso) || peso <= 0 || isNaN(ancho) || ancho <= 0 || isNaN(espesor) || espesor <= 0) {
+        return alert('Ingrese valores válidos para peso, ancho y espesor');
+      }
 
-      const metros = (peso * 100000) / (ancho * espesor * densidad);
+      const metros = ((peso * 100000) / (ancho * espesor * densidad)).toFixed(2);
       actualizarContadorBobina(extrusoraActualPanel, ot, parseInt(numero));
 
-      const registro = {
-        id: Date.now().toString(),
-        timestamp: Date.now(),
-        fecha: new Date().toLocaleDateString('es-CL'),
-        hora: new Date().toLocaleTimeString('es-CL'),
-        extrusoraId: extrusoraActualPanel,
-        ot: ot,
-        numeroBobina: String(numero),
-        pesoKg: peso,
-        anchoCm: ancho,
-        espesorMicras: espesor,
-        densidad: densidad,
-        metrosCalculados: metros.toFixed(2),
-        operador: operador
-      };
-
-      const muestraPendiente = {
-        id: 'muestra-' + Date.now().toString(),
-        timestamp: Date.now(),
-        bobinaId: registro.id,
-        extrusoraId: extrusoraActualPanel,
-        ot: ot,
-        numeroBobina: String(numero),
-        pesoKg: peso,
-        metros: metros.toFixed(2),
-        operador: operador,
-        fecha: registro.fecha,
-        hora: registro.hora
-      };
+      const registro = { id: Date.now().toString(), timestamp: Date.now(), fecha: new Date().toLocaleDateString('es-CL'), hora: new Date().toLocaleTimeString('es-CL'), extrusoraId: extrusoraActualPanel, ot, numeroBobina: String(numero), pesoKg: peso, anchoCm: ancho, espesorMicras: espesor, densidad, metrosCalculados: metros, operador };
+      const muestraPendiente = { id: 'muestra-' + Date.now().toString(), timestamp: Date.now(), bobinaId: registro.id, extrusoraId: extrusoraActualPanel, ot, numeroBobina: String(numero), pesoKg: peso, metros, operador, fecha: registro.fecha, hora: registro.hora };
 
       try {
         if (window.fbMethods && window.db) {
           await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "bobinas"), registro);
           await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "muestras_pendientes"), muestraPendiente);
         } else {
-          bobinas.unshift(registro);
-          localStorage.setItem('bobinas_local', JSON.stringify(bobinas));
-          muestrasPendientes.unshift(muestraPendiente);
-          localStorage.setItem('muestras_pendientes', JSON.stringify(muestrasPendientes));
+          bobinas.unshift(registro); localStorage.setItem('bobinas_local', JSON.stringify(bobinas));
+          muestrasPendientes.unshift(muestraPendiente); localStorage.setItem('muestras_pendientes', JSON.stringify(muestrasPendientes));
         }
-        
-        const siguienteNum = obtenerSiguienteNumeroBobina(extrusoraActualPanel, ot);
-        document.getElementById('bobina-numero').value = siguienteNum;
-        document.getElementById('bobina-peso').value = '';
-        document.getElementById('bobina-espesor').value = '';
-        document.getElementById('bobina-operador').value = '';
-        document.getElementById('bobina-metros').textContent = '--- m';
-        
-        alert(`✅ Bobina N° ${numero} registrada. Siguiente sugerido: ${siguienteNum}`);
-        renderBobinasExtrusora();
-        imprimirEtiquetaBobina(registro);
-        if (vistaActual === 'octagon') {
-          renderMuestrasPendientes();
-          autocompletarDatosMedicion();
-        }
-      } catch (e) {
-        console.error(e);
-        alert('Error al guardar');
-      }
+        document.getElementById('bobina-numero').value = obtenerSiguienteNumeroBobina(extrusoraActualPanel, ot);
+        document.getElementById('bobina-peso').value = ''; document.getElementById('bobina-espesor').value = '';
+        document.getElementById('bobina-operador').value = ''; document.getElementById('bobina-metros').textContent = '--- m';
+        alert(`✅ Bobina N° ${numero} registrada.`);
+        renderBobinasExtrusora(); imprimirEtiquetaBobina(registro);
+        if (vistaActual === 'octagon') { renderMuestrasPendientes(); autocompletarDatosMedicion(); }
+      } catch (e) { console.error(e); alert('Error al guardar'); }
     }
 
     function renderBobinasExtrusora() {
@@ -1183,92 +1182,37 @@
       if (!tbody || !extrusoraActualPanel) return;
       tbody.innerHTML = '';
       const filtradas = bobinas.filter(b => b.extrusoraId === extrusoraActualPanel);
-
-      if (filtradas.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted); padding: 24px;">Sin bobinas registradas</td></tr>';
-        return;
-      }
-
+      if (filtradas.length === 0) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted); padding: 24px;">Sin bobinas registradas</td></tr>'; return; }
       filtradas.forEach(b => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${b.fecha}<br><small style="color:var(--text-muted)">${b.hora}</small></td>
-            <td><strong>${b.numeroBobina}</strong></td>
-            <td>${b.pesoKg} kg</td>
-            <td>${b.anchoCm} cm</td>
-            <td>${b.espesorMicras} µm</td>
-            <td style="font-weight:700; color:var(--primary);">${b.metrosCalculados} m</td>
-            <td>${b.operador}</td>
-            <td style="display:flex; gap:4px;">
-              <button class="btn-imprimir" onclick='imprimirEtiquetaBobina(${JSON.stringify(b).replace(/'/g, "\\'")})'>🖨️</button>
-              <button class="btn-eliminar" onclick="eliminarBobina('${b.id}')">🗑️</button>
-            </td>
-          </tr>
-        `;
+        tbody.innerHTML += `<tr><td>${b.fecha}<br><small style="color:var(--text-muted)">${b.hora}</small></td><td><strong>${b.numeroBobina}</strong></td><td>${b.pesoKg} kg</td><td>${b.anchoCm} cm</td><td>${b.espesorMicras} µm</td><td style="font-weight:700; color:var(--primary);">${b.metrosCalculados} m</td><td>${b.operador}</td><td style="display:flex; gap:4px;"><button class="btn-imprimir" onclick='imprimirEtiquetaBobina(${JSON.stringify(b).replace(/'/g, "\\'")})'>🖨️</button><button class="btn-eliminar" onclick="eliminarBobina('${b.id}')">🗑️</button></td></tr>`;
       });
     }
 
     async function eliminarBobina(id) {
       if (!confirm('¿Eliminar este registro?')) return;
       try {
-        if (window.fbMethods && window.db) {
-          await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "bobinas", id));
-        }
-        bobinas = bobinas.filter(b => b.id !== id);
-        localStorage.setItem('bobinas_local', JSON.stringify(bobinas));
-        renderBobinasExtrusora();
-      } catch (e) {
-        bobinas = bobinas.filter(b => b.id !== id);
-        localStorage.setItem('bobinas_local', JSON.stringify(bobinas));
-        renderBobinasExtrusora();
-      }
+        if (window.fbMethods && window.db) await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "bobinas", id));
+        bobinas = bobinas.filter(b => b.id !== id); localStorage.setItem('bobinas_local', JSON.stringify(bobinas)); renderBobinasExtrusora();
+      } catch (e) { bobinas = bobinas.filter(b => b.id !== id); localStorage.setItem('bobinas_local', JSON.stringify(bobinas)); renderBobinasExtrusora(); }
     }
 
     async function registrarScrap() {
       if (!extrusoraActualPanel) return;
       const ext = extrusoras.find(e => e.id === extrusoraActualPanel);
       const ot = ext ? extraerOTDeFicha(ext.producto) : 'Sin OT';
-      
       const motivo = document.getElementById('scrap-motivo').value;
       const peso = parseFloat(document.getElementById('scrap-peso').value);
       const operador = document.getElementById('scrap-operador').value.trim() || 'Sin operador';
       const obs = document.getElementById('scrap-obs').value.trim();
-
       if (isNaN(peso) || peso <= 0) return alert('Ingrese un peso válido');
 
-      const registro = {
-        id: Date.now().toString(),
-        timestamp: Date.now(),
-        fecha: new Date().toLocaleDateString('es-CL'),
-        hora: new Date().toLocaleTimeString('es-CL'),
-        extrusoraId: extrusoraActualPanel,
-        ot: ot,
-        motivo: motivo,
-        pesoKg: peso,
-        operador: operador,
-        observaciones: obs
-      };
-
+      const registro = { id: Date.now().toString(), timestamp: Date.now(), fecha: new Date().toLocaleDateString('es-CL'), hora: new Date().toLocaleTimeString('es-CL'), extrusoraId: extrusoraActualPanel, ot, motivo, pesoKg: peso, operador, observaciones: obs };
       try {
-        if (window.fbMethods && window.db) {
-          await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "scraps"), registro);
-        } else {
-          scraps.unshift(registro);
-          localStorage.setItem('scraps_local', JSON.stringify(scraps));
-        }
-        
-        document.getElementById('scrap-peso').value = '';
-        document.getElementById('scrap-operador').value = '';
-        document.getElementById('scrap-obs').value = '';
-        
-        alert('✅ Scrap registrado');
-        renderScrapExtrusora();
-        actualizarTotalScrapTurno();
-        imprimirEtiquetaScrap(registro);
-      } catch (e) {
-        console.error(e);
-        alert('Error al guardar');
-      }
+        if (window.fbMethods && window.db) await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "scraps"), registro);
+        else { scraps.unshift(registro); localStorage.setItem('scraps_local', JSON.stringify(scraps)); }
+        document.getElementById('scrap-peso').value = ''; document.getElementById('scrap-operador').value = ''; document.getElementById('scrap-obs').value = '';
+        alert('✅ Scrap registrado'); renderScrapExtrusora(); actualizarTotalScrapTurno(); imprimirEtiquetaScrap(registro);
+      } catch (e) { console.error(e); alert('Error al guardar'); }
     }
 
     function renderScrapExtrusora() {
@@ -1276,87 +1220,43 @@
       if (!tbody || !extrusoraActualPanel) return;
       tbody.innerHTML = '';
       const filtrados = scraps.filter(s => s.extrusoraId === extrusoraActualPanel);
-
-      if (filtrados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding: 24px;">Sin scrap registrado</td></tr>';
-        return;
-      }
-
+      if (filtrados.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding: 24px;">Sin scrap registrado</td></tr>'; return; }
       filtrados.forEach(s => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${s.fecha}<br><small style="color:var(--text-muted)">${s.hora}</small></td>
-            <td><strong style="color:var(--danger);">${s.motivo}</strong></td>
-            <td>${s.pesoKg} kg</td>
-            <td>${s.operador}</td>
-            <td style="font-size:0.8rem; color:var(--text-muted);">${s.observaciones || '-'}</td>
-            <td style="display:flex; gap:4px;">
-              <button class="btn-imprimir" onclick='imprimirEtiquetaScrap(${JSON.stringify(s).replace(/'/g, "\\'")})'>🖨️</button>
-              <button class="btn-eliminar" onclick="eliminarScrap('${s.id}')">🗑️</button>
-            </td>
-          </tr>
-        `;
+        tbody.innerHTML += `<tr><td>${s.fecha}<br><small style="color:var(--text-muted)">${s.hora}</small></td><td><strong style="color:var(--danger);">${s.motivo}</strong></td><td>${s.pesoKg} kg</td><td>${s.operador}</td><td style="font-size:0.8rem; color:var(--text-muted);">${s.observaciones || '-'}</td><td style="display:flex; gap:4px;"><button class="btn-imprimir" onclick='imprimirEtiquetaScrap(${JSON.stringify(s).replace(/'/g, "\\'")})'>🖨️</button><button class="btn-eliminar" onclick="eliminarScrap('${s.id}')">🗑️</button></td></tr>`;
       });
     }
 
     function actualizarTotalScrapTurno() {
       if (!extrusoraActualPanel) return;
-      const total = scraps
-        .filter(s => s.extrusoraId === extrusoraActualPanel)
-        .reduce((sum, s) => sum + (parseFloat(s.pesoKg) || 0), 0);
+      const total = scraps.filter(s => s.extrusoraId === extrusoraActualPanel).reduce((sum, s) => sum + (parseFloat(s.pesoKg) || 0), 0);
       document.getElementById('scrap-total-turno').textContent = total.toFixed(1) + ' kg';
     }
 
     async function eliminarScrap(id) {
       if (!confirm('¿Eliminar este registro?')) return;
       try {
-        if (window.fbMethods && window.db) {
-          await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "scraps", id));
-        }
-        scraps = scraps.filter(s => s.id !== id);
-        localStorage.setItem('scraps_local', JSON.stringify(scraps));
-        renderScrapExtrusora();
-        actualizarTotalScrapTurno();
-      } catch (e) {
-        scraps = scraps.filter(s => s.id !== id);
-        localStorage.setItem('scraps_local', JSON.stringify(scraps));
-        renderScrapExtrusora();
-        actualizarTotalScrapTurno();
-      }
+        if (window.fbMethods && window.db) await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "scraps", id));
+        scraps = scraps.filter(s => s.id !== id); localStorage.setItem('scraps_local', JSON.stringify(scraps)); renderScrapExtrusora(); actualizarTotalScrapTurno();
+      } catch (e) { scraps = scraps.filter(s => s.id !== id); localStorage.setItem('scraps_local', JSON.stringify(scraps)); renderScrapExtrusora(); actualizarTotalScrapTurno(); }
     }
 
-    // --- MUESTRAS PENDIENTES ---
     function renderMuestrasPendientes() {
       const banner = document.getElementById('banner-muestras-pendientes');
       const lista = document.getElementById('lista-muestras-pendientes');
       if (!banner || !lista) return;
-
-      if (muestrasPendientes.length === 0) {
-        banner.style.display = 'none';
-        return;
-      }
-
-      banner.style.display = 'block';
-      lista.innerHTML = '';
+      if (muestrasPendientes.length === 0) { banner.style.display = 'none'; return; }
+      banner.style.display = 'block'; lista.innerHTML = '';
       muestrasPendientes.forEach(m => {
         const item = document.createElement('div');
         item.className = 'muestra-item';
-        item.innerHTML = `
-          <div class="muestra-info">
-            <div class="titulo">📦 ${m.extrusoraId} - Bobina N° ${m.numeroBobina}</div>
-            <div class="detalle">OT: ${m.ot} | ${m.pesoKg} kg | ${m.metros} m | Op: ${m.operador} | ${m.fecha} ${m.hora}</div>
-          </div>
-          <button class="btn-retirar" onclick="marcarMuestraRetirada('${m.id}')">✅ Marcar Retirada</button>
-        `;
+        item.innerHTML = `<div class="muestra-info"><div class="titulo">📦 ${m.extrusoraId} - Bobina N° ${m.numeroBobina}</div><div class="detalle">OT: ${m.ot} | ${m.pesoKg} kg | ${m.metros} m | Op: ${m.operador} | ${m.fecha} ${m.hora}</div></div><button class="btn-retirar" onclick="marcarMuestraRetirada('${m.id}')">✅ Marcar Retirada</button>`;
         lista.appendChild(item);
       });
     }
 
     async function marcarMuestraRetirada(muestraId) {
       try {
-        if (window.fbMethods && window.db) {
-          await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "muestras_pendientes", muestraId));
-        }
+        if (window.fbMethods && window.db) await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "muestras_pendientes", muestraId));
         muestrasPendientes = muestrasPendientes.filter(m => m.id !== muestraId);
         localStorage.setItem('muestras_pendientes', JSON.stringify(muestrasPendientes));
         renderMuestrasPendientes();
@@ -1367,21 +1267,13 @@
       }
     }
 
-    // --- AUTOCOMPLETAR DATOS DE MEDICIÓN (OCTAGON) ---
     function autocompletarDatosMedicion() {
       const extId = document.getElementById('select-extrusora').value;
       if (!extId) return;
-
       const ext = extrusoras.find(e => e.id === extId);
-      
-      // Autocompletar N° Bobina desde la última registrada en Extrusión
       const bobinasExt = bobinas.filter(b => b.extrusoraId === extId);
       const ultimaBobina = bobinasExt.length > 0 ? bobinasExt[0] : null;
-      document.getElementById('input-bobina').value = ultimaBobina 
-        ? `N° ${ultimaBobina.numeroBobina} (${ultimaBobina.pesoKg}kg / ${ultimaBobina.metrosCalculados}m)`
-        : 'Sin bobinas registradas';
-
-      // Sugerir valores de ficha técnica
+      document.getElementById('input-bobina').value = ultimaBobina ? `N° ${ultimaBobina.numeroBobina} (${ultimaBobina.pesoKg}kg / ${ultimaBobina.metrosCalculados}m)` : 'Sin bobinas registradas';
       if (ext) {
         document.getElementById('val-ancho-total').placeholder = `Sugerido: ${ext.ancho}`;
         document.getElementById('val-ancho-fuelles').placeholder = `Sugerido: ${ext.anchoFuelles || '--'}`;
@@ -1390,77 +1282,55 @@
       }
     }
 
-    // --- CAPTURA DE PANTALLA ---
     async function capturarPantalla() {
       try {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
           alert('Su navegador no soporta captura de pantalla. Use "Pegar desde portapapeles" (Ctrl+V).');
           return;
         }
-        
-        const stream = await navigator.mediaDevices.getDisplayMedia({ 
-          video: { cursor: "never" }, 
-          audio: false 
-        });
-        
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "never" }, audio: false });
         const video = document.createElement('video');
         video.srcObject = stream;
         await video.play();
         await new Promise(resolve => setTimeout(resolve, 100));
-        
         const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
+        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
         stream.getTracks().forEach(track => track.stop());
-        
-        const base64 = canvas.toDataURL('image/png');
-        mostrarCaptura(base64);
+        mostrarCaptura(canvas.toDataURL('image/png'));
       } catch (err) {
-        console.error('Error al capturar pantalla:', err);
-        if (err.name !== 'AbortError' && err.name !== 'NotAllowedError') {
-          alert('No se pudo capturar. Intente usar "Pegar desde portapapeles" (Ctrl+V).');
-        }
+        if (err.name !== 'AbortError' && err.name !== 'NotAllowedError') alert('No se pudo capturar. Intente usar "Pegar desde portapapeles" (Ctrl+V).');
       }
     }
 
     function pegarDesdePortapapeles() {
       const hint = document.getElementById('captura-hint');
       hint.innerHTML = '📋 <strong>Escuchando portapapeles...</strong> Presione Ctrl+V ahora.';
-      hint.style.color = 'var(--primary)';
-      hint.style.fontWeight = '600';
-      
+      hint.style.color = 'var(--primary)'; hint.style.fontWeight = '600';
       const handler = async (e) => {
         const items = e.clipboardData?.items;
         if (!items) return;
-        
         for (let item of items) {
           if (item.type.indexOf('image') !== -1) {
             e.preventDefault();
-            const blob = item.getAsFile();
             const reader = new FileReader();
             reader.onload = (event) => {
               mostrarCaptura(event.target.result);
               document.removeEventListener('paste', handler);
-              hint.innerHTML = '💡 Haga clic en "Capturar Pantalla" para seleccionar una ventana/aplicación, o use Ctrl+V.';
-              hint.style.color = 'var(--text-muted)';
-              hint.style.fontWeight = 'normal';
+              hint.innerHTML = '💡 Haga clic en "Capturar Pantalla" o use Ctrl+V.';
+              hint.style.color = 'var(--text-muted)'; hint.style.fontWeight = 'normal';
             };
-            reader.readAsDataURL(blob);
+            reader.readAsDataURL(item.getAsFile());
             break;
           }
         }
       };
-      
       document.addEventListener('paste', handler);
       setTimeout(() => {
         document.removeEventListener('paste', handler);
         if (hint.textContent.includes('Escuchando')) {
           hint.innerHTML = '💡 No se detectó imagen. Intente de nuevo.';
-          hint.style.color = 'var(--text-muted)';
-          hint.style.fontWeight = 'normal';
+          hint.style.color = 'var(--text-muted)'; hint.style.fontWeight = 'normal';
         }
       }, 15000);
     }
@@ -1468,7 +1338,6 @@
     function procesarArchivoCaptura(event) {
       const file = event.target.files[0];
       if (!file) return;
-      
       const reader = new FileReader();
       reader.onload = (e) => mostrarCaptura(e.target.result);
       reader.readAsDataURL(file);
@@ -1477,15 +1346,10 @@
 
     function mostrarCaptura(base64) {
       capturaActualBase64 = base64;
-      const preview = document.getElementById('captura-preview');
-      const container = document.getElementById('captura-preview-container');
-      const area = document.getElementById('captura-area');
-      const btnLimpiar = document.getElementById('btn-limpiar-captura');
-      
-      preview.src = base64;
-      container.style.display = 'block';
-      area.classList.add('has-image');
-      btnLimpiar.style.display = 'inline-flex';
+      document.getElementById('captura-preview').src = base64;
+      document.getElementById('captura-preview-container').style.display = 'block';
+      document.getElementById('captura-area').classList.add('has-image');
+      document.getElementById('btn-limpiar-captura').style.display = 'inline-flex';
     }
 
     function limpiarCaptura() {
@@ -1495,89 +1359,31 @@
       document.getElementById('btn-limpiar-captura').style.display = 'none';
     }
 
-    // --- IMPRESIÓN ETIQUETAS ---
     function imprimirEtiquetaBobina(bobina) {
-      const html = `
-        <div class="etiqueta">
-          <div class="etiqueta-header">
-            <div class="etiqueta-title">BOBINA N° ${bobina.numeroBobina}</div>
-            <div class="etiqueta-fecha">${bobina.fecha}<br>${bobina.hora}</div>
-          </div>
-          <div class="etiqueta-body">
-            <div><strong>Extrusora:</strong> ${bobina.extrusoraId}</div>
-            <div><strong>OT:</strong> ${bobina.ot}</div>
-            <div><strong>Ancho:</strong> ${bobina.anchoCm} cm | <strong>Espesor:</strong> ${bobina.espesorMicras} µm</div>
-            <div><strong>Peso:</strong> ${bobina.pesoKg} kg</div>
-          </div>
-          <div class="etiqueta-big">${bobina.metrosCalculados} m</div>
-          <div class="etiqueta-footer"><span>Op: ${bobina.operador}</span></div>
-        </div>
-      `;
+      const html = `<div class="etiqueta"><div class="etiqueta-header"><div class="etiqueta-title">BOBINA N° ${bobina.numeroBobina}</div><div class="etiqueta-fecha">${bobina.fecha}<br>${bobina.hora}</div></div><div class="etiqueta-body"><div><strong>Extrusora:</strong> ${bobina.extrusoraId}</div><div><strong>OT:</strong> ${bobina.ot}</div><div><strong>Ancho:</strong> ${bobina.anchoCm} cm | <strong>Espesor:</strong> ${bobina.espesorMicras} µm</div><div><strong>Peso:</strong> ${bobina.pesoKg} kg</div></div><div class="etiqueta-big">${bobina.metrosCalculados} m</div><div class="etiqueta-footer"><span>Op: ${bobina.operador}</span></div></div>`;
       imprimirEtiqueta(html);
     }
 
     function imprimirEtiquetaScrap(scrap) {
-      const html = `
-        <div class="etiqueta">
-          <div class="etiqueta-header">
-            <div class="etiqueta-title" style="color: #dc2626;">⚠ SCRAP</div>
-            <div class="etiqueta-fecha">${scrap.fecha}<br>${scrap.hora}</div>
-          </div>
-          <div class="etiqueta-body">
-            <div><strong>Extrusora:</strong> ${scrap.extrusoraId}</div>
-            <div><strong>OT:</strong> ${scrap.ot}</div>
-            <div><strong>Motivo:</strong> ${scrap.motivo}</div>
-            ${scrap.observaciones ? `<div><strong>Obs:</strong> ${scrap.observaciones}</div>` : ''}
-          </div>
-          <div class="etiqueta-big" style="color: #dc2626;">${scrap.pesoKg} kg</div>
-          <div class="etiqueta-footer"><span>Op: ${scrap.operador}</span></div>
-        </div>
-      `;
+      const html = `<div class="etiqueta"><div class="etiqueta-header"><div class="etiqueta-title" style="color: #dc2626;">⚠ SCRAP</div><div class="etiqueta-fecha">${scrap.fecha}<br>${scrap.hora}</div></div><div class="etiqueta-body"><div><strong>Extrusora:</strong> ${scrap.extrusoraId}</div><div><strong>OT:</strong> ${scrap.ot}</div><div><strong>Motivo:</strong> ${scrap.motivo}</div>${scrap.observaciones ? `<div><strong>Obs:</strong> ${scrap.observaciones}</div>` : ''}</div><div class="etiqueta-big" style="color: #dc2626;">${scrap.pesoKg} kg</div><div class="etiqueta-footer"><span>Op: ${scrap.operador}</span></div></div>`;
       imprimirEtiqueta(html);
     }
 
     function imprimirEtiqueta(html) {
       const printWindow = window.open('', '_blank', 'width=450,height=250');
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Etiqueta</title>
-          <style>
-            @page { size: 100mm 50mm; margin: 0; }
-            body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
-            .etiqueta { width: 100mm; height: 50mm; padding: 3mm; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #000; }
-            .etiqueta-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 2mm; }
-            .etiqueta-title { font-size: 14pt; font-weight: bold; }
-            .etiqueta-fecha { font-size: 8pt; text-align: right; }
-            .etiqueta-body { flex: 1; padding: 2mm 0; font-size: 10pt; line-height: 1.4; }
-            .etiqueta-body strong { font-weight: bold; }
-            .etiqueta-footer { border-top: 1px solid #000; padding-top: 2mm; font-size: 8pt; display: flex; justify-content: space-between; }
-            .etiqueta-big { font-size: 16pt; font-weight: bold; text-align: center; padding: 2mm 0; }
-          </style>
-        </head>
-        <body>${html}</body>
-        </html>
-      `);
+      printWindow.document.write(`<!DOCTYPE html><html><head><title>Etiqueta</title><style>@page { size: 100mm 50mm; margin: 0; } body { margin: 0; padding: 0; font-family: Arial, sans-serif; } .etiqueta { width: 100mm; height: 50mm; padding: 3mm; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #000; } .etiqueta-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 2mm; } .etiqueta-title { font-size: 14pt; font-weight: bold; } .etiqueta-fecha { font-size: 8pt; text-align: right; } .etiqueta-body { flex: 1; padding: 2mm 0; font-size: 10pt; line-height: 1.4; } .etiqueta-body strong { font-weight: bold; } .etiqueta-footer { border-top: 1px solid #000; padding-top: 2mm; font-size: 8pt; display: flex; justify-content: space-between; } .etiqueta-big { font-size: 16pt; font-weight: bold; text-align: center; padding: 2mm 0; }</style></head><body>${html}</body></html>`);
       printWindow.document.close();
-      printWindow.onload = () => {
-        printWindow.focus();
-        printWindow.print();
-        setTimeout(() => printWindow.close(), 1000);
-      };
+      printWindow.onload = () => { printWindow.focus(); printWindow.print(); setTimeout(() => printWindow.close(), 1000); };
     }
 
-    // --- IMPRIMIR REGISTRO OCTAGON (PDF HORIZONTAL FILTRADO POR EXTRUSORA) ---
+    // ============================================================
+    // IMPRIMIR REGISTRO OCTAGON (PDF HORIZONTAL MEJORADO)
+    // ============================================================
     function imprimirRegistroOctagon() {
       const hoy = new Date().toLocaleDateString('es-CL');
-      const medicionesHoy = historial.filter(r => {
-        const fechaReg = new Date(r.timestamp).toLocaleDateString('es-CL');
-        return fechaReg === hoy;
-      });
-
+      const medicionesHoy = historial.filter(r => new Date(r.timestamp).toLocaleDateString('es-CL') === hoy);
       if (medicionesHoy.length === 0) return alert('No hay mediciones registradas hoy para imprimir.');
 
-      // Agrupar por extrusora
       const porExtrusora = {};
       medicionesHoy.forEach(m => {
         if (!porExtrusora[m.id]) porExtrusora[m.id] = [];
@@ -1587,86 +1393,102 @@
       const extrusorasConDatos = Object.keys(porExtrusora);
       if (extrusorasConDatos.length === 0) return alert('No hay datos.');
 
-      // Preguntar por cuál extrusora imprimir (o todas)
       let opciones = '0 - TODAS LAS EXTRUSORAS\n';
-      extrusorasConDatos.forEach((ext, idx) => {
-        opciones += `${idx + 1} - ${ext} (${porExtrusora[ext].length} mediciones)\n`;
-      });
+      extrusorasConDatos.forEach((ext, idx) => { opciones += `${idx + 1} - ${ext} (${porExtrusora[ext].length} mediciones)\n`; });
       const seleccion = prompt(`Seleccione qué extrusora imprimir:\n\n${opciones}\nIngrese el número:`, '0');
       if (seleccion === null) return;
 
       const selNum = parseInt(seleccion);
       let extrusorasAImprimir = [];
-      if (selNum === 0) {
-        extrusorasAImprimir = extrusorasConDatos;
-      } else if (selNum >= 1 && selNum <= extrusorasConDatos.length) {
-        extrusorasAImprimir = [extrusorasConDatos[selNum - 1]];
-      } else {
-        return alert('Selección inválida');
-      }
+      if (selNum === 0) extrusorasAImprimir = extrusorasConDatos;
+      else if (selNum >= 1 && selNum <= extrusorasConDatos.length) extrusorasAImprimir = [extrusorasConDatos[selNum - 1]];
+      else return alert('Selección inválida');
 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'landscape' });
-      const turnoAuto = obtenerTurnoAutomatico();
+      const turnoActivo = obtenerTurnoActivo();
       const logoImg = new Image();
       logoImg.crossOrigin = 'Anonymous';
       logoImg.src = 'https://iili.io/nw6Sq0v.png';
 
+      let isGenerating = false;
+      let timeoutId = null;
+
       const generarPDF = () => {
+        if (isGenerating) return;
+        isGenerating = true;
+        if (timeoutId) clearTimeout(timeoutId);
+
         let primeraPagina = true;
 
-        extrusorasAImprimir.forEach((extId, idxExt) => {
+        extrusorasAImprimir.forEach((extId) => {
           const mediciones = porExtrusora[extId];
           const ext = extrusoras.find(e => e.id === extId);
           const producto = ext ? extraerDimensionesDeProducto(ext.producto) : '';
           const ot = ext ? extraerOTDeFicha(ext.producto) : '';
+          const bobinasUnicas = [...new Set(mediciones.map(m => m.numeroBobina).filter(Boolean))].join(', ') || 'N/A';
 
           if (!primeraPagina) doc.addPage('a4', 'landscape');
           primeraPagina = false;
 
-          // Logo y encabezado
+          // 1. Logo grande (1/3 de la página = ~95mm de 297mm)
           if (logoImg.complete && logoImg.naturalHeight > 0) {
-            const logoW = 25;
-            doc.addImage(logoImg, 'PNG', 15, 10, logoW, (logoImg.height * logoW) / logoImg.width);
+            const logoW = 95;
+            const logoH = (logoImg.height * logoW) / logoImg.width;
+            doc.addImage(logoImg, 'PNG', 15, 10, logoW, logoH);
           }
-          
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(14);
-          doc.setTextColor(15, 23, 42);
-          doc.text(`REGISTRO DE MEDICIONES - ${extId}`, 150, 15, { align: "center" });
-          doc.setFontSize(9);
-          doc.setFont("helvetica", "normal");
-          doc.setTextColor(100, 116, 139);
-          doc.text(`Fecha: ${hoy} | Turno: ${turnoAuto.nombre} | Producto: ${producto} | OT: ${ot}`, 150, 21, { align: "center" });
-          doc.text(`Operador: ${operadorActual || 'N/A'} | Total mediciones: ${mediciones.length}`, 150, 26, { align: "center" });
 
+          // 2. Título reformateado (a la derecha del logo)
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(15, 23, 42);
+          
+          doc.setFontSize(15);
+          doc.text("Registro de Mediciones", 120, 20);
+          
+          doc.setFontSize(22);
+          doc.text(`Extrusora N° ${extId.replace('EXT-', '')}`, 120, 35);
+          
+          doc.setFontSize(9);
+          doc.text(`Total de Mediciones: ${mediciones.length}`, 120, 45);
+
+          // 3. Lista vertical de metadatos (izquierda, debajo del logo)
+          let infoY = 70;
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+          doc.text(`Fecha: ${hoy}`, 15, infoY); infoY += 6;
+          doc.text(`Operador: ${operadorActual || 'N/A'}`, 15, infoY); infoY += 6;
+          doc.text(`Turno: ${turnoActivo.nombre}`, 15, infoY); infoY += 6;
+          doc.text(`O.T.: ${ot}`, 15, infoY); infoY += 6;
+          doc.text(`Producto: ${producto}`, 15, infoY); infoY += 6;
+          doc.text(`N° Bobina: ${bobinasUnicas}`, 15, infoY); 
+
+          // 4. Línea divisoria
+          const lineaY = infoY + 8;
           doc.setDrawColor(15, 76, 129);
           doc.setLineWidth(0.5);
-          doc.line(15, 30, 282, 30);
+          doc.line(15, lineaY, 282, lineaY);
 
-          let y = 38;
+          // 5. Tabla de mediciones (sin Extrusora, Producto, OT)
+          let y = lineaY + 10;
           doc.setFont("helvetica", "bold");
-          doc.setFontSize(7.5);
-          doc.setTextColor(15, 23, 42);
+          doc.setFontSize(8);
           doc.setFillColor(248, 250, 252);
-          doc.rect(15, y - 3, 267, 7, 'F');
-          doc.text("HORA", 17, y + 1);
-          doc.text("EQUIPO", 32, y + 1);
-          doc.text("EXTRUSORA", 48, y + 1);
-          doc.text("PRODUCTO", 72, y + 1);
-          doc.text("OT", 100, y + 1);
-          doc.text("MÍN.", 120, y + 1);
-          doc.text("PROM.", 140, y + 1);
-          doc.text("MÁX.", 160, y + 1);
-          doc.text("ANCHO", 180, y + 1);
-          doc.text("PESO", 205, y + 1);
-          doc.text("ESTADO", 280, y + 1, { align: "right" });
-          y += 7;
+          doc.rect(15, y - 4, 267, 7, 'F');
+          doc.text("HORA", 15, y);
+          doc.text("EQUIPO", 40, y);
+          doc.text("MÍN.", 70, y);
+          doc.text("PROM.", 100, y);
+          doc.text("MÁX.", 130, y);
+          doc.text("ANCHO", 160, y);
+          doc.text("PESO", 190, y);
+          doc.text("ESTADO", 270, y, { align: "right" });
+          y += 6;
 
           doc.setFont("helvetica", "normal");
-          doc.setFontSize(7.5);
+          doc.setFontSize(8);
+          
           mediciones.forEach(reg => {
-            if (y > 195) {
+            if (y > 190) {
               doc.addPage('a4', 'landscape');
               y = 20;
               doc.setDrawColor(15, 76, 129);
@@ -1674,45 +1496,40 @@
               doc.setFont("helvetica", "bold");
               doc.setFillColor(248, 250, 252);
               doc.rect(15, y + 2, 267, 7, 'F');
-              doc.text("HORA", 17, y + 6);
-              doc.text("EQUIPO", 32, y + 6);
-              doc.text("EXTRUSORA", 48, y + 6);
-              doc.text("PRODUCTO", 72, y + 6);
-              doc.text("OT", 100, y + 6);
-              doc.text("MÍN.", 120, y + 6);
-              doc.text("PROM.", 140, y + 6);
-              doc.text("MÁX.", 160, y + 6);
-              doc.text("ANCHO", 180, y + 6);
-              doc.text("PESO", 205, y + 6);
-              doc.text("ESTADO", 280, y + 6, { align: "right" });
-              y += 10;
+              doc.text("HORA", 15, y + 6);
+              doc.text("EQUIPO", 40, y + 6);
+              doc.text("MÍN.", 70, y + 6);
+              doc.text("PROM.", 100, y + 6);
+              doc.text("MÁX.", 130, y + 6);
+              doc.text("ANCHO", 160, y + 6);
+              doc.text("PESO", 190, y + 6);
+              doc.text("ESTADO", 270, y + 6, { align: "right" });
+              y += 12;
               doc.setFont("helvetica", "normal");
             }
+            
             doc.setTextColor(15, 23, 42);
-            doc.text(String(reg.hora), 17, y);
-            doc.text(String(reg.equipo || '-'), 32, y);
-            doc.text(String(reg.id), 48, y);
-            doc.text(producto, 72, y);
-            doc.text(ot, 100, y);
-            doc.text(reg.micronMin ? String(reg.micronMin) : '-', 120, y);
-            doc.text(reg.micronProm ? String(reg.micronProm) : '-', 140, y);
-            doc.text(reg.micronMax ? String(reg.micronMax) : '-', 160, y);
-            doc.text(reg.anchoTotal ? `${reg.anchoTotal} cm` : '-', 180, y);
-            doc.text(reg.pesoMetro ? `${reg.pesoMetro} gr` : '-', 205, y);
+            doc.text(String(reg.hora), 15, y);
+            doc.text(String(reg.equipo || '-'), 40, y);
+            doc.text(reg.micronMin ? String(reg.micronMin) : '-', 70, y);
+            doc.text(reg.micronProm ? String(reg.micronProm) : '-', 100, y);
+            doc.text(reg.micronMax ? String(reg.micronMax) : '-', 130, y);
+            doc.text(reg.anchoTotal ? `${reg.anchoTotal} cm` : '-', 160, y);
+            doc.text(reg.pesoMetro ? `${reg.pesoMetro} gr` : '-', 190, y);
 
             if (reg.fueraDeRango) {
               doc.setTextColor(220, 38, 38);
               doc.setFont("helvetica", "bold");
-              doc.text("FUERA", 280, y, { align: "right" });
+              doc.text("FUERA", 270, y, { align: "right" });
               doc.setFont("helvetica", "normal");
             } else if (reg.corregido) {
               doc.setTextColor(5, 150, 105);
               doc.setFont("helvetica", "bold");
-              doc.text("CORREGIDO", 280, y, { align: "right" });
+              doc.text("CORREGIDO", 270, y, { align: "right" });
               doc.setFont("helvetica", "normal");
             } else {
               doc.setTextColor(5, 150, 105);
-              doc.text("OK", 280, y, { align: "right" });
+              doc.text("OK", 270, y, { align: "right" });
             }
             doc.setTextColor(15, 23, 42);
             y += 6;
@@ -1722,202 +1539,135 @@
         doc.save(`Registro_Octagon_${hoy.replace(/\//g, '-')}.pdf`);
       };
 
-      logoImg.onload = generarPDF;
-      logoImg.onerror = generarPDF;
-      setTimeout(generarPDF, 2000);
+      const safeGenerate = () => {
+        if (timeoutId) clearTimeout(timeoutId);
+        generarPDF();
+      };
+
+      logoImg.onload = safeGenerate;
+      logoImg.onerror = safeGenerate;
+      timeoutId = setTimeout(safeGenerate, 2000); // Fallback seguro
     }
 
-    // --- IMPRIMIR PRODUCCIÓN EXTRUSIÓN ---
+    // ============================================================
+    // IMPRIMIR PRODUCCIÓN EXTRUSIÓN
+    // ============================================================
     function imprimirProduccionExtrusion() {
       const hoy = new Date().toLocaleDateString('es-CL');
       const bobinasHoy = bobinas.filter(b => b.fecha === hoy);
       const scrapsHoy = scraps.filter(s => s.fecha === hoy);
-
-      if (bobinasHoy.length === 0 && scrapsHoy.length === 0) {
-        return alert('No hay producción registrada hoy para imprimir.');
-      }
+      if (bobinasHoy.length === 0 && scrapsHoy.length === 0) return alert('No hay producción registrada hoy para imprimir.');
 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-      const turnoAuto = obtenerTurnoAutomatico();
+      const turnoActivo = obtenerTurnoActivo();
       const estado = JSON.parse(localStorage.getItem('estado_operativas')) || {};
 
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.setTextColor(15, 23, 42);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(15, 23, 42);
       doc.text("REPORTE DE PRODUCCIÓN - EXTRUSIÓN", 105, 15, { align: "center" });
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 116, 139);
-      doc.text(`Fecha: ${hoy} | Turno: ${turnoAuto.nombre}`, 105, 22, { align: "center" });
+      doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.setTextColor(100, 116, 139);
+      doc.text(`Fecha: ${hoy} | Turno: ${turnoActivo.nombre}`, 105, 22, { align: "center" });
       doc.text(`Encargado G1: ${estado.encG1 || 'N/A'} | Encargado G2: ${estado.encG2 || 'N/A'}`, 105, 28, { align: "center" });
-
-      doc.setDrawColor(15, 76, 129);
-      doc.setLineWidth(0.5);
-      doc.line(12, 32, 198, 32);
+      doc.setDrawColor(15, 76, 129); doc.setLineWidth(0.5); doc.line(12, 32, 198, 32);
 
       let y = 40;
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.setTextColor(5, 150, 105);
-      doc.text(`📦 BOBINAS REGISTRADAS (${bobinasHoy.length})`, 12, y);
-      y += 6;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(5, 150, 105);
+      doc.text(`📦 BOBINAS REGISTRADAS (${bobinasHoy.length})`, 12, y); y += 6;
 
       if (bobinasHoy.length > 0) {
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(7.5);
-        doc.setTextColor(15, 23, 42);
-        doc.setFillColor(248, 250, 252);
-        doc.rect(12, y - 3, 186, 7, 'F');
-        doc.text("N°", 14, y + 1);
-        doc.text("EXTRUSORA", 24, y + 1);
-        doc.text("OT", 50, y + 1);
-        doc.text("ANCHO", 75, y + 1);
-        doc.text("ESPESOR", 95, y + 1);
-        doc.text("PESO (kg)", 120, y + 1);
-        doc.text("METROS", 145, y + 1);
-        doc.text("OPERADOR", 170, y + 1);
-        y += 6;
-
+        doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); doc.setTextColor(15, 23, 42);
+        doc.setFillColor(248, 250, 252); doc.rect(12, y - 3, 186, 7, 'F');
+        doc.text("N°", 14, y + 1); doc.text("EXTRUSORA", 24, y + 1); doc.text("OT", 50, y + 1);
+        doc.text("ANCHO", 75, y + 1); doc.text("ESPESOR", 95, y + 1); doc.text("PESO (kg)", 120, y + 1);
+        doc.text("METROS", 145, y + 1); doc.text("OPERADOR", 170, y + 1); y += 6;
         doc.setFont("helvetica", "normal");
         bobinasHoy.forEach(b => {
           if (y > 280) { doc.addPage(); y = 20; }
           doc.setTextColor(15, 23, 42);
-          doc.text(String(b.numeroBobina), 14, y);
-          doc.text(String(b.extrusoraId), 24, y);
-          doc.text(String(b.ot), 50, y);
-          doc.text(`${b.anchoCm} cm`, 75, y);
-          doc.text(`${b.espesorMicras} µm`, 95, y);
-          doc.text(`${b.pesoKg}`, 120, y);
-          doc.text(`${b.metrosCalculados} m`, 145, y);
-          doc.text(String(b.operador), 170, y);
+          doc.text(String(b.numeroBobina), 14, y); doc.text(String(b.extrusoraId), 24, y); doc.text(String(b.ot), 50, y);
+          doc.text(`${b.anchoCm} cm`, 75, y); doc.text(`${b.espesorMicras} µm`, 95, y);
+          doc.text(`${b.pesoKg}`, 120, y); doc.text(`${b.metrosCalculados} m`, 145, y); doc.text(String(b.operador), 170, y);
           y += 5;
         });
-
-        const totalPesoBobinas = bobinasHoy.reduce((s, b) => s + (parseFloat(b.pesoKg) || 0), 0);
+        const totalPeso = bobinasHoy.reduce((s, b) => s + (parseFloat(b.pesoKg) || 0), 0);
         const totalMetros = bobinasHoy.reduce((s, b) => s + (parseFloat(b.metrosCalculados) || 0), 0);
-        y += 3;
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(5, 150, 105);
-        doc.text(`TOTAL BOBINAS: ${bobinasHoy.length} | PESO: ${totalPesoBobinas.toFixed(2)} kg | METROS: ${totalMetros.toFixed(2)} m`, 12, y);
-        y += 8;
-      } else {
-        doc.setFont("helvetica", "italic");
-        doc.setTextColor(100, 116, 139);
-        doc.text("Sin bobinas registradas en este turno.", 12, y);
-        y += 10;
-      }
+        y += 3; doc.setFont("helvetica", "bold"); doc.setTextColor(5, 150, 105);
+        doc.text(`TOTAL BOBINAS: ${bobinasHoy.length} | PESO: ${totalPeso.toFixed(2)} kg | METROS: ${totalMetros.toFixed(2)} m`, 12, y); y += 8;
+      } else { doc.setFont("helvetica", "italic"); doc.setTextColor(100, 116, 139); doc.text("Sin bobinas registradas en este turno.", 12, y); y += 10; }
 
-      y += 5;
-      if (y > 240) { doc.addPage(); y = 20; }
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.setTextColor(220, 38, 38);
-      doc.text(`🗑️ SCRAP REGISTRADO (${scrapsHoy.length})`, 12, y);
-      y += 6;
+      y += 5; if (y > 240) { doc.addPage(); y = 20; }
+      doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(220, 38, 38);
+      doc.text(`🗑️ SCRAP REGISTRADO (${scrapsHoy.length})`, 12, y); y += 6;
 
       if (scrapsHoy.length > 0) {
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(7.5);
-        doc.setTextColor(15, 23, 42);
-        doc.setFillColor(254, 242, 242);
-        doc.rect(12, y - 3, 186, 7, 'F');
-        doc.text("EXTRUSORA", 14, y + 1);
-        doc.text("OT", 50, y + 1);
-        doc.text("MOTIVO", 75, y + 1);
-        doc.text("PESO (kg)", 150, y + 1);
-        doc.text("OPERADOR", 175, y + 1);
-        y += 6;
-
+        doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); doc.setTextColor(15, 23, 42);
+        doc.setFillColor(254, 242, 242); doc.rect(12, y - 3, 186, 7, 'F');
+        doc.text("EXTRUSORA", 14, y + 1); doc.text("OT", 50, y + 1); doc.text("MOTIVO", 75, y + 1);
+        doc.text("PESO (kg)", 150, y + 1); doc.text("OPERADOR", 175, y + 1); y += 6;
         doc.setFont("helvetica", "normal");
         scrapsHoy.forEach(s => {
           if (y > 280) { doc.addPage(); y = 20; }
           doc.setTextColor(15, 23, 42);
-          doc.text(String(s.extrusoraId), 14, y);
-          doc.text(String(s.ot), 50, y);
-          doc.text(String(s.motivo).substring(0, 30), 75, y);
-          doc.text(`${s.pesoKg}`, 150, y);
-          doc.text(String(s.operador), 175, y);
+          doc.text(String(s.extrusoraId), 14, y); doc.text(String(s.ot), 50, y);
+          doc.text(String(s.motivo).substring(0, 30), 75, y); doc.text(`${s.pesoKg}`, 150, y); doc.text(String(s.operador), 175, y);
           y += 5;
         });
-
         const totalScrap = scrapsHoy.reduce((s, x) => s + (parseFloat(x.pesoKg) || 0), 0);
-        y += 3;
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(220, 38, 38);
+        y += 3; doc.setFont("helvetica", "bold"); doc.setTextColor(220, 38, 38);
         doc.text(`TOTAL SCRAP: ${scrapsHoy.length} registros | PESO TOTAL: ${totalScrap.toFixed(2)} kg`, 12, y);
-      } else {
-        doc.setFont("helvetica", "italic");
-        doc.setTextColor(100, 116, 139);
-        doc.text("Sin scrap registrado en este turno.", 12, y);
-      }
+      } else { doc.setFont("helvetica", "italic"); doc.setTextColor(100, 116, 139); doc.text("Sin scrap registrado en este turno.", 12, y); }
 
       doc.save(`Produccion_Extrusion_${hoy.replace(/\//g, '-')}.pdf`);
     }
 
-    // --- CAMBIO TURNO OCTAGON ---
+    // ============================================================
+    // CAMBIO TURNO
+    // ============================================================
     async function solicitarCambioTurnoOctagon() {
-      const medicionesHoy = historial.filter(r => {
-        const fechaReg = new Date(r.timestamp).toLocaleDateString('es-CL');
-        return fechaReg === new Date().toLocaleDateString('es-CL');
-      });
-
+      const medicionesHoy = historial.filter(r => new Date(r.timestamp).toLocaleDateString('es-CL') === new Date().toLocaleDateString('es-CL'));
       if (medicionesHoy.length > 0) {
-        const confirmar = confirm(`⚠️ Hay ${medicionesHoy.length} mediciones registradas hoy.\n\nSe generará un PDF con el registro del turno antes de cambiar.\n\n¿Continuar?`);
-        if (confirmar) {
+        if (confirm(`⚠️ Hay ${medicionesHoy.length} mediciones registradas hoy.\n\nSe generará un PDF con el registro del turno antes de cambiar.\n\n¿Continuar?`)) {
           imprimirRegistroOctagon();
           setTimeout(() => {
-            const limpiar = confirm("✅ PDF generado.\n\n¿Desea limpiar el historial de Octagon para iniciar el nuevo turno?");
-            if (limpiar) {
-              historial = [];
-              localStorage.removeItem('mediciones_local');
-              renderHistorial();
+            if (confirm("✅ PDF generado.\n\n¿Desea limpiar el historial de Octagon para iniciar el nuevo turno?")) {
+              historial = []; localStorage.removeItem('mediciones_local'); renderHistorial();
+              resetearTurnoAutomatico();
               alert("🔄 Turno de Octagon reiniciado.");
             }
           }, 1500);
         }
       } else {
-        const limpiar = confirm("No hay mediciones registradas hoy.\n\n¿Desea reiniciar el turno de Octagon?");
-        if (limpiar) {
-          historial = [];
-          localStorage.removeItem('mediciones_local');
-          renderHistorial();
+        if (confirm("No hay mediciones registradas hoy.\n\n¿Desea reiniciar el turno de Octagon?")) {
+          historial = []; localStorage.removeItem('mediciones_local'); renderHistorial();
+          resetearTurnoAutomatico();
         }
       }
     }
 
-    // --- CAMBIO TURNO EXTRUSIÓN ---
     async function solicitarCambioTurno() {
       if (historial.length > 0) {
-        const confirmar = confirm("⚠️ Debe descargar el reporte antes de cambiar turno.\n\n¿Generar PDF ahora?");
-        if (confirmar) {
+        if (confirm("⚠️ Debe descargar el reporte antes de cambiar turno.\n\n¿Generar PDF ahora?")) {
           await generarPDFPromise();
-          const limpiar = confirm("✅ PDF descargado.\n\n¿Limpiar historial y reiniciar configuración?");
-          if (limpiar) {
-            historial = [];
-            localStorage.removeItem('mediciones_local');
-            renderHistorial();
+          if (confirm("✅ PDF descargado.\n\n¿Limpiar historial y reiniciar configuración?")) {
+            historial = []; localStorage.removeItem('mediciones_local'); renderHistorial();
             localStorage.removeItem('estado_operativas');
-            document.getElementById('encargado-g1').value = '';
-            document.getElementById('encargado-g2').value = '';
-            toggleEditarOperativas(true);
-            renderBotonesExtrusoras();
+            document.getElementById('encargado-g1').value = ''; document.getElementById('encargado-g2').value = '';
+            toggleEditarOperativas(true); renderBotonesExtrusoras(); resetearTurnoAutomatico();
             alert("🔄 Turno cambiado. El contador correlativo de bobinas se mantiene hasta que cambie la OT.");
           }
         }
       } else {
-        const limpiar = confirm("¿Reiniciar configuración de operativas para el nuevo turno?");
-        if (limpiar) {
+        if (confirm("¿Reiniciar configuración de operativas para el nuevo turno?")) {
           localStorage.removeItem('estado_operativas');
-          document.getElementById('encargado-g1').value = '';
-          document.getElementById('encargado-g2').value = '';
-          toggleEditarOperativas(true);
-          renderBotonesExtrusoras();
+          document.getElementById('encargado-g1').value = ''; document.getElementById('encargado-g2').value = '';
+          toggleEditarOperativas(true); renderBotonesExtrusoras(); resetearTurnoAutomatico();
         }
       }
     }
 
-    // --- FUNCIONES GENERALES ---
+    // ============================================================
+    // FUNCIONES GENERALES
+    // ============================================================
     function toggleSonidoAudio() {
       sonidoHabilitado = !sonidoHabilitado;
       const btn = document.getElementById('btn-toggle-audio');
@@ -1928,57 +1678,33 @@
     }
 
     function cambiarVista(vista) {
-      if (vista === 'octagon') {
-        if (!solicitarLoginOctagon()) return;
-        actualizarInfoSesion();
-      }
+      if (vista === 'octagon') { if (!solicitarLoginOctagon()) return; actualizarInfoSesion(); }
       vistaActual = vista;
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       const target = document.getElementById('view-' + vista);
       if (target) target.classList.add('active');
       window.scrollTo(0,0);
+      guardarVistaActual(vista);
       if (vista === 'extrusion') renderBotonesExtrusoras();
-      if (vista === 'octagon') {
-        renderMuestrasPendientes();
-        autocompletarDatosMedicion();
-      }
+      if (vista === 'octagon') { renderMuestrasPendientes(); autocompletarDatosMedicion(); }
     }
 
     function abrirModal() { document.getElementById('modal-fichas').style.display = 'flex'; renderListaModal(); }
-    function cerrarModal() { 
-      document.getElementById('modal-fichas').style.display = 'none'; 
-      document.getElementById('mensaje-exito').style.display = 'none';
-      cancelarEdicionFicha();
-    }
-    function abrirModalDesvio() { 
-      document.getElementById('modal-desvios').style.display = 'flex'; 
-      actualizarCamposDesvio();
-      limpiarCaptura();
-    }
+    function cerrarModal() { document.getElementById('modal-fichas').style.display = 'none'; document.getElementById('mensaje-exito').style.display = 'none'; cancelarEdicionFicha(); }
+    function abrirModalDesvio() { document.getElementById('modal-desvios').style.display = 'flex'; actualizarCamposDesvio(); limpiarCaptura(); }
     function cerrarModalDesvio() { document.getElementById('modal-desvios').style.display = 'none'; }
 
-    // --- MODAL CAPTURA GRANDE (DESDE EXTRUSIÓN) ---
     function verCapturaDesvio(registro) {
-      if (!registro.capturaBase64) {
-        alert('Esta alerta no tiene captura de pantalla adjunta.');
-        return;
-      }
+      if (!registro.capturaBase64) { alert('Esta alerta no tiene captura de pantalla adjunta.'); return; }
       document.getElementById('captura-modal-img').src = registro.capturaBase64;
-      document.getElementById('captura-modal-info').innerHTML = `
-        <strong>${registro.alertaTipo}</strong> | ${registro.id} | ${registro.hora}<br>
-        Operador: ${registro.operador}
-      `;
+      document.getElementById('captura-modal-info').innerHTML = `<strong>${registro.alertaTipo}</strong> | ${registro.id} | ${registro.hora}<br>Operador: ${registro.operador}`;
       document.getElementById('modal-captura').style.display = 'flex';
     }
-
-    function cerrarModalCaptura() {
-      document.getElementById('modal-captura').style.display = 'none';
-    }
+    function cerrarModalCaptura() { document.getElementById('modal-captura').style.display = 'none'; }
 
     function actualizarCamposDesvio() {
       const tipo = document.getElementById('alerta-tipo-desvio').value;
       const esCirculoSucio = tipo === 'Circulo Micronométrico Sucio, Realizar Limpieza al Equipo';
-      
       document.getElementById('grupo-bobina').style.display = (tipo === 'Espesor Promedio' || tipo === 'Geles en Muestra' || tipo === 'Piel de Naranja') ? 'block' : 'none';
       document.getElementById('grupo-porcentaje').style.display = (tipo === 'Geles en Muestra' || tipo === 'Piel de Naranja') ? 'block' : 'none';
       document.getElementById('grupo-comentario').style.display = (tipo === 'Espesor Promedio' || tipo === 'Otro') ? 'block' : 'none';
@@ -2010,10 +1736,7 @@
           document.getElementById('info-objetivos-actuales').innerText = 'Configure una ficha técnica.';
         } else {
           extrusoras.forEach(e => { el.innerHTML += `<option value="${e.id}">${e.id} | ${e.producto}</option>`; });
-          if (id === 'select-extrusora') {
-            mostrarObjetivosSeleccionados();
-            autocompletarDatosMedicion();
-          }
+          if (id === 'select-extrusora') { mostrarObjetivosSeleccionados(); autocompletarDatosMedicion(); }
           if (id === 'alerta-extrusora') sincronizarOTAlerta();
         }
         el.value = prevVal || (id.includes('filtro') ? "TODAS" : "");
@@ -2028,24 +1751,14 @@
       selectOT.innerHTML = ext ? `<option value="${ext.producto}">${ext.producto}</option>` : `<option value="S/I">Sin OT</option>`;
     }
 
-    function verificarOperatividadExtrusora(extId) {
-      const num = parseInt(extId.replace(/\D/g, ''), 10);
-      const estado = JSON.parse(localStorage.getItem('estado_operativas')) || {};
-      const activas = [...(estado.g1 || []), ...(estado.g2 || [])];
-      return activas.includes(String(num));
-    }
-
     function mostrarObjetivosSeleccionados() {
       const select = document.getElementById('select-extrusora');
       if (!select) return;
       const ext = extrusoras.find(e => e.id === select.value);
       const infoBox = document.getElementById('info-objetivos-actuales');
-
       if (ext) {
         infoBox.innerHTML = `📌 <b>Ficha:</b> Ancho: ${ext.ancho}cm [${ext.minAncho}-${ext.maxAncho}] | Peso/m: ${ext.pesoIdeal}gr [${ext.minPeso}-${ext.maxPeso}] | Fuelles: ${ext.anchoFuelles || '-'}cm | Dinaje: ${ext.tensionSup || '-'} | <b>OT:</b> ${extraerOTDeFicha(ext.producto)}`;
-      } else {
-        infoBox.innerHTML = '';
-      }
+      } else { infoBox.innerHTML = ''; }
     }
 
     function renderListaModal() {
@@ -2053,18 +1766,7 @@
       if (!contenedor) return;
       contenedor.innerHTML = extrusoras.length === 0 ? '<p style="color:var(--text-muted);">Sin extrusoras.</p>' : '';
       extrusoras.forEach(e => {
-        contenedor.innerHTML += `
-          <div class="item-extrusora">
-            <div>
-              <strong>${e.id}</strong> - ${e.producto} <br>
-              <small style="color:var(--text-muted);">Ancho: ${e.ancho}cm | Fuelles: ${e.anchoFuelles || '-'}cm | Dinaje: ${e.tensionSup || '-'} | Peso: ${e.pesoIdeal}gr</small>
-            </div>
-            <div class="item-acciones">
-              <button class="btn-editar-item" onclick="cargarParaEditar('${e.id}')">✏️ Editar</button>
-              <button class="btn-borrar" onclick="eliminarExtrusora('${e.id}')">🗑️ Borrar</button>
-            </div>
-          </div>
-        `;
+        contenedor.innerHTML += `<div class="item-extrusora"><div><strong>${e.id}</strong> - ${e.producto} <br><small style="color:var(--text-muted);">Ancho: ${e.ancho}cm | Fuelles: ${e.anchoFuelles || '-'}cm | Dinaje: ${e.tensionSup || '-'} | Peso: ${e.pesoIdeal}gr</small></div><div class="item-acciones"><button class="btn-editar-item" onclick="cargarParaEditar('${e.id}')">✏️ Editar</button><button class="btn-borrar" onclick="eliminarExtrusora('${e.id}')">🗑️ Borrar</button></div></div>`;
       });
     }
 
@@ -2074,25 +1776,17 @@
       document.getElementById('cfg-num-ext').value = parseInt(ext.id.replace(/\D/g, ''), 10);
       document.getElementById('cfg-num-ext').readOnly = true;
       const matchProd = ext.producto.match(/^(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)\s*\(OT:\s*(\d+)\)$/);
-      if (matchProd) {
-        document.getElementById('cfg-ancho-prod').value = matchProd[1];
-        document.getElementById('cfg-largo-prod').value = matchProd[2];
-        document.getElementById('cfg-ot').value = matchProd[3];
-      }
-      document.getElementById('cfg-ancho').value = ext.ancho;
-      document.getElementById('cfg-tol-ancho').value = ext.tolAncho || 0.5;
-      document.getElementById('cfg-peso-ideal').value = ext.pesoIdeal;
-      document.getElementById('cfg-tol-peso').value = ext.tolPeso || 1.0;
-      document.getElementById('cfg-ancho-fuelles').value = ext.anchoFuelles || '';
-      document.getElementById('cfg-tension-sup').value = ext.tensionSup || '';
+      if (matchProd) { document.getElementById('cfg-ancho-prod').value = matchProd[1]; document.getElementById('cfg-largo-prod').value = matchProd[2]; document.getElementById('cfg-ot').value = matchProd[3]; }
+      document.getElementById('cfg-ancho').value = ext.ancho; document.getElementById('cfg-tol-ancho').value = ext.tolAncho || 0.5;
+      document.getElementById('cfg-peso-ideal').value = ext.pesoIdeal; document.getElementById('cfg-tol-peso').value = ext.tolPeso || 1.0;
+      document.getElementById('cfg-ancho-fuelles').value = ext.anchoFuelles || ''; document.getElementById('cfg-tension-sup').value = ext.tensionSup || '';
       actualizarRangos();
       document.getElementById('titulo-form-ficha').innerText = `Editar ${ext.id}`;
       document.getElementById('btn-cancelar-edicion').style.display = 'inline-block';
     }
 
     function cancelarEdicionFicha() {
-      document.getElementById('cfg-num-ext').value = '';
-      document.getElementById('cfg-num-ext').readOnly = false;
+      document.getElementById('cfg-num-ext').value = ''; document.getElementById('cfg-num-ext').readOnly = false;
       ['cfg-ancho-prod', 'cfg-largo-prod', 'cfg-ot', 'cfg-ancho-fuelles', 'cfg-tension-sup'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('titulo-form-ficha').innerText = 'Nueva Ficha Técnica';
       document.getElementById('btn-cancelar-edicion').style.display = 'none';
@@ -2109,50 +1803,34 @@
       const idFormatted = `EXT-${numExt.padStart(2, '0')}`;
       const nuevaFicha = { 
         id: idFormatted, producto: `${anchoProd}x${largoProd} (OT: ${ot})`, 
-        ancho: parseFloat(document.getElementById('cfg-ancho').value),
-        tolAncho: parseFloat(document.getElementById('cfg-tol-ancho').value),
-        minAncho: parseFloat(document.getElementById('cfg-min-ancho').value),
-        maxAncho: parseFloat(document.getElementById('cfg-max-ancho').value),
-        pesoIdeal: parseFloat(document.getElementById('cfg-peso-ideal').value),
-        tolPeso: parseFloat(document.getElementById('cfg-tol-peso').value),
-        minPeso: parseFloat(document.getElementById('cfg-min-peso').value),
-        maxPeso: parseFloat(document.getElementById('cfg-max-peso').value),
-        anchoFuelles: parseFloat(document.getElementById('cfg-ancho-fuelles').value) || null,
-        tensionSup: parseFloat(document.getElementById('cfg-tension-sup').value) || null
+        ancho: parseFloat(document.getElementById('cfg-ancho').value), tolAncho: parseFloat(document.getElementById('cfg-tol-ancho').value),
+        minAncho: parseFloat(document.getElementById('cfg-min-ancho').value), maxAncho: parseFloat(document.getElementById('cfg-max-ancho').value),
+        pesoIdeal: parseFloat(document.getElementById('cfg-peso-ideal').value), tolPeso: parseFloat(document.getElementById('cfg-tol-peso').value),
+        minPeso: parseFloat(document.getElementById('cfg-min-peso').value), maxPeso: parseFloat(document.getElementById('cfg-max-peso').value),
+        anchoFuelles: parseFloat(document.getElementById('cfg-ancho-fuelles').value) || null, tensionSup: parseFloat(document.getElementById('cfg-tension-sup').value) || null
       };
 
       try {
-        if (window.fbMethods && window.db) {
-          await window.fbMethods.setDoc(window.fbMethods.doc(window.db, "fichas", idFormatted), nuevaFicha);
-        } else {
+        if (window.fbMethods && window.db) await window.fbMethods.setDoc(window.fbMethods.doc(window.db, "fichas", idFormatted), nuevaFicha);
+        else {
           const index = extrusoras.findIndex(e => e.id === idFormatted);
           if (index >= 0) extrusoras[index] = nuevaFicha; else extrusoras.push(nuevaFicha);
           localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
         }
-        actualizarSelect();
-        renderListaModal();
-        renderBotonesExtrusoras();
-        document.getElementById('mensaje-exito').style.display = 'block';
-        cancelarEdicionFicha();
+        actualizarSelect(); renderListaModal(); renderBotonesExtrusoras();
+        document.getElementById('mensaje-exito').style.display = 'block'; cancelarEdicionFicha();
       } catch (e) { alert('Error al guardar'); }
     }
 
     async function eliminarExtrusora(id) {
       if (!confirm(`¿Eliminar ${id}?`)) return;
       try {
-        if (window.fbMethods && window.db) {
-          await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "fichas", id));
-        } else {
-          extrusoras = extrusoras.filter(e => e.id !== id);
-          localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
-        }
-        actualizarSelect();
-        renderListaModal();
-        renderBotonesExtrusoras();
+        if (window.fbMethods && window.db) await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "fichas", id));
+        else { extrusoras = extrusoras.filter(e => e.id !== id); localStorage.setItem('extrusoras', JSON.stringify(extrusoras)); }
+        actualizarSelect(); renderListaModal(); renderBotonesExtrusoras();
       } catch (e) { alert('Error'); }
     }
 
-    // --- REGISTRO DE DESVÍO CON CAPTURA ---
     async function registrarAlertaDesvio() {
       const extId = document.getElementById('alerta-extrusora').value;
       const ot = document.getElementById('alerta-ot').value;
@@ -2161,7 +1839,7 @@
       const porcentaje = document.getElementById('alerta-porcentaje').value.trim();
       const comentario = document.getElementById('alerta-comentario').value.trim();
       const operador = operadorActual || "Octagon";
-      const turno = obtenerTurnoAutomatico().nombre;
+      const turno = obtenerTurnoActivo().nombre;
 
       if (tipoDesvio === 'Espesor Promedio' && !bobina) return alert('Ingrese N° Bobina');
       if ((tipoDesvio === 'Geles en Muestra' || tipoDesvio === 'Piel de Naranja') && (!bobina || !porcentaje)) return alert('Ingrese Bobina y %');
@@ -2172,48 +1850,26 @@
       if (comentario) detalleExtra += ` | Obs: ${comentario}`;
 
       const registro = {
-        timestamp: Date.now(), 
-        hora: new Date().toLocaleTimeString('es-CL', {hour: '2-digit', minute:'2-digit', hour12: false}), 
-        operador, turno, id: extId, producto: detalleExtra,
-        valorMedido: 0, pesoMedido: 0, fueraDeRango: true, corregido: false, 
-        alertaTipo: `⚠️ ${tipoDesvio}`,
-        capturaBase64: capturaActualBase64 || null,
-        tieneCaptura: !!capturaActualBase64
+        timestamp: Date.now(), hora: new Date().toLocaleTimeString('es-CL', {hour: '2-digit', minute:'2-digit', hour12: false}), 
+        operador, turno, id: extId, producto: detalleExtra, valorMedido: 0, pesoMedido: 0, fueraDeRango: true, corregido: false, 
+        alertaTipo: `⚠️ ${tipoDesvio}`, capturaBase64: capturaActualBase64 || null, tieneCaptura: !!capturaActualBase64
       };
 
       try {
-        if (window.fbMethods && window.db) {
-          await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "mediciones"), registro);
-        } else {
-          historial.unshift(registro);
-          localStorage.setItem('mediciones_local', JSON.stringify(historial));
-          renderHistorial();
-          lanzarAlerta(registro);
-        }
+        if (window.fbMethods && window.db) await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "mediciones"), registro);
+        else { historial.unshift(registro); localStorage.setItem('mediciones_local', JSON.stringify(historial)); renderHistorial(); lanzarAlerta(registro); }
         ['alerta-bobina', 'alerta-porcentaje', 'alerta-comentario'].forEach(id => document.getElementById(id).value = '');
-        limpiarCaptura();
-        cerrarModalDesvio();
+        limpiarCaptura(); cerrarModalDesvio();
         alert('⚠️ Alerta enviada' + (capturaActualBase64 ? ' con captura de pantalla' : ''));
       } catch (e) {
-        historial.unshift(registro);
-        localStorage.setItem('mediciones_local', JSON.stringify(historial));
-        renderHistorial();
-        lanzarAlerta(registro);
-        cerrarModalDesvio();
+        historial.unshift(registro); localStorage.setItem('mediciones_local', JSON.stringify(historial)); renderHistorial(); lanzarAlerta(registro); cerrarModalDesvio();
       }
     }
 
-    // --- REGISTRO DE MEDIDA (NUEVO FORMULARIO) ---
     async function registrarMedida() {
-      if (!operadorActual) {
-        alert('Por favor inicie sesión primero');
-        verificarOperador();
-        return;
-      }
-
+      if (!operadorActual) { alert('Por favor inicie sesión primero'); solicitarLoginOctagon(); return; }
       const equipo = document.getElementById('input-equipo').value;
       const id = document.getElementById('select-extrusora').value;
-      
       const micronMin = document.getElementById('val-micron-min').value.trim();
       const micronProm = document.getElementById('val-micron-prom').value.trim();
       const micronMax = document.getElementById('val-micron-max').value.trim();
@@ -2221,6 +1877,9 @@
       const anchoFuelles = document.getElementById('val-ancho-fuelles').value.trim();
       const pesoMetro = document.getElementById('val-peso-metro').value.trim();
       const tensionSup = document.getElementById('val-tension-sup').value.trim();
+      const bobinaStr = document.getElementById('input-bobina').value;
+      const bobinaMatch = bobinaStr.match(/N°\s*(\d+)/);
+      const numeroBobina = bobinaMatch ? bobinaMatch[1] : 'N/A';
 
       if (!id) return alert('Seleccione extrusora');
       if (micronMin === '' || micronProm === '' || micronMax === '') return alert('Ingrese los 3 valores de micrón (Mín, Prom, Máx)');
@@ -2229,11 +1888,9 @@
       const ext = extrusoras.find(e => e.id === id);
       if (!ext) return alert('Ficha no encontrada');
 
-      // Verificar si está fuera de rango (usando tolerancias de la ficha)
       const valAncho = parseFloat(anchoTotal);
       const valPeso = parseFloat(pesoMetro);
       const fueraDeRango = (valAncho < ext.minAncho || valAncho > ext.maxAncho) || (valPeso < ext.minPeso || valPeso > ext.maxPeso);
-      
       let mensajeAlertaTipo = "";
       if (fueraDeRango) {
         if (valAncho < ext.minAncho || valAncho > ext.maxAncho) mensajeAlertaTipo += `🚨 Ancho Fuera (${valAncho}cm) `;
@@ -2241,45 +1898,21 @@
       }
 
       const registro = {
-        timestamp: Date.now(), 
-        hora: new Date().toLocaleTimeString('es-CL', {hour: '2-digit', minute:'2-digit', hour12: false}), 
-        operador: operadorActual, 
-        equipo, 
-        turno: obtenerTurnoAutomatico().nombre, 
-        id: ext.id, 
-        producto: ext.producto,
-        ot: extraerOTDeFicha(ext.producto),
-        dimensiones: extraerDimensionesDeProducto(ext.producto),
-        micronMin: parseFloat(micronMin),
-        micronProm: parseFloat(micronProm),
-        micronMax: parseFloat(micronMax),
-        anchoTotal: valAncho,
-        anchoFuelles: anchoFuelles ? parseFloat(anchoFuelles) : null,
-        pesoMetro: valPeso,
-        tensionSup: tensionSup ? parseFloat(tensionSup) : null,
-        // Compatibilidad con versiones anteriores
-        valorMedido: valAncho,
-        pesoMedido: valPeso,
-        fueraDeRango, corregido: false, 
-        alertaTipo: mensajeAlertaTipo || "✅ OK"
+        timestamp: Date.now(), hora: new Date().toLocaleTimeString('es-CL', {hour: '2-digit', minute:'2-digit', hour12: false}), 
+        operador: operadorActual, equipo, turno: obtenerTurnoActivo().nombre, id: ext.id, producto: ext.producto,
+        ot: extraerOTDeFicha(ext.producto), dimensiones: extraerDimensionesDeProducto(ext.producto), numeroBobina,
+        micronMin: parseFloat(micronMin), micronProm: parseFloat(micronProm), micronMax: parseFloat(micronMax),
+        anchoTotal: valAncho, anchoFuelles: anchoFuelles ? parseFloat(anchoFuelles) : null,
+        pesoMetro: valPeso, tensionSup: tensionSup ? parseFloat(tensionSup) : null,
+        valorMedido: valAncho, pesoMedido: valPeso, fueraDeRango, corregido: false, alertaTipo: mensajeAlertaTipo || "✅ OK"
       };
 
       try {
-        if (window.fbMethods && window.db) {
-          await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "mediciones"), registro);
-        } else {
-          historial.unshift(registro);
-          localStorage.setItem('mediciones_local', JSON.stringify(historial));
-          renderHistorial();
-          if (fueraDeRango) lanzarAlerta(registro);
-        }
-        // Limpiar campos manuales
+        if (window.fbMethods && window.db) await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "mediciones"), registro);
+        else { historial.unshift(registro); localStorage.setItem('mediciones_local', JSON.stringify(historial)); renderHistorial(); if (fueraDeRango) lanzarAlerta(registro); }
         ['val-micron-min', 'val-micron-prom', 'val-micron-max', 'val-ancho-total', 'val-ancho-fuelles', 'val-peso-metro', 'val-tension-sup'].forEach(id => document.getElementById(id).value = '');
       } catch (e) {
-        historial.unshift(registro);
-        localStorage.setItem('mediciones_local', JSON.stringify(historial));
-        renderHistorial();
-        if (fueraDeRango) lanzarAlerta(registro);
+        historial.unshift(registro); localStorage.setItem('mediciones_local', JSON.stringify(historial)); renderHistorial(); if (fueraDeRango) lanzarAlerta(registro);
       }
     }
 
@@ -2291,9 +1924,7 @@
           await Promise.all(snapshot.docs.map(d => window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "mediciones", d.id))));
         }
       } catch (e) {}
-      historial = []; 
-      localStorage.removeItem('mediciones_local'); 
-      renderHistorial();
+      historial = []; localStorage.removeItem('mediciones_local'); renderHistorial();
     }
 
     async function corregirError(docId) {
@@ -2313,10 +1944,7 @@
     function renderHistorial() {
       const alertasCount = historial.filter(r => r.fueraDeRango).length;
       const banner = document.getElementById('banner-alertas-medio');
-      if (banner) {
-        banner.style.display = alertasCount > 0 ? 'block' : 'none';
-        document.getElementById('m-alertas-count').innerText = alertasCount;
-      }
+      if (banner) { banner.style.display = alertasCount > 0 ? 'block' : 'none'; document.getElementById('m-alertas-count').innerText = alertasCount; }
 
       const fExt = document.getElementById('filtro-extrusora')?.value || "TODAS";
       const fEst = document.getElementById('filtro-estado')?.value || "TODOS";
@@ -2325,7 +1953,6 @@
       const fExtExt = document.getElementById('filtro-extrusora-ext')?.value || "TODAS";
       const fEstExt = document.getElementById('filtro-estado-ext')?.value || "TODOS";
 
-      // RENDER OCTAGON
       const tbodyOct = document.getElementById('tabla-log-octagon');
       if (tbodyOct) {
         tbodyOct.innerHTML = '';
@@ -2361,7 +1988,6 @@
         });
       }
 
-      // RENDER EXTRUSIÓN
       const tbodyExt = document.getElementById('tabla-log-extrusion');
       if (tbodyExt) {
         tbodyExt.innerHTML = '';
@@ -2374,12 +2000,8 @@
           const clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
           const estadoTexto = reg.fueraDeRango ? (reg.alertaTipo || '🚨 FUERA') : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
           const idKey = reg.docId || reg.timestamp;
-          const accion = reg.fueraDeRango 
-            ? `<button class="btn-corregir" onclick="corregirError('${idKey}')">Corregido</button>` 
-            : estadoTexto;
-          const capturaBtn = reg.tieneCaptura 
-            ? `<button class="btn-captura" onclick='verCapturaDesvio(${JSON.stringify(reg).replace(/'/g, "\\'")})'>📷 Ver</button>` 
-            : '<span style="color:var(--text-muted);">-</span>';
+          const accion = reg.fueraDeRango ? `<button class="btn-corregir" onclick="corregirError('${idKey}')">Corregido</button>` : estadoTexto;
+          const capturaBtn = reg.tieneCaptura ? `<button class="btn-captura" onclick='verCapturaDesvio(${JSON.stringify(reg).replace(/'/g, "\\'")})'>📷 Ver</button>` : '<span style="color:var(--text-muted);">-</span>';
 
           tbodyExt.innerHTML += `
             <tr class="${clase}">
@@ -2463,8 +2085,7 @@
         onSnapshot(qMediciones, (snapshot) => {
           const nuevosDatos = [];
           snapshot.forEach((docSnap) => nuevosDatos.push({ docId: docSnap.id, ...docSnap.data() }));
-          historial = nuevosDatos;
-          renderHistorial();
+          historial = nuevosDatos; renderHistorial();
           if (historial.length > 0) {
             const latestTimestamp = historial[0].timestamp;
             if (latestTimestamp > lastKnownTimestamp && historial[0].fueraDeRango) lanzarAlerta(historial[0]);
@@ -2478,11 +2099,8 @@
           const nuevasFichas = [];
           snapshot.forEach((docSnap) => nuevasFichas.push(docSnap.data()));
           if (nuevasFichas.length > 0) {
-            extrusoras = nuevasFichas;
-            localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
-            actualizarSelect();
-            renderListaModal();
-            renderBotonesExtrusoras();
+            extrusoras = nuevasFichas; localStorage.setItem('extrusoras', JSON.stringify(extrusoras));
+            actualizarSelect(); renderListaModal(); renderBotonesExtrusoras();
             if (vistaActual === 'octagon') autocompletarDatosMedicion();
           }
         });
@@ -2491,8 +2109,7 @@
         onSnapshot(qBobinas, (snapshot) => {
           const nuevasBobinas = [];
           snapshot.forEach((docSnap) => nuevasBobinas.push({ id: docSnap.id, ...docSnap.data() }));
-          bobinas = nuevasBobinas;
-          localStorage.setItem('bobinas_local', JSON.stringify(bobinas));
+          bobinas = nuevasBobinas; localStorage.setItem('bobinas_local', JSON.stringify(bobinas));
           if (extrusoraActualPanel) renderBobinasExtrusora();
           if (vistaActual === 'octagon') autocompletarDatosMedicion();
         });
@@ -2501,27 +2118,19 @@
         onSnapshot(qScraps, (snapshot) => {
           const nuevosScraps = [];
           snapshot.forEach((docSnap) => nuevosScraps.push({ id: docSnap.id, ...docSnap.data() }));
-          scraps = nuevosScraps;
-          localStorage.setItem('scraps_local', JSON.stringify(scraps));
-          if (extrusoraActualPanel) {
-            renderScrapExtrusora();
-            actualizarTotalScrapTurno();
-          }
+          scraps = nuevosScraps; localStorage.setItem('scraps_local', JSON.stringify(scraps));
+          if (extrusoraActualPanel) { renderScrapExtrusora(); actualizarTotalScrapTurno(); }
         });
 
         const qMuestras = query(collection(window.db, "muestras_pendientes"), orderBy("timestamp", "desc"));
         onSnapshot(qMuestras, (snapshot) => {
           const nuevasMuestras = [];
           snapshot.forEach((docSnap) => nuevasMuestras.push({ id: docSnap.id, ...docSnap.data() }));
-          muestrasPendientes = nuevasMuestras;
-          localStorage.setItem('muestras_pendientes', JSON.stringify(muestrasPendientes));
+          muestrasPendientes = nuevasMuestras; localStorage.setItem('muestras_pendientes', JSON.stringify(muestrasPendientes));
           if (vistaActual === 'octagon') renderMuestrasPendientes();
         });
 
-      } catch (e) { 
-        console.warn("Fallback local:", e);
-        usarHistorialLocal(); 
-      }
+      } catch (e) { console.warn("Fallback local:", e); usarHistorialLocal(); }
     }
 
     function usarHistorialLocal() {
@@ -2531,20 +2140,16 @@
       scraps = JSON.parse(localStorage.getItem('scraps_local')) || [];
       muestrasPendientes = JSON.parse(localStorage.getItem('muestras_pendientes')) || [];
       renderHistorial();
-      if (vistaActual === 'octagon') {
-        renderMuestrasPendientes();
-        autocompletarDatosMedicion();
-      }
+      if (vistaActual === 'octagon') { renderMuestrasPendientes(); autocompletarDatosMedicion(); }
     }
 
     window.onload = () => {
       actualizarSelect();
       cargarEstadoOperativas();
-      cargarEstadoEquipos();
+      inicializarSelectorTurno();
+      actualizarInfoSesion();
       renderBotonesExtrusoras();
-      setInterval(() => {
-        if (operadorActual) actualizarInfoSesion();
-      }, 30000);
+      restaurarVistaAlIniciar();
       setTimeout(iniciarSincronizacionFirebase, 800);
     };
   </script>
