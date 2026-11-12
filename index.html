@@ -95,7 +95,7 @@ h2 { color: var(--text-primary); border-bottom: 1px solid var(--border-color); p
 label { display: block; margin-top: 12px; font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 4px; }
 input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-main); transition: border-color 0.2s, box-shadow 0.2s; }
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1); }
-input[readonly] { background: #f8fafc; color: var(--text-muted); cursor: not-allowed; }
+input[readonly] { background: #f1f5f9; color: var(--text-muted); cursor: not-allowed; }
 button[type="button"], button[onclick] { font-family: var(--font-main); touch-action: manipulation; }
 .home-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; text-align: center; }
 .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; width: 100%; max-width: 600px; margin-top: 32px; }
@@ -110,9 +110,11 @@ tr:last-child td { border-bottom: none; }
 .alerta-row { background: #fef2f2; color: var(--danger); font-weight: 600; }
 .ok-row { color: var(--success); }
 .corregido-row { background: #f0fdf4; color: var(--success); font-weight: 600; }
+.scrap-row { background: #fff7ed; color: #9a3412; font-weight: 600; }
 .btn-volver { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); width: auto; padding: 6px 14px; font-size: 0.85rem; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: var(--font-main); }
 .btn-volver:hover { background: #f1f5f9; color: var(--text-primary); }
 .btn-corregir { background: var(--success); padding: 6px 12px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 6px; color: white; border: none; cursor: pointer; }
+.btn-comentario { background: var(--warning); padding: 6px 12px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 6px; color: white; border: none; cursor: pointer; }
 .btn-eliminar { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 6px; cursor: pointer; }
 .btn-imprimir { background: var(--info); color: white; padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 6px; cursor: pointer; border: none; }
 .btn-captura { background: var(--warning); color: white; padding: 6px 10px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 6px; cursor: pointer; border: none; }
@@ -125,10 +127,6 @@ tr:last-child td { border-bottom: none; }
 .item-producto { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border-color); font-size: 0.875rem; gap: 12px; }
 .item-producto-info { flex: 1; }
 .item-producto-codigo { display: inline-block; background: var(--primary); color: white; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; margin-right: 8px; }
-.item-asignacion { display: flex; justify-content: space-between; align-items: center; background: #f0f9ff; padding: 12px; border-radius: 8px; margin-top: 8px; border: 1px solid #bae6fd; font-size: 0.875rem; gap: 12px; }
-.item-asignacion-info { flex: 1; }
-.item-asignacion-ext { display: inline-block; background: var(--success); color: white; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; margin-right: 8px; }
-.item-asignacion-ot { display: inline-block; background: var(--warning); color: white; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; margin-right: 4px; }
 .item-acciones { display: flex; gap: 8px; }
 .btn-editar-item { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; cursor: pointer; }
 .btn-borrar { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); width: auto; margin: 0; padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; cursor: pointer; }
@@ -158,26 +156,22 @@ tr:last-child td { border-bottom: none; }
 .grupos-extrusoras { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 12px; }
 .grupo-extrusoras-box { background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); }
 .grupo-extrusoras-box h3 { margin: 0 0 10px 0; font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; }
-.extrusoras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
-.extrusora-btn { position: relative; border: 2px solid; border-radius: 8px; padding: 8px 6px; cursor: pointer; transition: all 0.2s; text-align: center; font-family: var(--font-main); min-height: 90px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+.extrusoras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.extrusora-btn { position: relative; border: 2px solid; border-radius: 8px; padding: 8px 6px; cursor: pointer; transition: all 0.2s; text-align: center; font-family: var(--font-main); min-height: 110px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
 .extrusora-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 .extrusora-btn.activa { background: var(--success-light); border-color: var(--success); color: var(--success-hover); }
-.extrusora-btn.inoperativa { background: var(--danger-light); border-color: var(--danger); color: var(--danger-hover); }
+.extrusora-btn.inoperativa { background: var(--danger-light); border-color: var(--danger); color: var(--danger-hover); display: none; }
 .extrusora-btn .ext-numero { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.025em; }
 .extrusora-btn .ext-ot { font-size: 0.65rem; font-weight: 600; margin-top: 2px; padding: 2px 4px; background: rgba(255,255,255,0.7); border-radius: 4px; width: 100%; word-break: break-all; line-height: 1.2; }
 .extrusora-btn .ext-codigo { font-size: 0.6rem; font-weight: 600; margin-top: 2px; padding: 1px 4px; background: rgba(15,76,129,0.15); color: var(--primary); border-radius: 3px; width: 100%; }
+.extrusora-btn .ext-metros { font-size: 0.65rem; font-weight: 700; margin-top: 2px; padding: 1px 4px; background: rgba(5,150,105,0.15); color: var(--success-hover); border-radius: 3px; width: 100%; }
 .extrusora-btn.activa .ext-ot { color: var(--success-hover); }
-.extrusora-btn.inoperativa .ext-ot { color: var(--danger-hover); }
 .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
 .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text-secondary); font-weight: 600; font-size: 0.9rem; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; font-family: var(--font-main); }
 .tab-btn:hover { color: var(--text-primary); background: #f8fafc; }
 .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 .tab-content { display: none; }
 .tab-content.active { display: block; animation: fadeIn 0.2s ease; }
-.calc-result { background: #f0fdf4; border: 1px solid #bbf7d0; color: var(--success); padding: 16px; border-radius: 8px; text-align: center; margin-top: 16px; }
-.calc-result .label { font-size: 0.85rem; font-weight: 600; color: var(--success-hover); text-transform: uppercase; }
-.calc-result .value { font-size: 2rem; font-weight: 800; color: var(--success); margin-top: 4px; }
-.calc-result .sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 .scrap-calc { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); padding: 16px; border-radius: 8px; text-align: center; margin-top: 16px; }
 .scrap-calc .label { font-size: 0.85rem; font-weight: 600; color: var(--danger-hover); text-transform: uppercase; }
 .scrap-calc .value { font-size: 1.5rem; font-weight: 800; color: var(--danger); margin-top: 4px; }
@@ -191,6 +185,7 @@ tr:last-child td { border-bottom: none; }
 .modal-operador-content { background: white; padding: 32px; border-radius: 16px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
 .modal-operador-content h2 { color: var(--primary); margin-top: 0; border: none; font-size: 1.25rem; }
 .modal-captura-img { max-width: 100%; max-height: 75vh; border-radius: 8px; border: 2px solid var(--border-color); }
+/* Layout Octagon: Izquierda = Datos + Espesor | Derecha = Físicas */
 .registrar-medida-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 @media (max-width: 768px) {
 .registrar-medida-grid { grid-template-columns: 1fr; }
@@ -224,11 +219,9 @@ tr:last-child td { border-bottom: none; }
 .producto-dims-row { display: flex; align-items: flex-end; gap: 6px; }
 .producto-dims-row .dim-field { flex: 1; }
 .producto-dims-row .dim-sep { padding-bottom: 12px; font-weight: 700; color: var(--text-muted); }
-.producto-info-preview { background: #f0f9ff; border: 1px solid #bae6fd; color: var(--primary); padding: 10px 12px; border-radius: 6px; font-size: 0.82rem; margin-top: 8px; }
-.asignacion-info-box { background: #fef3c7; border: 1px solid #fbbf24; color: #78350f; padding: 10px 12px; border-radius: 6px; font-size: 0.82rem; margin-top: 8px; }
-.asignacion-info-box.success { background: #dcfce7; border-color: #86efac; color: #14532d; }
-.asignacion-info-box.error { background: #fee2e2; border-color: #fca5a5; color: #7f1d1d; }
 .extrusion-actions-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.extrusora-info-inline { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; margin-top: 6px; font-weight: 600; }
+.extrusora-info-inline.error { background: #fee2e2; border-color: #fca5a5; color: #7f1d1d; }
 #print-area { display: none; }
 </style>
 </head>
@@ -324,22 +317,12 @@ tr:last-child td { border-bottom: none; }
 <div class="card">
 <h2>📏 Registrar Bobina</h2>
 <div class="registrar-medida-grid">
-<!-- COLUMNA IZQUIERDA: MEDICIONES DE ESPESOR -->
+<!-- COLUMNA IZQUIERDA: DATOS PRINCIPALES + MEDICIONES DE ESPESOR -->
 <div class="rm-col rm-col-left">
-<h3>🔹 Mediciones de Espesor (μm)</h3>
-<label>Máximo (μm): <small id="sug-max" style="color:var(--success); font-weight:600;"></small></label>
-<input type="number" step="0.1" id="val-micron-max" placeholder="Sugerido">
-<label>Promedio (μm): <small id="sug-prom" style="color:var(--success); font-weight:600;"></small></label>
-<input type="number" step="0.1" id="val-micron-prom" placeholder="Sugerido">
-<label>Mínimo (μm): <small id="sug-min" style="color:var(--success); font-weight:600;"></small></label>
-<input type="number" step="0.1" id="val-micron-min" placeholder="Sugerido">
-</div>
-<!-- COLUMNA DERECHA: DATOS PRINCIPALES + MEDICIONES FÍSICAS -->
-<div class="rm-col">
 <h3>🔹 Datos Principales</h3>
 <label>Extrusora:</label>
 <select id="select-extrusora" onchange="onExtrusoraChangeOctagon()"></select>
-<div id="asignacion-info-box" class="asignacion-info-box" style="display:none;"></div>
+<div id="extrusora-info-inline" class="extrusora-info-inline" style="display:none;"></div>
 <label>Octagon:</label>
 <select id="select-octagon-equipo">
 <option value="A">Octagon A</option>
@@ -347,19 +330,29 @@ tr:last-child td { border-bottom: none; }
 </select>
 <input type="hidden" id="input-equipo">
 <label>N° de Bobina:</label>
-<input type="number" id="input-bobina-numero" placeholder="Se sugiere automáticamente">
+<input type="number" id="input-bobina-numero" placeholder="Ej: 14">
 <div id="bobina-estado-msg"></div>
 <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-<h3 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">📐 Mediciones Físicas</h3>
-<label>Ancho Total (cm): <small id="sug-ancho" style="color:var(--success); font-weight:600;"></small></label>
-<input type="number" step="0.1" id="val-ancho-total" placeholder="Sugerido">
-<label>Peso Metro Lineal (gr): <small id="sug-peso" style="color:var(--success); font-weight:600;"></small></label>
-<input type="number" step="0.1" id="val-peso-metro" placeholder="Sugerido">
-<label>Ancho Fuelles (cm): <small id="sug-fuelles" style="color:var(--success); font-weight:600;"></small></label>
-<input type="number" step="0.1" id="val-ancho-fuelles" placeholder="Sugerido">
-<label>Tensión Sup. (Dinaje): <small id="sug-tension" style="color:var(--success); font-weight:600;"></small></label>
-<input type="number" step="0.1" id="val-tension-sup" placeholder="Sugerido">
+<h3 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">🔹 Mediciones de Espesor (μm)</h3>
+<label>Máximo (μm):</label>
+<input type="number" step="0.1" id="val-micron-max" placeholder="Ej: 55">
+<label>Promedio (μm):</label>
+<input type="number" step="0.1" id="val-micron-prom" placeholder="Ej: 50">
+<label>Mínimo (μm):</label>
+<input type="number" step="0.1" id="val-micron-min" placeholder="Ej: 45">
 </div>
+</div>
+<!-- COLUMNA DERECHA: MEDICIONES FÍSICAS -->
+<div class="rm-col">
+<h3>📐 Mediciones Físicas</h3>
+<label>Ancho Total (cm):</label>
+<input type="number" step="0.1" id="val-ancho-total" placeholder="Ej: 80">
+<label>Peso Metro Lineal (gr):</label>
+<input type="number" step="0.1" id="val-peso-metro" placeholder="Ej: 44">
+<label>Ancho Fuelles (cm):</label>
+<input type="number" step="0.1" id="val-ancho-fuelles" placeholder="Ej: 15" readonly>
+<label>Tensión Sup. (Dinaje):</label>
+<input type="number" step="0.1" id="val-tension-sup" placeholder="Ej: 38" readonly>
 <button class="btn-primary" style="width: 100%; margin-top: 16px; padding: 12px;" onclick="registrarMedida()">📤 Registrar Medida</button>
 </div>
 </div>
@@ -471,7 +464,7 @@ tr:last-child td { border-bottom: none; }
 <div class="produccion-header">
 <div>
 <h2 style="border:none; margin:0; padding:0;">🏭 Producción por Extrusora</h2>
-<p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Haga clic en una extrusora para registrar bobinas o scrap</p>
+<p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Solo se muestran extrusoras con OT y Código asignados</p>
 </div>
 <button class="btn-action btn-info" onclick="imprimirProduccionExtrusion()">🖨️ Imprimir Producción del Turno</button>
 </div>
@@ -490,30 +483,26 @@ tr:last-child td { border-bottom: none; }
 </div>
 </div>
 </div>
-<!-- ASIGNACIONES ACTIVAS -->
+<!-- MONITOREO DE PRODUCCIÓN -->
 <div class="card">
-<h2 style="margin-bottom: 16px;">🔗 Asignaciones Activas de Extrusión</h2>
-<div id="lista-asignaciones"></div>
-</div>
-<div class="card">
-<h2 style="margin-bottom: 16px;">🖥️ Monitoreo de Mediciones</h2>
+<h2 style="margin-bottom: 16px;">🖥️ Monitoreo de Producción</h2>
 <div class="filter-bar">
-<div><label style="margin-top:0;">Extrusora:</label><select id="filtro-extrusora-ext" onchange="renderHistorial()"><option value="TODAS">Todas</option></select></div>
-<div><label style="margin-top:0;">Estado:</label>
-<select id="filtro-estado-ext" onchange="renderHistorial()">
-<option value="TODOS">Todos</option><option value="ALERTAS">Alertas</option><option value="CORREGIDOS">Corregidos</option>
+<div><label style="margin-top:0;">Extrusora:</label><select id="filtro-extrusora-ext" onchange="renderProduccion()"><option value="TODAS">Todas</option></select></div>
+<div><label style="margin-top:0;">Tipo:</label>
+<select id="filtro-tipo-ext" onchange="renderProduccion()">
+<option value="TODOS">Todos</option><option value="BOBINAS">Bobinas</option><option value="SCRAP">Scrap</option>
 </select>
 </div>
 </div>
 <div class="table-responsive">
 <table>
-<thead><tr><th>Hora</th><th>Operador</th><th>Extrusora</th><th>Código / OT</th><th>Ancho</th><th>Peso</th><th>Captura</th><th>Acción</th></tr></thead>
+<thead><tr><th>Hora</th><th>Operador</th><th>Extrusora</th><th>Bobina</th><th>OT</th><th>Código</th><th>Peso</th><th>Metros</th><th>Captura</th><th>Acción</th></tr></thead>
 <tbody id="tabla-log-extrusion"></tbody>
 </table>
 </div>
 </div>
 </div>
-<!-- MODAL: PANEL DE EXTRUSORA -->
+<!-- MODAL: PANEL DE EXTRUSORA (simplificado) -->
 <div class="modal-overlay" id="modal-extrusora">
 <div class="modal-content">
 <div class="modal-header">
@@ -532,25 +521,18 @@ tr:last-child td { border-bottom: none; }
 <h3 style="margin: 0 0 12px 0; color: var(--primary); font-size: 1rem;">Registrar Nueva Bobina</h3>
 <div class="grid-3">
 <div><label>N° Bobina:</label><input type="number" id="bobina-numero" placeholder="Auto"></div>
-<div><label>Peso (kg):</label><input type="number" step="0.1" id="bobina-peso" placeholder="Ej: 15.5" oninput="calcularMetrosBobina()"></div>
-<div><label>Espesor (micras):</label><input type="number" step="1" id="bobina-espesor" placeholder="Ej: 40" oninput="calcularMetrosBobina()"></div>
+<div><label>Peso (kg):</label><input type="number" step="0.1" id="bobina-peso" placeholder="Ej: 15.5"></div>
+<div><label>Metros:</label><input type="number" step="0.1" id="bobina-metros-input" placeholder="Ej: 1250"></div>
 </div>
 <div class="grid-3" style="margin-top: 8px;">
-<div><label>Ancho (cm):</label><input type="number" step="0.1" id="bobina-ancho" readonly style="background:#f1f5f9;"></div>
-<div><label>Densidad (g/cm³):</label><input type="number" step="0.01" id="bobina-densidad" value="0.92" oninput="calcularMetrosBobina()"></div>
 <div><label>Operador:</label><input type="text" id="bobina-operador" placeholder="Nombre"></div>
-</div>
-<div class="calc-result">
-<div class="label">Longitud Estimada</div>
-<div class="value" id="bobina-metros">--- m</div>
-<div class="sub">Cálculo automático (Peso × 100.000) / (Ancho × Espesor × Densidad)</div>
 </div>
 <button class="btn-info" style="width: 100%; margin-top: 16px; padding: 12px;" onclick="registrarBobinaExtrusora()">💾 Registrar Bobina</button>
 </div>
 <h3 style="margin-top: 24px; color: var(--text-primary); font-size: 1rem;">Historial de Bobinas</h3>
 <div class="table-responsive">
 <table>
-<thead><tr><th>Fecha/Hora</th><th>N°</th><th>Peso</th><th>Ancho</th><th>Espesor</th><th>Metros</th><th>Operador</th><th>Acción</th></tr></thead>
+<thead><tr><th>Fecha/Hora</th><th>N°</th><th>Peso</th><th>Metros</th><th>Operador</th><th>Acción</th></tr></thead>
 <tbody id="tabla-bobinas-extrusora"></tbody>
 </table>
 </div>
@@ -613,7 +595,7 @@ tr:last-child td { border-bottom: none; }
 </select>
 <div class="grid-2" style="margin-top: 12px;">
 <div><label>Extrusora:</label><select id="alerta-extrusora"></select></div>
-<div><label>OT Activa:</label><input type="text" id="alerta-ot" placeholder="Se autocompleta"></div>
+<div><label>OT Activa:</label><input type="text" id="alerta-ot" placeholder="Se autocompleta" readonly></div>
 </div>
 <div id="grupo-bobina" style="margin-top: 12px;"><label>N° Bobina:</label><input type="number" id="alerta-bobina" placeholder="Ej: 14"></div>
 <div id="grupo-porcentaje" style="margin-top: 12px; display: none;"><label>Porcentaje (%):</label><input type="number" step="0.1" id="alerta-porcentaje" placeholder="Ej: 5.5"></div>
@@ -638,7 +620,7 @@ tr:last-child td { border-bottom: none; }
 </div>
 </div>
 </div>
-<!-- MODAL: CÓDIGOS (antes Productos) -->
+<!-- MODAL: CÓDIGOS -->
 <div class="modal-overlay" id="modal-codigos">
 <div class="modal-content">
 <div class="modal-header">
@@ -698,7 +680,7 @@ tr:last-child td { border-bottom: none; }
 <label>Código Asignado:</label>
 <input type="text" id="ne-codigo-buscador" placeholder="🔍 Buscar código (Ej: 40-626)" oninput="filtrarCodigosNuevaExtrusion()" style="margin-bottom: 6px;">
 <select id="ne-codigo" size="6" style="height: 140px; font-size: 0.85rem;"></select>
-<div id="ne-codigo-preview" class="producto-info-preview" style="display:none; margin-top: 8px;"></div>
+<div id="ne-codigo-preview" style="background: #f0f9ff; border: 1px solid #bae6fd; color: var(--primary); padding: 10px 12px; border-radius: 6px; font-size: 0.82rem; margin-top: 8px; display:none;"></div>
 <button class="btn-primary" style="width: 100%; margin-top: 16px; padding: 12px;" onclick="guardarNuevaExtrusion()">💾 Crear Extrusión</button>
 </div>
 </div>
@@ -750,7 +732,6 @@ await window.fbMethods.setDoc(window.fbMethods.doc(window.db, "asignaciones_extr
 }
 } catch(e) { console.warn('Error Firebase asignación:', e); }
 renderBotonesExtrusoras();
-renderListaAsignaciones();
 if (AppState.vistaActual === 'octagon') {
 actualizarSelectExtrusorasOctagon();
 onExtrusoraChangeOctagon();
@@ -765,7 +746,6 @@ await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "asignaciones_e
 }
 } catch(e) { console.warn('Error Firebase eliminar:', e); }
 renderBotonesExtrusoras();
-renderListaAsignaciones();
 if (AppState.vistaActual === 'octagon') {
 actualizarSelectExtrusorasOctagon();
 onExtrusoraChangeOctagon();
@@ -849,7 +829,7 @@ const sel = document.getElementById('select-octagon-equipo');
 document.getElementById('input-equipo').value = sel ? sel.value : '';
 }
 // ============================================================
-// SELECT DE EXTRUSORAS EN OCTAGON (solo muestra las asignadas)
+// SELECT DE EXTRUSORAS EN OCTAGON - MUESTRA ANCHO × 20
 // ============================================================
 function actualizarSelectExtrusorasOctagon() {
 const sel = document.getElementById('select-extrusora');
@@ -864,7 +844,10 @@ const asig = obtenerAsignacionExtrusora(extId);
 const opt = document.createElement('option');
 opt.value = extId;
 if (asig) {
-opt.textContent = `${extId} | OT:${asig.ot} | Código:${asig.codigoProducto}`;
+const cod = obtenerCodigoPorId(asig.codigoProducto);
+const anchoTotal = cod ? (cod.ancho * 20) : 0;
+const dims = cod ? formatoCodigo(cod) : '';
+opt.textContent = `${extId} → OT: ${asig.ot} | Código: ${asig.codigoProducto} (${dims}) - ${anchoTotal}`;
 } else {
 opt.textContent = `${extId} | ⚠️ Sin asignar`;
 }
@@ -886,9 +869,12 @@ if (filtroExt) {
 const prev = filtroExt.value;
 filtroExt.innerHTML = '<option value="TODAS">Todas</option>';
 TODAS_EXTRUSORAS.forEach(extId => {
+const asig = obtenerAsignacionExtrusora(extId);
+if (asig) {
 const opt = document.createElement('option');
 opt.value = extId; opt.textContent = extId;
 filtroExt.appendChild(opt);
+}
 });
 filtroExt.value = prev || 'TODAS';
 }
@@ -896,24 +882,23 @@ if (selAlerta) {
 const prev = selAlerta.value;
 selAlerta.innerHTML = '';
 TODAS_EXTRUSORAS.forEach(extId => {
+const asig = obtenerAsignacionExtrusora(extId);
+if (asig) {
 const opt = document.createElement('option');
 opt.value = extId; opt.textContent = extId;
 selAlerta.appendChild(opt);
+}
 });
 selAlerta.value = prev || '';
 selAlerta.dispatchEvent(new Event('change'));
 }
 }
 // ============================================================
-// AL CAMBIAR EXTRUSORA EN OCTAGON → AUTOCOMPLETAR DESDE ASIGNACIÓN
+// AL CAMBIAR EXTRUSORA EN OCTAGON → INFO INLINE + AUTOCOMPLETAR
 // ============================================================
 function onExtrusoraChangeOctagon() {
 const extId = document.getElementById('select-extrusora').value;
-const infoBox = document.getElementById('asignacion-info-box');
-// Limpiar sugerencias
-['sug-max','sug-prom','sug-min','sug-ancho','sug-peso','sug-fuelles','sug-tension'].forEach(id => {
-const el = document.getElementById(id); if (el) el.textContent = '';
-});
+const infoBox = document.getElementById('extrusora-info-inline');
 if (!extId) {
 if (infoBox) infoBox.style.display = 'none';
 return;
@@ -922,40 +907,35 @@ const asig = obtenerAsignacionExtrusora(extId);
 if (!asig) {
 if (infoBox) {
 infoBox.style.display = 'block';
-infoBox.className = 'asignacion-info-box error';
-infoBox.innerHTML = `⚠️ <strong>${extId}</strong> no tiene asignación activa. Vaya a Planta Extrusión → "Nueva Extrusión" para asignarle OT y Código.`;
+infoBox.className = 'extrusora-info-inline error';
+infoBox.innerHTML = `⚠️ <strong>${extId}</strong> no tiene asignación activa. Vaya a Planta Extrusión → "Nueva Extrusión".`;
 }
+// Limpiar fuelles y dinaje
+document.getElementById('val-ancho-fuelles').value = '';
+document.getElementById('val-tension-sup').value = '';
 return;
 }
 const cod = obtenerCodigoPorId(asig.codigoProducto);
 if (!cod) {
 if (infoBox) {
 infoBox.style.display = 'block';
-infoBox.className = 'asignacion-info-box error';
-infoBox.innerHTML = `⚠️ El código <strong>${asig.codigoProducto}</strong> no existe. Regístrelo primero en "Registrar Código".`;
+infoBox.className = 'extrusora-info-inline error';
+infoBox.innerHTML = `⚠️ El código <strong>${asig.codigoProducto}</strong> no existe.`;
 }
+document.getElementById('val-ancho-fuelles').value = '';
+document.getElementById('val-tension-sup').value = '';
 return;
 }
+// Info inline con ancho × 20
+const anchoTotal = cod.ancho * 20;
 if (infoBox) {
 infoBox.style.display = 'block';
-infoBox.className = 'asignacion-info-box success';
-infoBox.innerHTML = `✅ <strong>${extId}</strong> → OT: <strong>${asig.ot}</strong> | Código: <strong>${asig.codigoProducto}</strong> (${formatoCodigo(cod)})`;
+infoBox.className = 'extrusora-info-inline';
+infoBox.innerHTML = `✅ <strong>${extId}</strong> → OT: <strong>${asig.ot}</strong> | Código: <strong>${asig.codigoProducto}</strong> (${formatoCodigo(cod)}) - <strong>${anchoTotal}</strong>`;
 }
-// Sugerencias de micrones desde el código
-const sugMax = (cod.micron + (cod.tolerancia || 0)).toFixed(1);
-const sugMin = (cod.micron - (cod.tolerancia || 0)).toFixed(1);
-const sugProm = cod.micron.toFixed(1);
-document.getElementById('sug-max').textContent = `Sugerido: ${sugMax}`;
-document.getElementById('sug-prom').textContent = `Sugerido: ${sugProm}`;
-document.getElementById('sug-min').textContent = `Sugerido: ${sugMin}`;
-document.getElementById('sug-ancho').textContent = cod.anchoIdeal ? `Sugerido: ${cod.anchoIdeal}` : '';
-document.getElementById('sug-peso').textContent = cod.pesoIdeal ? `Sugerido: ${cod.pesoIdeal}` : '';
-document.getElementById('sug-fuelles').textContent = cod.anchoFuelles ? `Sugerido: ${cod.anchoFuelles}` : '';
-document.getElementById('sug-tension').textContent = cod.tensionSup ? `Sugerido: ${cod.tensionSup}` : '';
-document.getElementById('val-ancho-total').placeholder = cod.anchoIdeal ? `Sugerido: ${cod.anchoIdeal}` : 'Sugerido';
-document.getElementById('val-ancho-fuelles').placeholder = cod.anchoFuelles ? `Sugerido: ${cod.anchoFuelles}` : 'Sugerido';
-document.getElementById('val-peso-metro').placeholder = cod.pesoIdeal ? `Sugerido: ${cod.pesoIdeal}` : 'Sugerido';
-document.getElementById('val-tension-sup').placeholder = cod.tensionSup ? `Sugerido: ${cod.tensionSup}` : 'Sugerido';
+// Fuelles y Dinaje readonly desde código
+document.getElementById('val-ancho-fuelles').value = cod.anchoFuelles || '';
+document.getElementById('val-tension-sup').value = cod.tensionSup || '';
 // Sugerir N° Bobina de muestras pendientes
 const muestraDisp = sugerirBobinaDisponible(extId);
 const inputBobina = document.getElementById('input-bobina-numero');
@@ -980,7 +960,7 @@ return true;
 } else { msgDiv.innerHTML = ''; return false; }
 }
 // ============================================================
-// CONFIGURACIÓN DE TURNO - COLAPSABLE
+// CONFIGURACIÓN DE TURNO - COLAPSABLE + PERSISTENTE
 // ============================================================
 function toggleOperativasCollapse() {
 AppState.operativasCollapsed = !AppState.operativasCollapsed;
@@ -1054,72 +1034,46 @@ if (collapsed) {
 document.getElementById('operativas-content').classList.add('collapsed');
 document.getElementById('operativas-toggle-icon').classList.add('collapsed');
 }
-if (estado && (estado.g1?.length > 0 || estado.g2?.length > 0)) toggleEditarOperativas(false);
-else toggleEditarOperativas(true);
+if (estado && (estado.g1?.length > 0 || estado.g2?.length > 0)) {
+// Cargar sin mostrar formulario
+document.getElementById('encargado-g1').value = estado.encG1 || '';
+document.getElementById('encargado-g2').value = estado.encG2 || '';
+document.getElementById('display-operativas').style.display = 'grid';
+document.getElementById('form-operativas').style.display = 'none';
+document.getElementById('btn-editar-operativas').style.display = 'inline-flex';
+document.getElementById('btn-conservar-operativas').style.display = 'none';
+actualizarDisplayOperativas();
+} else {
+toggleEditarOperativas(true);
+}
 }
 // ============================================================
-// BOTONES DE EXTRUSORAS (MUESTRAN OT + CÓDIGO)
+// BOTONES DE EXTRUSORAS - SOLO LAS ASIGNADAS + METROS TOTALES
 // ============================================================
+function calcularMetrosTotalesExtrusora(extId) {
+const bobinas = AppState.bobinas.filter(b => b.extrusoraId === extId);
+return bobinas.reduce((sum, b) => sum + (parseFloat(b.metrosCalculados) || 0), 0);
+}
 function renderBotonesExtrusoras() {
 const gridG1 = document.getElementById('extrusoras-grid-g1');
 const gridG2 = document.getElementById('extrusoras-grid-g2');
 if (!gridG1 || !gridG2) return;
 gridG1.innerHTML = ''; gridG2.innerHTML = '';
-const estado = JSON.parse(localStorage.getItem('estado_operativas')) || {};
-const activas = [...(estado.g1 || []), ...(estado.g2 || [])];
 NUMS_EXTRUSORAS.forEach(num => {
 const extId = `EXT-${String(num).padStart(2, '0')}`;
-const esActiva = activas.includes(String(num));
 const asig = obtenerAsignacionExtrusora(extId);
+// Solo mostrar si tiene asignación
+if (!asig) return;
+const metrosTotal = calcularMetrosTotalesExtrusora(extId);
 const btn = document.createElement('button');
-btn.className = `extrusora-btn ${esActiva ? 'activa' : 'inoperativa'}`;
+btn.className = `extrusora-btn activa`;
 btn.onclick = () => abrirPanelExtrusora(extId);
-let otHtml = '';
-let codHtml = '';
-if (esActiva && asig) {
-otHtml = `<div class="ext-ot">OT: ${asig.ot}</div>`;
-codHtml = `<div class="ext-codigo">📦 ${asig.codigoProducto}</div>`;
-} else if (esActiva) {
-otHtml = `<div class="ext-ot">Sin asignar</div>`;
-} else {
-otHtml = `<div class="ext-ot">Inoperativa</div>`;
-}
-btn.innerHTML = `<div class="ext-numero">EXT-${String(num).padStart(2,'0')}</div>${otHtml}${codHtml}`;
+const otHtml = `<div class="ext-ot">OT: ${asig.ot}</div>`;
+const codHtml = `<div class="ext-codigo">📦 ${asig.codigoProducto}</div>`;
+const metrosHtml = `<div class="ext-metros">📏 ${metrosTotal.toFixed(1)} m</div>`;
+btn.innerHTML = `<div class="ext-numero">EXT-${String(num).padStart(2,'0')}</div>${otHtml}${codHtml}${metrosHtml}`;
 if (GRUPO1.includes(num)) gridG1.appendChild(btn); else gridG2.appendChild(btn);
 });
-}
-function renderListaAsignaciones() {
-const cont = document.getElementById('lista-asignaciones');
-if (!cont) return;
-const keys = Object.keys(AppState.asignacionesExtrusora);
-if (keys.length === 0) {
-cont.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:16px;">No hay extrusiones asignadas. Haga clic en "➕ Nueva Extrusión" para comenzar.</p>';
-return;
-}
-cont.innerHTML = keys.map(extId => {
-const asig = AppState.asignacionesExtrusora[extId];
-const cod = obtenerCodigoPorId(asig.codigoProducto);
-const codTxt = cod ? formatoCodigo(cod) : '⚠️ Código no encontrado';
-const fecha = new Date(asig.timestamp).toLocaleString('es-CL');
-return `
-<div class="item-asignacion">
-<div class="item-asignacion-info">
-<span class="item-asignacion-ext">${extId}</span>
-<span class="item-asignacion-ot">OT: ${asig.ot}</span>
-<strong>${asig.codigoProducto}</strong> · ${codTxt}
-<br><small style="color:var(--text-muted);">Asignado: ${fecha}</small>
-</div>
-<div class="item-acciones">
-<button class="btn-editar-item" onclick="abrirModalNuevaExtrusion('${extId}')">✏️ Reasignar</button>
-<button class="btn-borrar" onclick="confirmarEliminarAsignacion('${extId}')">🗑️ Quitar</button>
-</div>
-</div>
-`;
-}).join('');
-}
-async function confirmarEliminarAsignacion(extId) {
-if (!confirm(`¿Quitar la asignación de ${extId}?\n\nLa extrusora quedará sin OT ni Código hasta que se le asigne una nueva extrusión.`)) return;
-await eliminarAsignacionExtrusora(extId);
 }
 function abrirPanelExtrusora(extId) {
 AppState.extrusoraActualPanel = extId;
@@ -1127,17 +1081,19 @@ const asig = obtenerAsignacionExtrusora(extId);
 document.getElementById('modal-ext-titulo').textContent = extId;
 if (asig) {
 document.getElementById('modal-ext-subtitulo').textContent = `OT: ${asig.ot} | Código: ${asig.codigoProducto}`;
-const cod = obtenerCodigoPorId(asig.codigoProducto);
-document.getElementById('bobina-ancho').value = cod ? (cod.anchoIdeal || '') : '';
 } else {
 document.getElementById('modal-ext-subtitulo').textContent = '⚠️ Sin asignación';
-document.getElementById('bobina-ancho').value = '';
 }
+// Autocompletar siguiente bobina (contador compartido por OT+Código)
+if (asig) {
+const siguiente = obtenerSiguienteNumeroBobinaGlobal(asig.ot, asig.codigoProducto);
+document.getElementById('bobina-numero').value = siguiente;
+} else {
 document.getElementById('bobina-numero').value = '';
+}
 document.getElementById('bobina-peso').value = '';
-document.getElementById('bobina-espesor').value = '';
+document.getElementById('bobina-metros-input').value = '';
 document.getElementById('bobina-operador').value = '';
-document.getElementById('bobina-metros').textContent = '--- m';
 document.getElementById('scrap-peso').value = '';
 document.getElementById('scrap-operador').value = '';
 document.getElementById('scrap-obs').value = '';
@@ -1155,42 +1111,45 @@ document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('activ
 btn.classList.add('active');
 document.getElementById(`tab-${tab}`).classList.add('active');
 }
-function calcularMetrosBobina() {
-const peso = parseFloat(document.getElementById('bobina-peso').value) || 0;
-const ancho = parseFloat(document.getElementById('bobina-ancho').value) || 0;
-const espesor = parseFloat(document.getElementById('bobina-espesor').value) || 0;
-const densidad = parseFloat(document.getElementById('bobina-densidad').value) || 0.92;
-const display = document.getElementById('bobina-metros');
-if (peso > 0 && ancho > 0 && espesor > 0) {
-display.textContent = ((peso * 100000) / (ancho * espesor * densidad)).toFixed(2) + ' m';
-} else { display.textContent = '--- m'; }
+// ============================================================
+// CONTADOR DE BOBINA COMPARTIDO POR OT + CÓDIGO
+// ============================================================
+function obtenerSiguienteNumeroBobinaGlobal(ot, codigo) {
+const contadores = JSON.parse(localStorage.getItem('contador_bobinas_global')) || {};
+const key = `${ot}_${codigo}`;
+const actual = contadores[key];
+if (!actual) return 1;
+return actual.ultimo + 1;
+}
+function actualizarContadorBobinaGlobal(ot, codigo, numero) {
+const contadores = JSON.parse(localStorage.getItem('contador_bobinas_global')) || {};
+const key = `${ot}_${codigo}`;
+contadores[key] = { ultimo: parseInt(numero) };
+localStorage.setItem('contador_bobinas_global', JSON.stringify(contadores));
 }
 async function registrarBobinaExtrusora() {
 if (!AppState.extrusoraActualPanel) return;
 const asig = obtenerAsignacionExtrusora(AppState.extrusoraActualPanel);
-const ot = asig ? asig.ot : '';
-const codigoProd = asig ? asig.codigoProducto : '';
+if (!asig) return alert('Esta extrusora no tiene asignación activa.');
+const ot = asig.ot;
+const codigoProd = asig.codigoProducto;
 const numero = document.getElementById('bobina-numero').value.trim();
 const peso = parseFloat(document.getElementById('bobina-peso').value);
-const ancho = parseFloat(document.getElementById('bobina-ancho').value);
-const espesor = parseFloat(document.getElementById('bobina-espesor').value);
-const densidad = parseFloat(document.getElementById('bobina-densidad').value) || 0.92;
+const metros = parseFloat(document.getElementById('bobina-metros-input').value);
 const operador = document.getElementById('bobina-operador').value.trim() || 'Sin operador';
 if (!numero) return alert('Ingrese N° de Bobina');
-if (isNaN(peso) || peso <= 0 || isNaN(espesor) || espesor <= 0) {
-return alert('Ingrese valores válidos para peso y espesor');
-}
-const metros = ancho > 0 ? ((peso * 100000) / (ancho * espesor * densidad)).toFixed(2) : '0';
+if (isNaN(peso) || peso <= 0) return alert('Ingrese un peso válido');
+if (isNaN(metros) || metros <= 0) return alert('Ingrese metros válidos');
 const registro = {
 id: Date.now().toString(), timestamp: Date.now(),
 fecha: new Date().toLocaleDateString('es-CL'), hora: new Date().toLocaleTimeString('es-CL'),
 extrusoraId: AppState.extrusoraActualPanel, ot, codigoProducto: codigoProd, numeroBobina: String(numero),
-pesoKg: peso, anchoCm: ancho, espesorMicras: espesor, densidad, metrosCalculados: metros, operador
+pesoKg: peso, metrosCalculados: metros.toFixed(2), operador, tipo: 'bobina'
 };
 const muestraPendiente = {
 id: 'muestra-' + Date.now().toString(), timestamp: Date.now(), bobinaId: registro.id,
 extrusoraId: AppState.extrusoraActualPanel, ot, codigoProducto: codigoProd, numeroBobina: String(numero),
-pesoKg: peso, metros, operador, fecha: registro.fecha, hora: registro.hora
+pesoKg: peso, metros: metros.toFixed(2), operador, fecha: registro.fecha, hora: registro.hora
 };
 try {
 if (window.fbMethods && window.db && !window.useLocalFallback) {
@@ -1202,14 +1161,16 @@ localStorage.setItem('bobinas_local', JSON.stringify(AppState.bobinas));
 AppState.muestrasPendientes.unshift(muestraPendiente);
 localStorage.setItem('muestras_pendientes', JSON.stringify(AppState.muestrasPendientes));
 }
-document.getElementById('bobina-numero').value = '';
+// Actualizar contador global (compartido por OT+Código)
+actualizarContadorBobinaGlobal(ot, codigoProd, parseInt(numero));
+document.getElementById('bobina-numero').value = obtenerSiguienteNumeroBobinaGlobal(ot, codigoProd);
 document.getElementById('bobina-peso').value = '';
-document.getElementById('bobina-espesor').value = '';
+document.getElementById('bobina-metros-input').value = '';
 document.getElementById('bobina-operador').value = '';
-document.getElementById('bobina-metros').textContent = '--- m';
 alert(`✅ Bobina N° ${numero} registrada.`);
 renderBobinasExtrusora();
-imprimirEtiquetaBobinaById(registro.id);
+renderBotonesExtrusoras();
+renderProduccion();
 if (AppState.vistaActual === 'octagon') { renderNotificaciones(); onExtrusoraChangeOctagon(); }
 } catch (e) { console.error(e); alert('Error al guardar'); }
 }
@@ -1218,7 +1179,7 @@ const tbody = document.getElementById('tabla-bobinas-extrusora');
 if (!tbody || !AppState.extrusoraActualPanel) return;
 const filtradas = AppState.bobinas.filter(b => b.extrusoraId === AppState.extrusoraActualPanel);
 if (filtradas.length === 0) {
-tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted); padding: 24px;">Sin bobinas registradas</td></tr>';
+tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding: 24px;">Sin bobinas registradas</td></tr>';
 return;
 }
 tbody.innerHTML = filtradas.map(b => `
@@ -1226,12 +1187,9 @@ tbody.innerHTML = filtradas.map(b => `
 <td>${b.fecha}<br><small style="color:var(--text-muted)">${b.hora}</small></td>
 <td><strong>${b.numeroBobina}</strong></td>
 <td>${b.pesoKg} kg</td>
-<td>${b.anchoCm || '-'} cm</td>
-<td>${b.espesorMicras} µm</td>
 <td style="font-weight:700; color:var(--primary);">${b.metrosCalculados} m</td>
 <td>${b.operador}</td>
-<td style="display:flex; gap:4px;">
-<button class="btn-imprimir" onclick="imprimirEtiquetaBobinaById('${b.id}')">🖨️</button>
+<td>
 <button class="btn-eliminar" onclick="eliminarBobina('${b.id}')">🗑️</button>
 </td>
 </tr>
@@ -1246,17 +1204,22 @@ await window.fbMethods.deleteDoc(window.fbMethods.doc(window.db, "bobinas", id))
 AppState.bobinas = AppState.bobinas.filter(b => b.id !== id);
 localStorage.setItem('bobinas_local', JSON.stringify(AppState.bobinas));
 renderBobinasExtrusora();
+renderBotonesExtrusoras();
+renderProduccion();
 } catch (e) {
 AppState.bobinas = AppState.bobinas.filter(b => b.id !== id);
 localStorage.setItem('bobinas_local', JSON.stringify(AppState.bobinas));
 renderBobinasExtrusora();
+renderBotonesExtrusoras();
+renderProduccion();
 }
 }
 async function registrarScrap() {
 if (!AppState.extrusoraActualPanel) return;
 const asig = obtenerAsignacionExtrusora(AppState.extrusoraActualPanel);
-const ot = asig ? asig.ot : '';
-const codigoProd = asig ? asig.codigoProducto : '';
+if (!asig) return alert('Esta extrusora no tiene asignación activa.');
+const ot = asig.ot;
+const codigoProd = asig.codigoProducto;
 const motivo = document.getElementById('scrap-motivo').value;
 const peso = parseFloat(document.getElementById('scrap-peso').value);
 const operador = document.getElementById('scrap-operador').value.trim() || 'Sin operador';
@@ -1265,7 +1228,7 @@ if (isNaN(peso) || peso <= 0) return alert('Ingrese un peso válido');
 const registro = {
 id: Date.now().toString(), timestamp: Date.now(),
 fecha: new Date().toLocaleDateString('es-CL'), hora: new Date().toLocaleTimeString('es-CL'),
-extrusoraId: AppState.extrusoraActualPanel, ot, codigoProducto: codigoProd, motivo, pesoKg: peso, operador, observaciones: obs
+extrusoraId: AppState.extrusoraActualPanel, ot, codigoProducto: codigoProd, motivo, pesoKg: peso, operador, observaciones: obs, tipo: 'scrap'
 };
 try {
 if (window.fbMethods && window.db && !window.useLocalFallback) {
@@ -1280,7 +1243,8 @@ document.getElementById('scrap-obs').value = '';
 alert('✅ Scrap registrado');
 renderScrapExtrusora();
 actualizarTotalScrapTurno();
-imprimirEtiquetaScrapById(registro.id);
+renderBotonesExtrusoras();
+renderProduccion();
 } catch (e) { console.error(e); alert('Error al guardar'); }
 }
 function renderScrapExtrusora() {
@@ -1298,8 +1262,7 @@ tbody.innerHTML = filtrados.map(s => `
 <td>${s.pesoKg} kg</td>
 <td>${s.operador}</td>
 <td style="font-size:0.8rem; color:var(--text-muted);">${s.observaciones || '-'}</td>
-<td style="display:flex; gap:4px;">
-<button class="btn-imprimir" onclick="imprimirEtiquetaScrapById('${s.id}')">🖨️</button>
+<td>
 <button class="btn-eliminar" onclick="eliminarScrap('${s.id}')">🗑️</button>
 </td>
 </tr>
@@ -1320,12 +1283,98 @@ AppState.scraps = AppState.scraps.filter(s => s.id !== id);
 localStorage.setItem('scraps_local', JSON.stringify(AppState.scraps));
 renderScrapExtrusora();
 actualizarTotalScrapTurno();
+renderBotonesExtrusoras();
+renderProduccion();
 } catch (e) {
 AppState.scraps = AppState.scraps.filter(s => s.id !== id);
 localStorage.setItem('scraps_local', JSON.stringify(AppState.scraps));
 renderScrapExtrusora();
 actualizarTotalScrapTurno();
+renderBotonesExtrusoras();
+renderProduccion();
 }
+}
+// ============================================================
+// MONITOREO DE PRODUCCIÓN (bobinas + scraps combinados)
+// ============================================================
+function renderProduccion() {
+const tbody = document.getElementById('tabla-log-extrusion');
+if (!tbody) return;
+const fExt = document.getElementById('filtro-extrusora-ext')?.value || "TODAS";
+const fTipo = document.getElementById('filtro-tipo-ext')?.value || "TODOS";
+// Combinar bobinas y scraps
+let combinados = [];
+AppState.bobinas.forEach(b => {
+combinados.push({
+timestamp: b.timestamp, fecha: b.fecha, hora: b.hora,
+extrusoraId: b.extrusoraId, operador: b.operador,
+numeroBobina: b.numeroBobina, ot: b.ot, codigoProducto: b.codigoProducto,
+pesoKg: b.pesoKg, metros: b.metrosCalculados,
+tipo: 'bobina', motivo: null, observaciones: null, id: b.id
+});
+});
+AppState.scraps.forEach(s => {
+combinados.push({
+timestamp: s.timestamp, fecha: s.fecha, hora: s.hora,
+extrusoraId: s.extrusoraId, operador: s.operador,
+numeroBobina: '-', ot: s.ot, codigoProducto: s.codigoProducto,
+pesoKg: s.pesoKg, metros: '0',
+tipo: 'scrap', motivo: s.motivo, observaciones: s.observaciones, id: s.id
+});
+});
+// Ordenar por timestamp descendente
+combinados.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+// Filtrar
+combinados = combinados.filter(r => {
+if (fExt !== "TODAS" && r.extrusoraId !== fExt) return false;
+if (fTipo === "BOBINAS" && r.tipo !== 'bobina') return false;
+if (fTipo === "SCRAP" && r.tipo !== 'scrap') return false;
+return true;
+});
+if (combinados.length === 0) {
+tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 20px; color: var(--text-muted);">Sin registros de producción</td></tr>';
+return;
+}
+tbody.innerHTML = combinados.map(r => {
+// Buscar alerta asociada a esta extrusora + OT + código
+const alertaAsociada = AppState.historial.find(h =>
+h.extrusoraId === r.extrusoraId &&
+h.ot === r.ot &&
+h.codigoProducto === r.codigoProducto &&
+h.fueraDeRango && !h.corregido
+);
+let accionHtml = '';
+if (r.tipo === 'scrap') {
+accionHtml = `<span style="color:var(--danger); font-weight:600;">🗑️ ${r.motivo || 'Scrap'}</span>`;
+} else if (alertaAsociada) {
+const txtAlerta = (alertaAsociada.alertaTipo || '').replace(/[⚠️🚨]/g, '').trim();
+accionHtml = `<button class="btn-comentario" onclick="verComentarioAlerta(${alertaAsociada.timestamp})">💬 Ver Comentario</button>`;
+} else {
+accionHtml = '<span style="color:var(--text-muted);">-</span>';
+}
+const clase = r.tipo === 'scrap' ? 'scrap-row' : (alertaAsociada ? 'alerta-row' : '');
+const capturaBtn = '<span style="color:var(--text-muted);">-</span>';
+return `
+<tr class="${clase}">
+<td>${r.hora}</td>
+<td>${r.operador || '-'}</td>
+<td><strong>${r.extrusoraId}</strong></td>
+<td>${r.numeroBobina}</td>
+<td>${r.ot || '-'}</td>
+<td>${r.codigoProducto || '-'}</td>
+<td>${r.pesoKg} kg</td>
+<td>${r.tipo === 'scrap' ? '-' : r.metros + ' m'}</td>
+<td>${capturaBtn}</td>
+<td>${accionHtml}</td>
+</tr>
+`;
+}).join('');
+}
+function verComentarioAlerta(timestamp) {
+const reg = AppState.historial.find(r => r.timestamp == timestamp);
+if (!reg) return alert('Alerta no encontrada');
+const txtAlerta = (reg.alertaTipo || '').replace(/[⚠️🚨]/g, '').trim();
+alert(`💬 Comentario / Desvío:\n\n${txtAlerta}\n\nExtrusora: ${reg.extrusoraId}\nOT: ${reg.ot}\nCódigo: ${reg.codigoProducto}\nOperador: ${reg.operador}\nHora: ${reg.hora}`);
 }
 // ============================================================
 // NOTIFICACIONES CAMPANA
@@ -1488,7 +1537,6 @@ document.getElementById('grupo-porcentaje').style.display = (tipo === 'Geles en 
 document.getElementById('grupo-comentario').style.display = (tipo === 'Espesor Promedio' || tipo === 'Otro') ? 'block' : 'none';
 document.getElementById('grupo-captura').style.display = esCirculoSucio ? 'block' : 'none';
 }
-// Cuando cambia la extrusora en el modal de desvíos, autocompletar OT
 document.addEventListener('change', (e) => {
 if (e.target && e.target.id === 'alerta-extrusora') {
 const extId = e.target.value;
@@ -1529,6 +1577,7 @@ await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "mediciones
 AppState.historial.unshift(registro);
 localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 renderHistorial();
+renderProduccion();
 lanzarAlerta(registro);
 }
 ['alerta-bobina', 'alerta-porcentaje', 'alerta-comentario'].forEach(id => document.getElementById(id).value = '');
@@ -1539,12 +1588,13 @@ alert('⚠️ Alerta enviada' + (AppState.capturaActualBase64 ? ' con captura de
 AppState.historial.unshift(registro);
 localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 renderHistorial();
+renderProduccion();
 lanzarAlerta(registro);
 cerrarModalDesvio();
 }
 }
 // ============================================================
-// REGISTRAR MEDIDA (OCTAGON) - USA ASIGNACIÓN
+// REGISTRAR MEDIDA (OCTAGON)
 // ============================================================
 async function registrarMedida() {
 if (!AppState.operadorActual) { alert('Por favor inicie sesión primero'); solicitarLoginOctagon(); return; }
@@ -1554,7 +1604,7 @@ if (!equiposStr) return alert('Seleccione un Octagon (A o B)');
 const extId = document.getElementById('select-extrusora').value;
 if (!extId) return alert('Seleccione una extrusora');
 const asig = obtenerAsignacionExtrusora(extId);
-if (!asig) return alert(`⚠️ ${extId} no tiene asignación activa. Vaya a Planta Extrusión → "Nueva Extrusión".`);
+if (!asig) return alert(`⚠️ ${extId} no tiene asignación activa.`);
 const cod = obtenerCodigoPorId(asig.codigoProducto);
 if (!cod) return alert(`⚠️ El código ${asig.codigoProducto} no existe.`);
 const numeroBobina = document.getElementById('input-bobina-numero').value.trim();
@@ -1563,6 +1613,7 @@ const micronProm = document.getElementById('val-micron-prom').value.trim();
 const micronMax = document.getElementById('val-micron-max').value.trim();
 let anchoTotal = document.getElementById('val-ancho-total').value.trim();
 let pesoMetro = document.getElementById('val-peso-metro').value.trim();
+// Fuelles y Dinaje ya vienen readonly del código
 let anchoFuelles = document.getElementById('val-ancho-fuelles').value.trim();
 let tensionSup = document.getElementById('val-tension-sup').value.trim();
 if (!numeroBobina) return alert('Ingrese el N° de Bobina');
@@ -1602,9 +1653,10 @@ await window.fbMethods.addDoc(window.fbMethods.collection(window.db, "mediciones
 AppState.historial.unshift(registro);
 localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 renderHistorial();
+renderProduccion();
 if (fueraDeRango) lanzarAlerta(registro);
 }
-['val-micron-min', 'val-micron-prom', 'val-micron-max', 'val-ancho-total', 'val-ancho-fuelles', 'val-peso-metro', 'val-tension-sup'].forEach(id => document.getElementById(id).value = '');
+['val-micron-min', 'val-micron-prom', 'val-micron-max', 'val-ancho-total', 'val-peso-metro'].forEach(id => document.getElementById(id).value = '');
 const siguienteNum = parseInt(numeroBobina) + 1;
 document.getElementById('input-bobina-numero').value = siguienteNum;
 verificarBobinaYaMedida();
@@ -1613,6 +1665,7 @@ renderNotificaciones();
 AppState.historial.unshift(registro);
 localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 renderHistorial();
+renderProduccion();
 if (fueraDeRango) lanzarAlerta(registro);
 renderNotificaciones();
 }
@@ -1628,8 +1681,6 @@ const fExt = document.getElementById('filtro-extrusora')?.value || "TODAS";
 const fEst = document.getElementById('filtro-estado')?.value || "TODOS";
 const fBus = (document.getElementById('filtro-buscar')?.value || "").toLowerCase().trim();
 const fEquipo = document.getElementById('filtro-equipo')?.value || "TODOS";
-const fExtExt = document.getElementById('filtro-extrusora-ext')?.value || "TODAS";
-const fEstExt = document.getElementById('filtro-estado-ext')?.value || "TODOS";
 const tbodyOct = document.getElementById('tabla-log-octagon');
 if (tbodyOct) {
 const datosFiltradosOct = AppState.historial.filter(r => {
@@ -1669,41 +1720,6 @@ return `
 `;
 }).join('');
 }
-const tbodyExt = document.getElementById('tabla-log-extrusion');
-if (tbodyExt) {
-const datosFiltradosExt = AppState.historial.filter(r => {
-const extReg = r.extrusoraId || r.id;
-if (fExtExt !== "TODAS" && extReg !== fExtExt) return false;
-if (fEstExt === "ALERTAS" && !r.fueraDeRango) return false;
-if (fEstExt === "CORREGIDOS" && !r.corregido) return false;
-return true;
-});
-tbodyExt.innerHTML = datosFiltradosExt.length === 0
-? '<tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--text-muted);">Sin registros</td></tr>'
-: datosFiltradosExt.map(reg => {
-const clase = reg.fueraDeRango ? 'alerta-row' : (reg.corregido ? 'corregido-row' : 'ok-row');
-const estadoTexto = reg.fueraDeRango ? (reg.alertaTipo || '🚨 FUERA') : (reg.corregido ? '🟢 CORREGIDO' : '✅ OK');
-const idKey = reg.docId || reg.timestamp;
-const accion = reg.fueraDeRango ? `<button class="btn-corregir" onclick="corregirError('${idKey}')">Corregido</button>` : estadoTexto;
-const capturaBtn = reg.tieneCaptura ? `<button class="btn-captura" onclick="verCapturaDesvioById('${idKey}')">📷 Ver</button>` : '<span style="color:var(--text-muted);">-</span>';
-const extId = reg.extrusoraId || reg.id;
-const codigoTxt = reg.codigoProducto || '-';
-const otTxt = reg.ot || '-';
-const productoTxt = `${codigoTxt} / OT:${otTxt}`;
-return `
-<tr class="${clase}">
-<td>${reg.hora}</td>
-<td>${reg.operador || '-'}</td>
-<td><strong>${extId}</strong></td>
-<td>${productoTxt}</td>
-<td>${reg.valorMedido ? reg.valorMedido + ' cm' : '-'}</td>
-<td>${reg.pesoMedido ? reg.pesoMedido + ' gr' : '-'}</td>
-<td>${capturaBtn}</td>
-<td>${accion}</td>
-</tr>
-`;
-}).join('');
-}
 }
 async function corregirError(id) {
 try {
@@ -1717,17 +1733,10 @@ reg.fueraDeRango = false;
 localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
 }
 renderHistorial();
+renderProduccion();
 renderNotificaciones();
 } catch(e) {
 console.error("Error al corregir:", e);
-const reg = AppState.historial.find(r => (r.docId || r.timestamp) == id);
-if (reg) {
-reg.corregido = true;
-reg.fueraDeRango = false;
-localStorage.setItem('mediciones_local', JSON.stringify(AppState.historial));
-renderHistorial();
-renderNotificaciones();
-}
 }
 }
 async function limpiarHistorial() {
@@ -1741,28 +1750,11 @@ await Promise.all(snapshot.docs.map(d => window.fbMethods.deleteDoc(window.fbMet
 AppState.historial = [];
 localStorage.removeItem('mediciones_local');
 renderHistorial();
+renderProduccion();
 renderNotificaciones();
 }
-function imprimirEtiquetaBobinaById(id) {
-const b = AppState.bobinas.find(x => x.id === id);
-if (!b) return alert('Bobina no encontrada');
-const html = `<div class="etiqueta"><div class="etiqueta-header"><div class="etiqueta-title">BOBINA N° ${b.numeroBobina}</div><div class="etiqueta-fecha">${b.fecha}<br>${b.hora}</div></div><div class="etiqueta-body"><div><strong>Extrusora:</strong> ${b.extrusoraId}</div><div><strong>OT:</strong> ${b.ot || '-'}</div><div><strong>Código:</strong> ${b.codigoProducto || '-'}</div><div><strong>Ancho:</strong> ${b.anchoCm || '-'} cm | <strong>Espesor:</strong> ${b.espesorMicras} µm</div><div><strong>Peso:</strong> ${b.pesoKg} kg</div></div><div class="etiqueta-big">${b.metrosCalculados} m</div><div class="etiqueta-footer"><span>Op: ${b.operador}</span></div></div>`;
-imprimirEtiqueta(html);
-}
-function imprimirEtiquetaScrapById(id) {
-const s = AppState.scraps.find(x => x.id === id);
-if (!s) return alert('Registro de scrap no encontrado');
-const html = `<div class="etiqueta"><div class="etiqueta-header"><div class="etiqueta-title" style="color: #dc2626;">⚠ SCRAP</div><div class="etiqueta-fecha">${s.fecha}<br>${s.hora}</div></div><div class="etiqueta-body"><div><strong>Extrusora:</strong> ${s.extrusoraId}</div><div><strong>OT:</strong> ${s.ot || '-'}</div><div><strong>Código:</strong> ${s.codigoProducto || '-'}</div><div><strong>Motivo:</strong> ${s.motivo}</div>${s.observaciones ? `<div><strong>Obs:</strong> ${s.observaciones}</div>` : ''}</div><div class="etiqueta-big" style="color: #dc2626;">${s.pesoKg} kg</div><div class="etiqueta-footer"><span>Op: ${s.operador}</span></div></div>`;
-imprimirEtiqueta(html);
-}
-function imprimirEtiqueta(html) {
-const printWindow = window.open('', '_blank', 'width=450,height=250');
-printWindow.document.write(`<!DOCTYPE html><html><head><title>Etiqueta</title><style>@page { size: 100mm 50mm; margin: 0; } body { margin: 0; padding: 0; font-family: Arial, sans-serif; } .etiqueta { width: 100mm; height: 50mm; padding: 3mm; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #000; } .etiqueta-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 2mm; } .etiqueta-title { font-size: 14pt; font-weight: bold; } .etiqueta-fecha { font-size: 8pt; text-align: right; } .etiqueta-body { flex: 1; padding: 2mm 0; font-size: 10pt; line-height: 1.4; } .etiqueta-body strong { font-weight: bold; } .etiqueta-footer { border-top: 1px solid #000; padding-top: 2mm; font-size: 8pt; display: flex; justify-content: space-between; } .etiqueta-big { font-size: 16pt; font-weight: bold; text-align: center; padding: 2mm 0; }</style></head><body>${html}</body></html>`);
-printWindow.document.close();
-printWindow.onload = () => { printWindow.focus(); printWindow.print(); setTimeout(() => printWindow.close(), 1000); };
-}
 // ============================================================
-// PDF OCTAGON
+// PDF OCTAGON - CON FECHA, SIN CÓDIGO/OT, CON FUELLES/DINAJE
 // ============================================================
 function imprimirRegistroOctagon() {
 if (!window.jspdf) return alert('Error: Librería de PDF no cargada. Recargue la página.');
@@ -1801,194 +1793,123 @@ isGenerating = true;
 if (timeoutId) clearTimeout(timeoutId);
 
 const M = 10;
-const W = 277;
-const PAGE_BOTTOM = 196;
 const AZUL = [15, 76, 129];
-const AZUL_SUAVE = [241, 245, 249];
 const GRIS = [71, 85, 105];
-const NEGRO = [15, 23, 42];
 const VERDE = [5, 150, 105];
 const ROJO = [220, 38, 38];
-const NARANJA = [180, 83, 9];
-
-const HEADERS = ['Hora', 'Equipo', 'N° Bobina', 'Código', 'OT', 'Mín. (µm)', 'Prom. (µm)', 'Máx. (µm)', 'Ancho (cm)', 'Peso (gr)', 'Estado'];
-const COLW    = [18,      18,       18,           28,         22,     18,           18,            18,            22,           22,          43];
-const HEAD_H = 9;
-const ROW_H = 8;
-
-const limpiarTexto = (txt) => String(txt == null ? '' : txt)
-.replace(/🚨|✅|🟢|⚠️|⚠|📦|🗑️|📷/g, '')
-.replace(/\s+/g, ' ')
-.trim();
-
-const estadoDe = (reg) => {
-if (reg.fueraDeRango) {
-const detalle = limpiarTexto(reg.alertaTipo || 'FUERA DE RANGO');
-return { texto: detalle || 'FUERA DE RANGO', color: ROJO, bg: [254, 242, 242] };
-}
-if (reg.corregido) return { texto: 'CORREGIDO', color: NARANJA, bg: [255, 251, 235] };
-return { texto: 'OK', color: VERDE, bg: [240, 253, 244] };
-};
 
 const dibujarLogo = () => {
 if (logoImg.complete && logoImg.naturalHeight > 0) {
-let lw = 50;
+let lw = 60;
 let lh = (logoImg.height * lw) / logoImg.width;
 if (lh > 18) { lh = 18; lw = (logoImg.width * lh) / logoImg.height; }
-try { doc.addImage(logoImg, 'PNG', M + 2, (26 - lh) / 2, lw, lh); } catch (e) {}
+try { doc.addImage(logoImg, 'PNG', M, 8, lw, lh); } catch (e) {}
 }
-};
-
-const dibujarBandaSuperior = (extId, count, continuacion) => {
-doc.setFillColor(AZUL[0], AZUL[1], AZUL[2]);
-doc.rect(0, 0, 297, 26, 'F');
-dibujarLogo();
-doc.setTextColor(255, 255, 255);
-doc.setFont('helvetica', 'bold');
-doc.setFontSize(15);
-doc.text('REGISTRO DE MEDICIONES - OCTAGON', 66, 12);
-doc.setFont('helvetica', 'normal');
-doc.setFontSize(9.5);
-doc.text(`Extrusora: ${extId}${continuacion ? '  (continuación)' : ''}  |  Control de Calidad`, 66, 19);
-doc.setFontSize(8.5);
-doc.text(`Registros: ${count}`, 287, 16, { align: 'right' });
-};
-
-const dibujarFichaInfo = (ot, codigoProd, operador, count) => {
-const y0 = 30;
-doc.setFillColor(AZUL_SUAVE[0], AZUL_SUAVE[1], AZUL_SUAVE[2]);
-doc.setDrawColor(203, 213, 225);
-doc.setLineWidth(0.3);
-doc.roundedRect(M, y0, W, 14, 2, 2, 'FD');
-const linea = (label, valor, lx, vx, ly) => {
-doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5);
-doc.setTextColor(AZUL[0], AZUL[1], AZUL[2]);
-doc.text(label, lx, ly);
-doc.setFont('helvetica', 'normal');
-doc.setTextColor(GRIS[0], GRIS[1], GRIS[2]);
-doc.text(String(valor || '-'), vx, ly);
-};
-linea('Operador:', operador, M + 4, M + 30, y0 + 5.5);
-linea('Total mediciones:', count, M + 4, M + 40, y0 + 11.5);
-linea('O.T.:', ot, M + 140, M + 165, y0 + 5.5);
-linea('Código:', codigoProd, M + 140, M + 165, y0 + 11.5);
-return y0 + 14 + 6;
-};
-
-const dibujarCabeceraTabla = (y) => {
-doc.setFillColor(AZUL[0], AZUL[1], AZUL[2]);
-doc.rect(M, y, W, HEAD_H, 'F');
-doc.setTextColor(255, 255, 255);
-doc.setFont('helvetica', 'bold');
-doc.setFontSize(7.5);
-let x = M;
-HEADERS.forEach((h, i) => {
-doc.text(h, x + COLW[i] / 2, y + 6, { align: 'center' });
-x += COLW[i];
-});
-doc.setDrawColor(AZUL[0], AZUL[1], AZUL[2]);
-doc.setLineWidth(0.3);
-doc.rect(M, y, W, HEAD_H, 'S');
-return y + HEAD_H;
-};
-
-const altoDeFila = (reg) => {
-const est = estadoDe(reg);
-doc.setFont('helvetica', 'bold');
-doc.setFontSize(7);
-const lines = doc.splitTextToSize(est.texto, COLW[10] - 4);
-return Math.max(ROW_H, lines.length * 3.4 + 4);
-};
-
-const dibujarFila = (reg, y, idx) => {
-const est = estadoDe(reg);
-doc.setFont('helvetica', 'bold');
-doc.setFontSize(7);
-const estadoLines = doc.splitTextToSize(est.texto, COLW[10] - 4);
-const h = Math.max(ROW_H, estadoLines.length * 3.4 + 4);
-
-let bg = est.bg;
-if (!reg.fueraDeRango && !reg.corregido && idx % 2 === 1) bg = [248, 250, 252];
-doc.setFillColor(bg[0], bg[1], bg[2]);
-doc.rect(M, y, W, h, 'F');
-
-doc.setDrawColor(203, 213, 225);
-doc.setLineWidth(0.2);
-doc.rect(M, y, W, h, 'S');
-let gx = M;
-for (let i = 0; i < COLW.length - 1; i++) {
-gx += COLW[i];
-doc.line(gx, y, gx, y + h);
-}
-
-const cod = obtenerCodigoPorId(reg.codigoProducto);
-const productoTxt = reg.codigoProducto || '-';
-const valores = [
-reg.hora || '-',
-reg.equipo ? `Eq ${reg.equipo}` : '-',
-reg.numeroBobina || '-',
-productoTxt,
-reg.ot || '-',
-reg.micronMin != null ? String(reg.micronMin) : '-',
-reg.micronProm != null ? String(reg.micronProm) : '-',
-reg.micronMax != null ? String(reg.micronMax) : '-',
-(reg.anchoTotal != null && reg.anchoTotal !== '') ? String(reg.anchoTotal) : '-',
-(reg.pesoMetro != null && reg.pesoMetro !== '') ? String(reg.pesoMetro) : '-'
-];
-
-let x = M;
-valores.forEach((v, i) => {
-let color = NEGRO;
-let bold = (i === 3 || i === 6);
-if (reg.fueraDeRango && cod) {
-if (i === 8 && reg.anchoTotal != null && cod.anchoIdeal != null && (reg.anchoTotal < cod.anchoIdeal - 0.5 || reg.anchoTotal > cod.anchoIdeal + 0.5)) { color = ROJO; bold = true; }
-if (i === 9 && reg.pesoMetro != null && cod.pesoIdeal != null && (reg.pesoMetro < cod.pesoIdeal - 1.0 || reg.pesoMetro > cod.pesoIdeal + 1.0)) { color = ROJO; bold = true; }
-}
-doc.setFont('helvetica', bold ? 'bold' : 'normal');
-doc.setFontSize(7.5);
-doc.setTextColor(color[0], color[1], color[2]);
-const txt = doc.splitTextToSize(String(v), COLW[i] - 3)[0] || '-';
-doc.text(txt, x + COLW[i] / 2, y + h / 2 + 1.2, { align: 'center' });
-x += COLW[i];
-});
-
-doc.setFont('helvetica', 'bold');
-doc.setFontSize(7);
-doc.setTextColor(est.color[0], est.color[1], est.color[2]);
-const ey = y + (h - (estadoLines.length - 1) * 3.4) / 2 + 1;
-doc.text(estadoLines, x + COLW[10] / 2, ey, { align: 'center' });
-
-return y + h;
 };
 
 extrusorasAImprimir.forEach((extId, indexExt) => {
 const mediciones = porExtrusora[extId].slice().sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-const ots = [...new Set(mediciones.map(m => m.ot || 'Sin OT'))];
-const otPrincipal = ots[0] || 'Sin OT';
-const codigos = [...new Set(mediciones.map(m => m.codigoProducto || 'Sin Código'))];
-const codigoPrincipal = codigos[0] || 'Sin Código';
-
 if (indexExt > 0) doc.addPage('a4', 'landscape');
-dibujarBandaSuperior(extId, mediciones.length, false);
-let y = dibujarFichaInfo(otPrincipal, codigoPrincipal, AppState.operadorActual || 'N/A', mediciones.length);
-y = dibujarCabeceraTabla(y);
 
-mediciones.forEach((reg, idx) => {
-const h = altoDeFila(reg);
-if (y + h > PAGE_BOTTOM) {
+// ENCABEZADO
+dibujarLogo();
+doc.setFont("helvetica", "bold");
+doc.setTextColor(15, 23, 42);
+doc.setFontSize(15);
+doc.text("Registro de Mediciones", 80, 15);
+doc.setFontSize(18);
+doc.text(`Extrusora N° ${extId.replace('EXT-', '')}`, 80, 25);
+// Fecha arriba derecha
+doc.setFontSize(9);
+doc.setFont("helvetica", "normal");
+doc.setTextColor(71, 85, 105);
+doc.text(`Fecha: ${hoy}`, 287, 12, { align: 'right' });
+doc.text(`Total: ${mediciones.length} registros`, 287, 18, { align: 'right' });
+
+// Línea divisoria
+doc.setDrawColor(15, 76, 129);
+doc.setLineWidth(0.5);
+doc.line(M, 32, 287, 32);
+
+// TARJETAS TIPO EXCEL
+let y = 38;
+const cardW = 277;
+const cardHalfW = cardW / 2;
+const rowH = 6;
+const rowsPerCard = 6;
+const cardH = rowH * rowsPerCard;
+const labelW = 30;
+
+mediciones.forEach((reg) => {
+if (y + cardH > 200) {
 doc.addPage('a4', 'landscape');
-dibujarBandaSuperior(extId, mediciones.length, true);
-y = dibujarCabeceraTabla(32);
+y = 15;
 }
-y = dibujarFila(reg, y, idx);
+let bgColor = [240, 253, 244];
+let estadoColor = [5, 150, 105];
+let estadoTexto = "OK";
+if (reg.fueraDeRango) {
+bgColor = [254, 242, 242];
+estadoColor = [220, 38, 38];
+estadoTexto = "FUERA DE RANGO";
+} else if (reg.corregido) {
+bgColor = [240, 253, 244];
+estadoColor = [5, 150, 105];
+estadoTexto = "CORREGIDO";
+}
+doc.setFillColor(bgColor[0], bgColor[1], bgColor[2]);
+doc.rect(M, y, cardW, cardH, 'F');
+doc.setDrawColor(15, 23, 42);
+doc.setLineWidth(0.4);
+doc.rect(M, y, cardW, cardH, 'S');
+doc.setDrawColor(15, 23, 42);
+doc.setLineWidth(0.3);
+doc.line(M + cardHalfW, y, M + cardHalfW, y + cardH);
+doc.setDrawColor(180, 180, 180);
+doc.setLineWidth(0.2);
+for (let i = 1; i < rowsPerCard; i++) {
+doc.line(M, y + i * rowH, M + cardW, y + i * rowH);
+}
+doc.setDrawColor(180, 180, 180);
+doc.line(M + labelW, y, M + labelW, y + cardH);
+doc.line(M + cardHalfW + labelW, y, M + cardHalfW + labelW, y + cardH);
+
+const writeRow = (rowIndex, label, value, colOffset, valueColor = [15, 23, 42], valueBold = false) => {
+const rowY = y + rowIndex * rowH + rowH - 1.8;
+doc.setFont("helvetica", "bold");
+doc.setFontSize(8);
+doc.setTextColor(71, 85, 105);
+doc.text(label, colOffset + 2, rowY);
+doc.setFont("helvetica", valueBold ? "bold" : "normal");
+doc.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
+doc.text(String(value), colOffset + labelW + 2, rowY);
+};
+
+// COLUMNA IZQUIERDA
+writeRow(0, "N° Bobina:", reg.numeroBobina || 'N/A', M, [15, 76, 129], true);
+writeRow(1, "Hora:", reg.hora || '-', M);
+writeRow(2, "Equipo:", `Octagon ${reg.equipo || '-'}`, M);
+writeRow(3, "Máximo:", reg.micronMax != null ? `${reg.micronMax} μm` : '-', M);
+writeRow(4, "Promedio:", reg.micronProm != null ? `${reg.micronProm} μm` : '-', M);
+writeRow(5, "Mínimo:", reg.micronMin != null ? `${reg.micronMin} μm` : '-', M);
+
+// COLUMNA DERECHA
+writeRow(0, "Estado:", estadoTexto, M + cardHalfW, estadoColor, true);
+writeRow(1, "Ancho:", reg.anchoTotal ? `${reg.anchoTotal} cm` : '-', M + cardHalfW);
+writeRow(2, "Peso/m:", reg.pesoMetro ? `${reg.pesoMetro} gr` : '-', M + cardHalfW);
+writeRow(3, "Fuelles:", reg.anchoFuelles ? `${reg.anchoFuelles} cm` : '-', M + cardHalfW);
+writeRow(4, "Tensión Sup:", reg.tensionSup ? `${reg.tensionSup} dinas` : '-', M + cardHalfW);
+writeRow(5, "Operador:", reg.operador || '-', M + cardHalfW);
+
+y += cardH + 3;
 });
 
-if (y + 24 > PAGE_BOTTOM) {
+// FIRMAS
+if (y + 24 > 200) {
 doc.addPage('a4', 'landscape');
-dibujarBandaSuperior(extId, mediciones.length, true);
-y = 34;
+y = 30;
 }
-y += 14;
+y += 10;
 doc.setDrawColor(GRIS[0], GRIS[1], GRIS[2]);
 doc.setLineWidth(0.3);
 doc.line(M + 15, y, M + 85, y);
@@ -2000,6 +1921,7 @@ doc.text('Firma Operador Octagon', M + 50, y + 4.5, { align: 'center' });
 doc.text('Firma Responsable de Calidad', M + 210, y + 4.5, { align: 'center' });
 });
 
+// FOOTER
 const totalPaginas = doc.internal.getNumberOfPages();
 for (let i = 1; i <= totalPaginas; i++) {
 doc.setPage(i);
@@ -2029,6 +1951,9 @@ logoImg.onerror = safeGenerate;
 timeoutId = setTimeout(safeGenerate, 2000);
 }
 }
+// ============================================================
+// PDF PRODUCCIÓN EXTRUSIÓN - MISMO DISEÑO QUE OCTAGON
+// ============================================================
 function imprimirProduccionExtrusion() {
 if (!window.jspdf) return alert('Error: Librería de PDF no cargada. Recargue la página.');
 const hoy = new Date().toLocaleDateString('es-CL');
@@ -2036,61 +1961,260 @@ const bobinasHoy = AppState.bobinas.filter(b => b.fecha === hoy);
 const scrapsHoy = AppState.scraps.filter(s => s.fecha === hoy);
 if (bobinasHoy.length === 0 && scrapsHoy.length === 0) return alert('No hay producción registrada hoy para imprimir.');
 const { jsPDF } = window.jspdf;
-const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'landscape' });
 const turnoActivo = obtenerTurnoActivo();
-const estado = JSON.parse(localStorage.getItem('estado_operativas')) || {};
-doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(15, 23, 42);
-doc.text("REPORTE DE PRODUCCIÓN - EXTRUSIÓN", 105, 15, { align: "center" });
-doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.setTextColor(100, 116, 139);
-doc.text(`Fecha: ${hoy} | Turno: ${turnoActivo.nombre}`, 105, 22, { align: "center" });
-doc.text(`Encargado G1: ${estado.encG1 || 'N/A'} | Encargado G2: ${estado.encG2 || 'N/A'}`, 105, 28, { align: "center" });
-doc.setDrawColor(15, 76, 129); doc.setLineWidth(0.5); doc.line(12, 32, 198, 32);
-let y = 40;
-doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(5, 150, 105);
-doc.text(`📦 BOBINAS REGISTRADAS (${bobinasHoy.length})`, 12, y); y += 6;
-if (bobinasHoy.length > 0) {
-doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); doc.setTextColor(15, 23, 42);
-doc.setFillColor(248, 250, 252); doc.rect(12, y - 3, 186, 7, 'F');
-doc.text("N°", 14, y + 1); doc.text("EXTRUSORA", 24, y + 1); doc.text("CÓDIGO", 50, y + 1);
-doc.text("OT", 75, y + 1); doc.text("ESPESOR", 95, y + 1); doc.text("PESO (kg)", 120, y + 1);
-doc.text("METROS", 145, y + 1); doc.text("OPERADOR", 170, y + 1); y += 6;
+const logoImg = new Image();
+logoImg.crossOrigin = 'Anonymous';
+logoImg.src = 'https://iili.io/nw6Sq0v.png';
+let isGenerating = false;
+let timeoutId = null;
+
+const generarPDF = () => {
+if (isGenerating) return;
+isGenerating = true;
+if (timeoutId) clearTimeout(timeoutId);
+
+const M = 10;
+const AZUL = [15, 76, 129];
+const GRIS = [71, 85, 105];
+const VERDE = [5, 150, 105];
+const ROJO = [220, 38, 38];
+const NARANJA = [180, 83, 9];
+
+const dibujarLogo = () => {
+if (logoImg.complete && logoImg.naturalHeight > 0) {
+let lw = 60;
+let lh = (logoImg.height * lw) / logoImg.width;
+if (lh > 18) { lh = 18; lw = (logoImg.width * lh) / logoImg.height; }
+try { doc.addImage(logoImg, 'PNG', M, 8, lw, lh); } catch (e) {}
+}
+};
+
+// ENCABEZADO
+dibujarLogo();
+doc.setFont("helvetica", "bold");
+doc.setTextColor(15, 23, 42);
+doc.setFontSize(15);
+doc.text("Reporte de Producción", 80, 15);
+doc.setFontSize(18);
+doc.text("Planta Extrusión", 80, 25);
+doc.setFontSize(9);
 doc.setFont("helvetica", "normal");
+doc.setTextColor(71, 85, 105);
+doc.text(`Fecha: ${hoy}`, 287, 12, { align: 'right' });
+doc.text(`Turno: ${turnoActivo.nombre}`, 287, 18, { align: 'right' });
+
+doc.setDrawColor(15, 76, 129);
+doc.setLineWidth(0.5);
+doc.line(M, 32, 287, 32);
+
+// AGRUPAR POR EXTRUSORA
+const porExtrusora = {};
 bobinasHoy.forEach(b => {
-if (y > 280) { doc.addPage(); y = 20; }
-doc.setTextColor(15, 23, 42);
-doc.text(String(b.numeroBobina), 14, y); doc.text(String(b.extrusoraId), 24, y); doc.text(String(b.codigoProducto || '-'), 50, y);
-doc.text(String(b.ot || '-'), 75, y);
-doc.text(`${b.espesorMicras} µm`, 95, y);
-doc.text(`${b.pesoKg}`, 120, y); doc.text(`${b.metrosCalculados} m`, 145, y); doc.text(String(b.operador), 170, y);
-y += 5;
+if (!porExtrusora[b.extrusoraId]) porExtrusora[b.extrusoraId] = { bobinas: [], scraps: [] };
+porExtrusora[b.extrusoraId].bobinas.push(b);
 });
-const totalPeso = bobinasHoy.reduce((s, b) => s + (parseFloat(b.pesoKg) || 0), 0);
-const totalMetros = bobinasHoy.reduce((s, b) => s + (parseFloat(b.metrosCalculados) || 0), 0);
-y += 3; doc.setFont("helvetica", "bold"); doc.setTextColor(5, 150, 105);
-doc.text(`TOTAL BOBINAS: ${bobinasHoy.length} | PESO: ${totalPeso.toFixed(2)} kg | METROS: ${totalMetros.toFixed(2)} m`, 12, y); y += 8;
-} else { doc.setFont("helvetica", "italic"); doc.setTextColor(100, 116, 139); doc.text("Sin bobinas registradas en este turno.", 12, y); y += 10; }
-y += 5; if (y > 240) { doc.addPage(); y = 20; }
-doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(220, 38, 38);
-doc.text(`🗑️ SCRAP REGISTRADO (${scrapsHoy.length})`, 12, y); y += 6;
-if (scrapsHoy.length > 0) {
-doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); doc.setTextColor(15, 23, 42);
-doc.setFillColor(254, 242, 242); doc.rect(12, y - 3, 186, 7, 'F');
-doc.text("EXTRUSORA", 14, y + 1); doc.text("CÓDIGO", 50, y + 1); doc.text("OT", 75, y + 1);
-doc.text("MOTIVO", 95, y + 1); doc.text("PESO (kg)", 150, y + 1); doc.text("OPERADOR", 175, y + 1); y += 6;
-doc.setFont("helvetica", "normal");
 scrapsHoy.forEach(s => {
-if (y > 280) { doc.addPage(); y = 20; }
-doc.setTextColor(15, 23, 42);
-doc.text(String(s.extrusoraId), 14, y); doc.text(String(s.codigoProducto || '-'), 50, y);
-doc.text(String(s.ot || '-'), 75, y);
-doc.text(String(s.motivo).substring(0, 25), 95, y); doc.text(`${s.pesoKg}`, 150, y); doc.text(String(s.operador), 175, y);
-y += 5;
+if (!porExtrusora[s.extrusoraId]) porExtrusora[s.extrusoraId] = { bobinas: [], scraps: [] };
+porExtrusora[s.extrusoraId].scraps.push(s);
 });
-const totalScrap = scrapsHoy.reduce((s, x) => s + (parseFloat(x.pesoKg) || 0), 0);
-y += 3; doc.setFont("helvetica", "bold"); doc.setTextColor(220, 38, 38);
-doc.text(`TOTAL SCRAP: ${scrapsHoy.length} registros | PESO TOTAL: ${totalScrap.toFixed(2)} kg`, 12, y);
-} else { doc.setFont("helvetica", "italic"); doc.setTextColor(100, 116, 139); doc.text("Sin scrap registrado en este turno.", 12, y); }
+
+let y = 38;
+const cardW = 277;
+const cardHalfW = cardW / 2;
+const rowH = 6;
+const rowsPerCard = 6;
+const cardH = rowH * rowsPerCard;
+const labelW = 30;
+
+Object.keys(porExtrusora).forEach((extId) => {
+const data = porExtrusora[extId];
+const asig = obtenerAsignacionExtrusora(extId);
+const totalMetros = data.bobinas.reduce((s, b) => s + (parseFloat(b.metrosCalculados) || 0), 0);
+const totalPeso = data.bobinas.reduce((s, b) => s + (parseFloat(b.pesoKg) || 0), 0);
+const totalScrap = data.scraps.reduce((s, x) => s + (parseFloat(x.pesoKg) || 0), 0);
+
+// Título de extrusora
+if (y + 15 > 200) {
+doc.addPage('a4', 'landscape');
+y = 15;
+}
+doc.setFillColor(AZUL[0], AZUL[1], AZUL[2]);
+doc.rect(M, y, cardW, 8, 'F');
+doc.setTextColor(255, 255, 255);
+doc.setFont("helvetica", "bold");
+doc.setFontSize(10);
+doc.text(`${extId}${asig ? ` | OT: ${asig.ot} | Código: ${asig.codigoProducto}` : ''}`, M + 4, y + 5.5);
+doc.text(`Total: ${totalMetros.toFixed(1)} m`, 287, y + 5.5, { align: 'right' });
+y += 10;
+
+// Tarjetas de bobinas
+data.bobinas.forEach((b) => {
+if (y + cardH > 200) {
+doc.addPage('a4', 'landscape');
+y = 15;
+}
+doc.setFillColor(240, 253, 244);
+doc.rect(M, y, cardW, cardH, 'F');
+doc.setDrawColor(15, 23, 42);
+doc.setLineWidth(0.4);
+doc.rect(M, y, cardW, cardH, 'S');
+doc.setDrawColor(15, 23, 42);
+doc.setLineWidth(0.3);
+doc.line(M + cardHalfW, y, M + cardHalfW, y + cardH);
+doc.setDrawColor(180, 180, 180);
+doc.setLineWidth(0.2);
+for (let i = 1; i < rowsPerCard; i++) {
+doc.line(M, y + i * rowH, M + cardW, y + i * rowH);
+}
+doc.setDrawColor(180, 180, 180);
+doc.line(M + labelW, y, M + labelW, y + cardH);
+doc.line(M + cardHalfW + labelW, y, M + cardHalfW + labelW, y + cardH);
+
+const writeRow = (rowIndex, label, value, colOffset, valueColor = [15, 23, 42], valueBold = false) => {
+const rowY = y + rowIndex * rowH + rowH - 1.8;
+doc.setFont("helvetica", "bold");
+doc.setFontSize(8);
+doc.setTextColor(71, 85, 105);
+doc.text(label, colOffset + 2, rowY);
+doc.setFont("helvetica", valueBold ? "bold" : "normal");
+doc.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
+doc.text(String(value), colOffset + labelW + 2, rowY);
+};
+
+writeRow(0, "N° Bobina:", b.numeroBobina || 'N/A', M, [15, 76, 129], true);
+writeRow(1, "Fecha:", b.fecha || '-', M);
+writeRow(2, "Hora:", b.hora || '-', M);
+writeRow(3, "Peso:", `${b.pesoKg} kg`, M);
+writeRow(4, "Metros:", `${b.metrosCalculados} m`, M, VERDE, true);
+writeRow(5, "Operador:", b.operador || '-', M);
+
+writeRow(0, "Tipo:", "BOBINA", M + cardHalfW, VERDE, true);
+writeRow(1, "OT:", b.ot || '-', M + cardHalfW);
+writeRow(2, "Código:", b.codigoProducto || '-', M + cardHalfW);
+writeRow(3, "Extrusora:", b.extrusoraId, M + cardHalfW);
+writeRow(4, "", "", M + cardHalfW);
+writeRow(5, "", "", M + cardHalfW);
+
+y += cardH + 2;
+});
+
+// Tarjetas de scrap
+data.scraps.forEach((s) => {
+if (y + cardH > 200) {
+doc.addPage('a4', 'landscape');
+y = 15;
+}
+doc.setFillColor(254, 242, 242);
+doc.rect(M, y, cardW, cardH, 'F');
+doc.setDrawColor(15, 23, 42);
+doc.setLineWidth(0.4);
+doc.rect(M, y, cardW, cardH, 'S');
+doc.setDrawColor(15, 23, 42);
+doc.setLineWidth(0.3);
+doc.line(M + cardHalfW, y, M + cardHalfW, y + cardH);
+doc.setDrawColor(180, 180, 180);
+doc.setLineWidth(0.2);
+for (let i = 1; i < rowsPerCard; i++) {
+doc.line(M, y + i * rowH, M + cardW, y + i * rowH);
+}
+doc.setDrawColor(180, 180, 180);
+doc.line(M + labelW, y, M + labelW, y + cardH);
+doc.line(M + cardHalfW + labelW, y, M + cardHalfW + labelW, y + cardH);
+
+const writeRow = (rowIndex, label, value, colOffset, valueColor = [15, 23, 42], valueBold = false) => {
+const rowY = y + rowIndex * rowH + rowH - 1.8;
+doc.setFont("helvetica", "bold");
+doc.setFontSize(8);
+doc.setTextColor(71, 85, 105);
+doc.text(label, colOffset + 2, rowY);
+doc.setFont("helvetica", valueBold ? "bold" : "normal");
+doc.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
+doc.text(String(value), colOffset + labelW + 2, rowY);
+};
+
+writeRow(0, "Fecha:", s.fecha || '-', M, [15, 76, 129], true);
+writeRow(1, "Hora:", s.hora || '-', M);
+writeRow(2, "Motivo:", s.motivo || '-', M, ROJO, true);
+writeRow(3, "Peso:", `${s.pesoKg} kg`, M, ROJO, true);
+writeRow(4, "Observaciones:", s.observaciones || '-', M);
+writeRow(5, "Operador:", s.operador || '-', M);
+
+writeRow(0, "Tipo:", "SCRAP", M + cardHalfW, ROJO, true);
+writeRow(1, "OT:", s.ot || '-', M + cardHalfW);
+writeRow(2, "Código:", s.codigoProducto || '-', M + cardHalfW);
+writeRow(3, "Extrusora:", s.extrusoraId, M + cardHalfW);
+writeRow(4, "", "", M + cardHalfW);
+writeRow(5, "", "", M + cardHalfW);
+
+y += cardH + 2;
+});
+
+// Resumen por extrusora
+if (y + 15 > 200) {
+doc.addPage('a4', 'landscape');
+y = 15;
+}
+doc.setFillColor(241, 245, 249);
+doc.rect(M, y, cardW, 10, 'F');
+doc.setDrawColor(AZUL[0], AZUL[1], AZUL[2]);
+doc.setLineWidth(0.3);
+doc.rect(M, y, cardW, 10, 'S');
+doc.setFont("helvetica", "bold");
+doc.setFontSize(9);
+doc.setTextColor(AZUL[0], AZUL[1], AZUL[2]);
+doc.text(`RESUMEN ${extId}:`, M + 4, y + 6);
+doc.setFont("helvetica", "normal");
+doc.setTextColor(GRIS[0], GRIS[1], GRIS[2]);
+doc.text(`Bobinas: ${data.bobinas.length} | Peso: ${totalPeso.toFixed(2)} kg | Metros: ${totalMetros.toFixed(2)} m | Scrap: ${totalScrap.toFixed(2)} kg`, M + 50, y + 6);
+y += 16;
+});
+
+// FIRMAS
+if (y + 24 > 200) {
+doc.addPage('a4', 'landscape');
+y = 30;
+}
+y += 8;
+doc.setDrawColor(GRIS[0], GRIS[1], GRIS[2]);
+doc.setLineWidth(0.3);
+doc.line(M + 15, y, M + 85, y);
+doc.line(M + 175, y, M + 245, y);
+doc.setFont('helvetica', 'normal');
+doc.setFontSize(8);
+doc.setTextColor(GRIS[0], GRIS[1], GRIS[2]);
+doc.text('Firma Encargado de Turno', M + 50, y + 4.5, { align: 'center' });
+doc.text('Firma Responsable de Planta', M + 210, y + 4.5, { align: 'center' });
+
+// FOOTER
+const totalPaginas = doc.internal.getNumberOfPages();
+for (let i = 1; i <= totalPaginas; i++) {
+doc.setPage(i);
+doc.setDrawColor(AZUL[0], AZUL[1], AZUL[2]);
+doc.setLineWidth(0.4);
+doc.line(M, 201, 287, 201);
+doc.setFont('helvetica', 'italic');
+doc.setFontSize(7.5);
+doc.setTextColor(GRIS[0], GRIS[1], GRIS[2]);
+doc.text('Planta Extrusión - Reporte de Producción | Documento generado automáticamente', M, 205.5);
+doc.setFillColor(AZUL[0], AZUL[1], AZUL[2]);
+doc.rect(0, 208, 297, 2, 'F');
+}
+
 doc.save(`Produccion_Extrusion_${hoy.replace(/\//g, '-')}.pdf`);
+};
+
+const safeGenerate = () => {
+if (timeoutId) clearTimeout(timeoutId);
+generarPDF();
+};
+if (logoImg.complete) {
+safeGenerate();
+} else {
+logoImg.onload = safeGenerate;
+logoImg.onerror = safeGenerate;
+timeoutId = setTimeout(safeGenerate, 2000);
+}
 }
 async function solicitarCambioTurnoOctagon() {
 const medicionesHoy = AppState.historial.filter(r => new Date(r.timestamp).toLocaleDateString('es-CL') === new Date().toLocaleDateString('es-CL'));
@@ -2102,6 +2226,7 @@ if (confirm("✅ PDF generado.\n¿Desea limpiar el historial de Octagon para ini
 AppState.historial = [];
 localStorage.removeItem('mediciones_local');
 renderHistorial();
+renderProduccion();
 resetearTurnoAutomatico();
 alert("🔄 Turno de Octagon reiniciado.");
 }
@@ -2112,48 +2237,52 @@ if (confirm("No hay mediciones registradas hoy.\n¿Desea reiniciar el turno de O
 AppState.historial = [];
 localStorage.removeItem('mediciones_local');
 renderHistorial();
+renderProduccion();
 resetearTurnoAutomatico();
 }
 }
 }
 async function solicitarCambioTurno() {
-if (AppState.historial.length > 0) {
+const prodHoy = AppState.bobinas.filter(b => b.fecha === new Date().toLocaleDateString('es-CL')).length +
+AppState.scraps.filter(s => s.fecha === new Date().toLocaleDateString('es-CL')).length;
+if (prodHoy > 0 || AppState.historial.length > 0) {
 if (confirm("⚠️ Debe descargar el reporte antes de cambiar turno.\n¿Generar PDF ahora?")) {
 imprimirProduccionExtrusion();
-if (confirm("✅ PDF descargado.\n¿Limpiar historial, asignaciones y reiniciar configuración?")) {
+if (confirm("✅ PDF descargado.\n¿Limpiar historial y reiniciar configuración?")) {
 AppState.historial = [];
+AppState.bobinas = [];
+AppState.scraps = [];
 AppState.asignacionesExtrusora = {};
+AppState.muestrasPendientes = [];
 localStorage.removeItem('mediciones_local');
+localStorage.removeItem('bobinas_local');
+localStorage.removeItem('scraps_local');
 localStorage.removeItem('asignaciones_extrusora');
+localStorage.removeItem('muestras_pendientes');
+localStorage.removeItem('contador_bobinas_global');
 localStorage.removeItem('estado_operativas');
 document.getElementById('encargado-g1').value = '';
 document.getElementById('encargado-g2').value = '';
 toggleEditarOperativas(true);
 renderBotonesExtrusoras();
-renderListaAsignaciones();
+renderProduccion();
 resetearTurnoAutomatico();
 if (AppState.vistaActual === 'octagon') {
 actualizarSelectExtrusorasOctagon();
 onExtrusoraChangeOctagon();
+renderNotificaciones();
 }
-alert("🔄 Turno cambiado. Asignaciones de extrusoras limpiadas.");
+alert("🔄 Turno cambiado.");
 }
 }
 } else {
-if (confirm("¿Reiniciar configuración de operativas y asignaciones para el nuevo turno?")) {
-AppState.asignacionesExtrusora = {};
-localStorage.removeItem('asignaciones_extrusora');
+if (confirm("¿Reiniciar configuración de operativas para el nuevo turno?")) {
 localStorage.removeItem('estado_operativas');
 document.getElementById('encargado-g1').value = '';
 document.getElementById('encargado-g2').value = '';
 toggleEditarOperativas(true);
 renderBotonesExtrusoras();
-renderListaAsignaciones();
 resetearTurnoAutomatico();
-if (AppState.vistaActual === 'octagon') {
-actualizarSelectExtrusorasOctagon();
-onExtrusoraChangeOctagon();
-}
 }
 }
 }
@@ -2184,7 +2313,7 @@ window.scrollTo(0,0);
 localStorage.setItem('vista_actual', vista);
 if (vista === 'extrusion') {
 renderBotonesExtrusoras();
-renderListaAsignaciones();
+renderProduccion();
 }
 }
 function restaurarVistaAlIniciar() {
@@ -2195,7 +2324,7 @@ document.querySelectorAll('.view-section').forEach(el => el.classList.remove('ac
 const target = document.getElementById('view-' + vistaGuardada);
 if (target) target.classList.add('active');
 if (vistaGuardada === 'extrusion') {
-setTimeout(() => { renderBotonesExtrusoras(); renderListaAsignaciones(); }, 100);
+setTimeout(() => { renderBotonesExtrusoras(); renderProduccion(); }, 100);
 }
 if (vistaGuardada === 'octagon') {
 if (!AppState.operadorActual) {
@@ -2301,6 +2430,7 @@ else AppState.codigos.push(nuevoCodigo);
 localStorage.setItem('codigos', JSON.stringify(AppState.codigos));
 }
 renderListaCodigos();
+actualizarSelectExtrusorasOctagon();
 document.getElementById('mensaje-exito-cod').style.display = 'block';
 setTimeout(() => { document.getElementById('mensaje-exito-cod').style.display = 'none'; }, 2000);
 cancelarEdicionCodigo();
@@ -2316,6 +2446,7 @@ AppState.codigos = AppState.codigos.filter(p => p.codigo !== codigo);
 localStorage.setItem('codigos', JSON.stringify(AppState.codigos));
 }
 renderListaCodigos();
+actualizarSelectExtrusorasOctagon();
 } catch (e) { alert('Error al eliminar'); }
 }
 // ============================================================
@@ -2391,16 +2522,8 @@ mensaje = `${extId} ya tiene una asignación (OT: ${asigAnterior.ot}, Código: $
 if (!confirm(mensaje)) return;
 await setAsignacionExtrusora(extId, ot, codigo);
 cerrarModalNuevaExtrusion();
+renderBotonesExtrusoras();
 alert(`✅ ${extId} asignado correctamente.\nOT: ${ot} | Código: ${codigo}`);
-}
-function verCapturaDesvioById(id) {
-const reg = AppState.historial.find(r => (r.docId || r.timestamp) == id);
-if (!reg) return alert('Registro no encontrado');
-if (!reg.capturaBase64) return alert('Esta alerta no tiene captura de pantalla adjunta.');
-document.getElementById('captura-modal-img').src = reg.capturaBase64;
-const extId = reg.extrusoraId || reg.id;
-document.getElementById('captura-modal-info').innerHTML = `<strong>${reg.alertaTipo}</strong> | ${extId} | ${reg.hora}<br>Operador: ${reg.operador}`;
-document.getElementById('modal-captura').style.display = 'flex';
 }
 function cerrarAlertaFullscreen() {
 if (AppState.timerAlertaFullscreen) { clearTimeout(AppState.timerAlertaFullscreen); AppState.timerAlertaFullscreen = null; }
@@ -2437,6 +2560,7 @@ AppState.bobinas = JSON.parse(localStorage.getItem('bobinas_local')) || [];
 AppState.scraps = JSON.parse(localStorage.getItem('scraps_local')) || [];
 AppState.muestrasPendientes = JSON.parse(localStorage.getItem('muestras_pendientes')) || [];
 renderHistorial();
+renderProduccion();
 if (AppState.vistaActual === 'octagon') {
 actualizarSelectExtrusorasOctagon();
 onExtrusoraChangeOctagon();
@@ -2454,6 +2578,7 @@ const nuevosDatos = [];
 snapshot.forEach((docSnap) => nuevosDatos.push({ docId: docSnap.id, ...docSnap.data() }));
 AppState.historial = nuevosDatos;
 renderHistorial();
+renderProduccion();
 renderNotificaciones();
 if (AppState.historial.length > 0) {
 const latestTimestamp = AppState.historial[0].timestamp;
@@ -2470,6 +2595,7 @@ const nuevosCodigos = [];
 snapshot.forEach((docSnap) => nuevosCodigos.push(docSnap.data()));
 AppState.codigos = nuevosCodigos;
 localStorage.setItem('codigos', JSON.stringify(AppState.codigos));
+actualizarSelectExtrusorasOctagon();
 });
 const qAsignaciones = collection(window.db, "asignaciones_extrusora");
 onSnapshot(qAsignaciones, (snapshot) => {
@@ -2480,7 +2606,6 @@ nuevasAsig[docSnap.id] = docSnap.data();
 AppState.asignacionesExtrusora = nuevasAsig;
 guardarAsignaciones();
 renderBotonesExtrusoras();
-renderListaAsignaciones();
 if (AppState.vistaActual === 'octagon') {
 actualizarSelectExtrusorasOctagon();
 onExtrusoraChangeOctagon();
@@ -2493,6 +2618,8 @@ snapshot.forEach((docSnap) => nuevasBobinas.push({ id: docSnap.id, ...docSnap.da
 AppState.bobinas = nuevasBobinas;
 localStorage.setItem('bobinas_local', JSON.stringify(AppState.bobinas));
 if (AppState.extrusoraActualPanel) renderBobinasExtrusora();
+renderBotonesExtrusoras();
+renderProduccion();
 if (AppState.vistaActual === 'octagon') {
 verificarBobinaYaMedida();
 renderNotificaciones();
@@ -2505,6 +2632,8 @@ snapshot.forEach((docSnap) => nuevosScraps.push({ id: docSnap.id, ...docSnap.dat
 AppState.scraps = nuevosScraps;
 localStorage.setItem('scraps_local', JSON.stringify(AppState.scraps));
 if (AppState.extrusoraActualPanel) { renderScrapExtrusora(); actualizarTotalScrapTurno(); }
+renderBotonesExtrusoras();
+renderProduccion();
 });
 const qMuestras = query(collection(window.db, "muestras_pendientes"), orderBy("timestamp", "desc"));
 onSnapshot(qMuestras, (snapshot) => {
@@ -2540,7 +2669,6 @@ window.onload = () => {
 cargarEstadoOperativas();
 actualizarInfoSesion();
 renderBotonesExtrusoras();
-renderListaAsignaciones();
 restaurarVistaAlIniciar();
 const inputBobina = document.getElementById('input-bobina-numero');
 if (inputBobina) {
