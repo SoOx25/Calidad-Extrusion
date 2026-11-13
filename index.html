@@ -77,7 +77,8 @@ body { background: var(--bg-body); color: var(--text-primary); font-family: var(
 .btn-danger:hover { background: var(--danger-hover); }
 .btn-info { background: var(--info); color: white; border: none; }
 .btn-info:hover { background: #0369a1; }
-.card { background: var(--bg-card); border-radius: 10px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
+.card { background: var(--bg-card); border-radius: 10px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 12px; }
+#view-sector-a .card, #view-sector-b .card { margin-bottom: 10px; }
 h2 { color: var(--text-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 0; font-size: 1.1rem; font-weight: 700; }
 label { display: block; margin-top: 12px; font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 4px; }
 input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-main); transition: border-color 0.2s, box-shadow 0.2s; }
@@ -154,9 +155,10 @@ tr:last-child td { border-bottom: none; }
 .display-card .subvalue { font-size: 0.875rem; color: var(--text-secondary); }
 .operativas-content { transition: all 0.3s; overflow: hidden; }
 .operativas-content.collapsed { display: none; }
-.produccion-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
-.extrusoras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 12px; }
-.extrusora-btn { position: relative; border: 2px solid; border-radius: 8px; padding: 8px 6px; cursor: pointer; transition: all 0.2s; text-align: center; font-family: var(--font-main); min-height: 110px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+.produccion-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 6px; }
+.extrusion-actions-bar { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 8px; }
+.extrusoras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 0; }
+.extrusora-btn { position: relative; border: 2px solid; border-radius: 8px; padding: 8px 6px; cursor: pointer; transition: all 0.2s; text-align: center; font-family: var(--font-main); min-height: 88px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
 .extrusora-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 .extrusora-btn.activa { background: var(--success-light); border-color: var(--success); color: var(--success-hover); }
 .extrusora-btn .ext-numero { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.025em; }
@@ -210,7 +212,6 @@ tr:last-child td { border-bottom: none; }
 .producto-dims-row { display: flex; align-items: flex-end; gap: 6px; }
 .producto-dims-row .dim-field { flex: 1; }
 .producto-dims-row .dim-sep { padding-bottom: 12px; font-weight: 700; color: var(--text-muted); }
-.extrusion-actions-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
 .extrusora-info-inline { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; margin-top: 6px; font-weight: 600; }
 .extrusora-info-inline.error { background: #fee2e2; border-color: #fca5a5; color: #7f1d1d; }
 .btn-dual { display: inline-flex; border-radius: 6px; overflow: hidden; }
@@ -1340,6 +1341,50 @@ setTimeout(() => { document.removeEventListener('paste', handler); if (hint.text
 function procesarArchivoCaptura(event) {
 const file = event.target.files[0]; if (!file) return;
 const reader = new FileReader(); reader.onload = (e) => mostrarCaptura(e.target.result); reader.readAsDataURL(file); event.target.value = '';
+}
+function abrirModalCaptura() {
+const modal = document.getElementById('modal-captura');
+const img = document.getElementById('captura-modal-img');
+const info = document.getElementById('captura-modal-info');
+if (!modal || !img || !AppState.capturaActualBase64) return;
+img.src = AppState.capturaActualBase64;
+info.textContent = 'Captura adjunta al desvío registrad';
+modal.style.display = 'flex';
+}
+function cerrarModalCaptura() {
+const modal = document.getElementById('modal-captura');
+if (modal) modal.style.display = 'none';
+}
+function abrirModalDesvio() {
+const modal = document.getElementById('modal-desvios');
+if (!modal) return;
+const sel = document.getElementById('alerta-extrusora');
+if (sel) {
+sel.innerHTML = '';
+TODAS_EXTRUSORAS.forEach(extId => {
+const asig = obtenerAsignacionExtrusora(extId);
+if (!asig) return;
+const opt = document.createElement('option');
+opt.value = extId;
+opt.textContent = extId;
+sel.appendChild(opt);
+});
+if (sel.options.length > 0) {
+sel.value = sel.options[0].value;
+const asig = obtenerAsignacionExtrusora(sel.value);
+const otInput = document.getElementById('alerta-ot');
+if (otInput) otInput.value = asig ? asig.ot : '';
+}
+}
+actualizarCamposDesvio();
+modal.style.display = 'flex';
+}
+function cerrarModalDesvio() {
+const modal = document.getElementById('modal-desvios');
+if (modal) modal.style.display = 'none';
+const tipo = document.getElementById('alerta-tipo-desvio');
+if (tipo) tipo.value = 'Espesor Promedio';
+actualizarCamposDesvio();
 }
 function mostrarCaptura(base64) {
 AppState.capturaActualBase64 = base64;
